@@ -1,4 +1,4 @@
 # compiled python
-.pyc
+*.pyc
 # vim swp
-.swp
+*.swp
