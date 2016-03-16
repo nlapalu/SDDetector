@@ -65,7 +65,6 @@ class TestAlignmentChainer(unittest.TestCase):
         self.db.insertlAlignments(lAlignments)
         iAlgmtChainer = AlignmentChainer(self.db)
         iAlgmtChainer.chainAlignments(lAlignments)
-        print "HAHAH {}".format(iAlgmtChainer.lChains)
         self.assertEquals([Chain([al1,al2]),Chain([al3]),Chain([al4])],iAlgmtChainer.lChains)
         self.assertEquals({1:[0], 2:[0], 3:[1], 4:[2]},iAlgmtChainer.dIndex)
 

@@ -155,6 +155,7 @@ class Detector(object):
            query coordinates
 
         """
+
         lAlgmts = self.db.selectSelfSelfMatchAlgmts()
         self.db.deletelAlignments(lAlgmts)
         self.db.commit()
@@ -166,6 +167,7 @@ class Detector(object):
            Threshold set to 0.9 by default
 
         """
+
         lAlgmts = self.db.selectAlgmtsBelowIdentityThreshold() 
         self.db.deletelAlignments(lAlgmts)
         self.db.commit()
@@ -186,6 +188,7 @@ class Detector(object):
            - ??? distance on query ???
 
         """
+
         lSbjcts = self.db.selectAllSbjcts()
         lQueries = self.db.selectAllQueries()
         lSelectedChains = []

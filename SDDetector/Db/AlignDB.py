@@ -10,15 +10,18 @@ class AlignDB(SqliteDB):
 
     def __init__(self, dbfile='', logLevel='ERROR'):
         """AlignDB Constructor""" 
+
         SqliteDB.__init__(self, dbfile=dbfile, logLevel=logLevel)
         self._createDBSchema()
 
     def _createDBSchema(self):
-        """Create Database Schema"""
+       """Create Database Schema"""
+
         self._createAlignmentTable()
 
     def _createAlignmentTable(self):
         """Create table Alignment"""
+
         self.conn.execute('''create table alignment (id int primary key not null,
                                                      query text not null,
                                                      sbjct text not null,
@@ -34,6 +37,7 @@ class AlignDB(SqliteDB):
 
     def insertAlignment(self, algmt):
         """Insert an alignment in db"""
+
         self.conn.execute('''insert into alignment (id, query, sbjct,
                              qstart, qend, sstart, send, length, identities,
                              qstrand,sstrand) values (%s)''' % (','.join('\'{}\''.format(i) for i in (algmt.id,algmt.query,algmt.sbjct, algmt.qstart, algmt.qend, algmt.sstart, algmt.send, algmt.length, algmt.identities, algmt.qstrand, algmt.sstrand))))
@@ -50,30 +54,35 @@ class AlignDB(SqliteDB):
 
     def deleteAlignment(self, id):
         """Delete an alignment"""
+
         cursor = self.conn.execute('''delete from alignment where id = {}''' \
                                    .format(id))
 
 
     def deletelAlignments(self, lIds):
         """Delete a list of alignments"""
+
         cursor = self.conn.execute('''delete from alignment where id in ({})''' \
                                    .format(','.join(str(id) for id in lIds)))
 
  
     def deleteAllAlignments(self):
         """Delete all alignments"""
+
         cursor = self.conn.execute('''delete from alignment''')
         self.commit()
 
 
     def deleteDB(self):
         """Delete the DB"""
+
         self.conn.close()
         os.remove(self.dbfile)
 
 
     def exportDbToGff3(self, fileName):
         """Export entire db in gff3 match features"""
+
         with open(fileName,'w') as f:
             cursor = self.conn.execute('''select id, query, sbjct, qstart,
                                           qend, sstart, send, length,identities,
@@ -87,18 +96,21 @@ class AlignDB(SqliteDB):
 
     def selectAlignmentMaxId(self):
         """Select alignment max id"""
+
         cursor = self.conn.execute('''select max(id) from alignment''')
         return cursor.fetchone()[0]
 
 
     def selectAllIds(self):
         """Select all alignments"""
+
         cursor = self.conn.execute('''select id from alignment''')
         return [ row[0] for row in cursor ]
 
 
     def selectAlignmentById(self, id):
         """Select alignment by id"""
+
         cursor = self.conn.execute('''select id, query, sbjct, qstart,
                                    qend, sstart, send, length, identities,
                                    qstrand, sstrand from alignment where id = {}''' \
@@ -111,18 +123,21 @@ class AlignDB(SqliteDB):
 
     def selectAllSbjcts(self):
         """Select all sequence name used as subject"""
+
         cursor = self.conn.execute('''select distinct(sbjct) from alignment order by sbjct ASC''' )
         
         return [ row[0] for row in cursor ]
 
     def selectAllQueries(self):
         """Select all sequence name used as query"""
+
         cursor = self.conn.execute('''select distinct(query) from alignment order by query ASC''' )
         
         return [ row[0] for row in cursor ]
 
     def selectAlignmentsWithDefinedSbjctAndQueryOrderBySbjctCoord(self, sbjct, query):
-        """blabla"""
+        """Select ordered sub-list of alignments with defined sbjct and query"""
+
         cursor = self.conn.execute('''select id, query, sbjct, qstart,
                                    qend, sstart, send, length, identities,
                                    qstrand, sstrand from alignment where \
@@ -134,7 +149,8 @@ class AlignDB(SqliteDB):
 
 
     def selectAlignmentsWithDefinedIdOrderBySbjctCoord(self, lIds):
-        """blabla"""
+        """Select ordered sub-list of alignments with defined id"""
+
         cursor = self.conn.execute('''select id, query, sbjct, qstart,
                                    qend, sstart, send, length, identities,
                                    qstrand, sstrand from alignment where \
@@ -199,4 +215,5 @@ class AlignDB(SqliteDB):
 
     def  commit(self):
         """Commit transactions"""
+
         self.conn.commit()

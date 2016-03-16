@@ -68,11 +68,11 @@ class Chain(object):
                 strand = '-'
 
             if format == 'gff3':
-                lines.append('{}\tSegDupAna\tmatch_part\t{}\t{}\t.\t{}\t.\tID=match{};Target={} {} {}\n'.format(algmt.sbjct,algmt.sstart,algmt.send,strand,algmt.id,algmt.query,algmt.qstart,algmt.qend))
+                lines.append('{}\tSegDupAna\tmatch_part\t{}\t{}\t.\t{}\t.\tID=match{};Target={} {} {};length={};identities={};identity_percentage={}\n'.format(algmt.sbjct,algmt.sstart,algmt.send,strand,algmt.id,algmt.query,algmt.qstart,algmt.qend,algmt.length,algmt.identities,float(algmt.identities/algmt.length)))
             if format == 'bed':
                 lines.append('{}\t'.format(algmt.sbjct))
         if format == 'gff3':
-            lines.insert(0, '{}\tSegDupAna\tmatch\t{}\t{}\t.\t.\t.\tID=chain{}\n'.format(algmt.sbjct,sstartMin,sendMax,id))
+            lines.insert(0, '{}\tSegDupAna\tmatch\t{}\t{}\t.\t.\t.\tID=chain{};length={}\n'.format(algmt.sbjct,sstartMin,sendMax,id,self.getLenth()))
 
         return ''.join(lines)
 
