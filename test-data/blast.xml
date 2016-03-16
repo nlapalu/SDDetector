@@ -1,0 +1,250 @@
+<?xml version="1.0"?>
+<!DOCTYPE BlastOutput PUBLIC "-//NCBI//NCBI BlastOutput/EN" "http://www.ncbi.nlm.nih.gov/dtd/NCBI_BlastOutput.dtd">
+<BlastOutput>
+  <BlastOutput_program>blastn</BlastOutput_program>
+  <BlastOutput_version>BLASTN 2.3.0+</BlastOutput_version>
+  <BlastOutput_reference>Zheng Zhang, Scott Schwartz, Lukas Wagner, and Webb Miller (2000), &quot;A greedy algorithm for aligning DNA sequences&quot;, J Comput Biol 2000; 7(1-2):203-14.</BlastOutput_reference>
+  <BlastOutput_db>seq</BlastOutput_db>
+  <BlastOutput_query-ID>Query_1</BlastOutput_query-ID>
+  <BlastOutput_query-def>seq1</BlastOutput_query-def>
+  <BlastOutput_query-len>167</BlastOutput_query-len>
+  <BlastOutput_param>
+    <Parameters>
+      <Parameters_expect>10</Parameters_expect>
+      <Parameters_sc-match>1</Parameters_sc-match>
+      <Parameters_sc-mismatch>-2</Parameters_sc-mismatch>
+      <Parameters_gap-open>0</Parameters_gap-open>
+      <Parameters_gap-extend>0</Parameters_gap-extend>
+      <Parameters_filter>L;m;</Parameters_filter>
+    </Parameters>
+  </BlastOutput_param>
+<BlastOutput_iterations>
+<Iteration>
+  <Iteration_iter-num>1</Iteration_iter-num>
+  <Iteration_query-ID>Query_1</Iteration_query-ID>
+  <Iteration_query-def>seq1</Iteration_query-def>
+  <Iteration_query-len>167</Iteration_query-len>
+<Iteration_hits>
+<Hit>
+  <Hit_num>1</Hit_num>
+  <Hit_id>seq1</Hit_id>
+  <Hit_def>No definition line</Hit_def>
+  <Hit_accession>seq1</Hit_accession>
+  <Hit_len>167</Hit_len>
+  <Hit_hsps>
+    <Hsp>
+      <Hsp_num>1</Hsp_num>
+      <Hsp_bit-score>309.511</Hsp_bit-score>
+      <Hsp_score>167</Hsp_score>
+      <Hsp_evalue>5.77905e-89</Hsp_evalue>
+      <Hsp_query-from>1</Hsp_query-from>
+      <Hsp_query-to>167</Hsp_query-to>
+      <Hsp_hit-from>1</Hsp_hit-from>
+      <Hsp_hit-to>167</Hsp_hit-to>
+      <Hsp_query-frame>1</Hsp_query-frame>
+      <Hsp_hit-frame>1</Hsp_hit-frame>
+      <Hsp_identity>167</Hsp_identity>
+      <Hsp_positive>167</Hsp_positive>
+      <Hsp_gaps>0</Hsp_gaps>
+      <Hsp_align-len>167</Hsp_align-len>
+      <Hsp_qseq>ATGATGCTCGTAGAGAGCGCTCGCCGTAGAGGATAGTGCGGCTCGATGATGAAGTCGCTGTTTTGGCTGTAGGATAGCGGTGGTCTCGATTAGCCTAGAGGATAATTATAGCTCGTCAAAATTTTATATGTCGCCTAGATAGTCTCCGATTAGATCGGCTAGGATCG</Hsp_qseq>
+      <Hsp_hseq>ATGATGCTCGTAGAGAGCGCTCGCCGTAGAGGATAGTGCGGCTCGATGATGAAGTCGCTGTTTTGGCTGTAGGATAGCGGTGGTCTCGATTAGCCTAGAGGATAATTATAGCTCGTCAAAATTTTATATGTCGCCTAGATAGTCTCCGATTAGATCGGCTAGGATCG</Hsp_hseq>
+      <Hsp_midline>|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||</Hsp_midline>
+    </Hsp>
+  </Hit_hsps>
+</Hit>
+<Hit>
+  <Hit_num>2</Hit_num>
+  <Hit_id>seq2</Hit_id>
+  <Hit_def>No definition line</Hit_def>
+  <Hit_accession>seq2</Hit_accession>
+  <Hit_len>400</Hit_len>
+  <Hit_hsps>
+    <Hsp>
+      <Hsp_num>1</Hsp_num>
+      <Hsp_bit-score>303.971</Hsp_bit-score>
+      <Hsp_score>164</Hsp_score>
+      <Hsp_evalue>2.68873e-87</Hsp_evalue>
+      <Hsp_query-from>1</Hsp_query-from>
+      <Hsp_query-to>164</Hsp_query-to>
+      <Hsp_hit-from>400</Hsp_hit-from>
+      <Hsp_hit-to>237</Hsp_hit-to>
+      <Hsp_query-frame>1</Hsp_query-frame>
+      <Hsp_hit-frame>-1</Hsp_hit-frame>
+      <Hsp_identity>164</Hsp_identity>
+      <Hsp_positive>164</Hsp_positive>
+      <Hsp_gaps>0</Hsp_gaps>
+      <Hsp_align-len>164</Hsp_align-len>
+      <Hsp_qseq>ATGATGCTCGTAGAGAGCGCTCGCCGTAGAGGATAGTGCGGCTCGATGATGAAGTCGCTGTTTTGGCTGTAGGATAGCGGTGGTCTCGATTAGCCTAGAGGATAATTATAGCTCGTCAAAATTTTATATGTCGCCTAGATAGTCTCCGATTAGATCGGCTAGGA</Hsp_qseq>
+      <Hsp_hseq>ATGATGCTCGTAGAGAGCGCTCGCCGTAGAGGATAGTGCGGCTCGATGATGAAGTCGCTGTTTTGGCTGTAGGATAGCGGTGGTCTCGATTAGCCTAGAGGATAATTATAGCTCGTCAAAATTTTATATGTCGCCTAGATAGTCTCCGATTAGATCGGCTAGGA</Hsp_hseq>
+      <Hsp_midline>||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||</Hsp_midline>
+    </Hsp>
+    <Hsp>
+      <Hsp_num>2</Hsp_num>
+      <Hsp_bit-score>102.686</Hsp_bit-score>
+      <Hsp_score>55</Hsp_score>
+      <Hsp_evalue>1.05272e-26</Hsp_evalue>
+      <Hsp_query-from>50</Hsp_query-from>
+      <Hsp_query-to>113</Hsp_query-to>
+      <Hsp_hit-from>54</Hsp_hit-from>
+      <Hsp_hit-to>118</Hsp_hit-to>
+      <Hsp_query-frame>1</Hsp_query-frame>
+      <Hsp_hit-frame>1</Hsp_hit-frame>
+      <Hsp_identity>63</Hsp_identity>
+      <Hsp_positive>63</Hsp_positive>
+      <Hsp_gaps>3</Hsp_gaps>
+      <Hsp_align-len>66</Hsp_align-len>
+      <Hsp_qseq>TGA-AGTCGCT-GTTTTGGCTGTAGGATAGCGGTGGTCTCGATTAGCCTAGAGGATAATTATAGCT</Hsp_qseq>
+      <Hsp_hseq>TGATAGT-GCTGGTTTTGGCTGTAGGATAGCGGTGGTCTCGATTAGCCTAGAGGATAATTATAGCT</Hsp_hseq>
+      <Hsp_midline>||| ||| ||| ||||||||||||||||||||||||||||||||||||||||||||||||||||||</Hsp_midline>
+    </Hsp>
+  </Hit_hsps>
+</Hit>
+</Iteration_hits>
+  <Iteration_stat>
+    <Statistics>
+      <Statistics_db-num>2</Statistics_db-num>
+      <Statistics_db-len>567</Statistics_db-len>
+      <Statistics_hsp-len>10</Statistics_hsp-len>
+      <Statistics_eff-space>85879</Statistics_eff-space>
+      <Statistics_kappa>0.46</Statistics_kappa>
+      <Statistics_lambda>1.28</Statistics_lambda>
+      <Statistics_entropy>0.85</Statistics_entropy>
+    </Statistics>
+  </Iteration_stat>
+</Iteration>
+<Iteration>
+  <Iteration_iter-num>2</Iteration_iter-num>
+  <Iteration_query-ID>Query_2</Iteration_query-ID>
+  <Iteration_query-def>seq2</Iteration_query-def>
+  <Iteration_query-len>400</Iteration_query-len>
+<Iteration_hits>
+<Hit>
+  <Hit_num>1</Hit_num>
+  <Hit_id>seq2</Hit_id>
+  <Hit_def>No definition line</Hit_def>
+  <Hit_accession>seq2</Hit_accession>
+  <Hit_len>400</Hit_len>
+  <Hit_hsps>
+    <Hsp>
+      <Hsp_num>1</Hsp_num>
+      <Hsp_bit-score>739.78</Hsp_bit-score>
+      <Hsp_score>400</Hsp_score>
+      <Hsp_evalue>0</Hsp_evalue>
+      <Hsp_query-from>1</Hsp_query-from>
+      <Hsp_query-to>400</Hsp_query-to>
+      <Hsp_hit-from>1</Hsp_hit-from>
+      <Hsp_hit-to>400</Hsp_hit-to>
+      <Hsp_query-frame>1</Hsp_query-frame>
+      <Hsp_hit-frame>1</Hsp_hit-frame>
+      <Hsp_identity>400</Hsp_identity>
+      <Hsp_positive>400</Hsp_positive>
+      <Hsp_gaps>0</Hsp_gaps>
+      <Hsp_align-len>400</Hsp_align-len>
+      <Hsp_qseq>ATATAGTCGCGCGCCGCCTCGCGCGCGCGCTATATATAGAATGCTCGAGATCGTGATAGTGCTGGTTTTGGCTGTAGGATAGCGGTGGTCTCGATTAGCCTAGAGGATAATTATAGCTTGCGCGCTGCTCGTACTGCTCGATATTAATAGGAGATCCGATTAGCTCTGGTGGCGATAGGATGTCGGTTTTGCTAGGATCGGCTAGATTAGCCTCTGATAGATCCGCTGTATATTTTTCCTAGCCGATCTAATCGGAGACTATCTAGGCGACATATAAAATTTTGACGAGCTATAATTATCCTCTAGGCTAATCGAGACCACCGCTATCCTACAGCCAAAACAGCGACTTCATCATCGAGCCGCACTATCCTCTACGGCGAGCGCTCTCTACGAGCATCAT</Hsp_qseq>
+      <Hsp_hseq>ATATAGTCGCGCGCCGCCTCGCGCGCGCGCTATATATAGAATGCTCGAGATCGTGATAGTGCTGGTTTTGGCTGTAGGATAGCGGTGGTCTCGATTAGCCTAGAGGATAATTATAGCTTGCGCGCTGCTCGTACTGCTCGATATTAATAGGAGATCCGATTAGCTCTGGTGGCGATAGGATGTCGGTTTTGCTAGGATCGGCTAGATTAGCCTCTGATAGATCCGCTGTATATTTTTCCTAGCCGATCTAATCGGAGACTATCTAGGCGACATATAAAATTTTGACGAGCTATAATTATCCTCTAGGCTAATCGAGACCACCGCTATCCTACAGCCAAAACAGCGACTTCATCATCGAGCCGCACTATCCTCTACGGCGAGCGCTCTCTACGAGCATCAT</Hsp_hseq>
+      <Hsp_midline>||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||</Hsp_midline>
+    </Hsp>
+    <Hsp>
+      <Hsp_num>2</Hsp_num>
+      <Hsp_bit-score>102.686</Hsp_bit-score>
+      <Hsp_score>55</Hsp_score>
+      <Hsp_evalue>2.5988e-26</Hsp_evalue>
+      <Hsp_query-from>288</Hsp_query-from>
+      <Hsp_query-to>351</Hsp_query-to>
+      <Hsp_hit-from>118</Hsp_hit-from>
+      <Hsp_hit-to>54</Hsp_hit-to>
+      <Hsp_query-frame>1</Hsp_query-frame>
+      <Hsp_hit-frame>-1</Hsp_hit-frame>
+      <Hsp_identity>63</Hsp_identity>
+      <Hsp_positive>63</Hsp_positive>
+      <Hsp_gaps>3</Hsp_gaps>
+      <Hsp_align-len>66</Hsp_align-len>
+      <Hsp_qseq>AGCTATAATTATCCTCTAGGCTAATCGAGACCACCGCTATCCTACAGCCAAAAC-AGCGACT-TCA</Hsp_qseq>
+      <Hsp_hseq>AGCTATAATTATCCTCTAGGCTAATCGAGACCACCGCTATCCTACAGCCAAAACCAGC-ACTATCA</Hsp_hseq>
+      <Hsp_midline>|||||||||||||||||||||||||||||||||||||||||||||||||||||| ||| ||| |||</Hsp_midline>
+    </Hsp>
+    <Hsp>
+      <Hsp_num>3</Hsp_num>
+      <Hsp_bit-score>102.686</Hsp_bit-score>
+      <Hsp_score>55</Hsp_score>
+      <Hsp_evalue>2.5988e-26</Hsp_evalue>
+      <Hsp_query-from>54</Hsp_query-from>
+      <Hsp_query-to>118</Hsp_query-to>
+      <Hsp_hit-from>351</Hsp_hit-from>
+      <Hsp_hit-to>288</Hsp_hit-to>
+      <Hsp_query-frame>1</Hsp_query-frame>
+      <Hsp_hit-frame>-1</Hsp_hit-frame>
+      <Hsp_identity>63</Hsp_identity>
+      <Hsp_positive>63</Hsp_positive>
+      <Hsp_gaps>3</Hsp_gaps>
+      <Hsp_align-len>66</Hsp_align-len>
+      <Hsp_qseq>TGATAGT-GCTGGTTTTGGCTGTAGGATAGCGGTGGTCTCGATTAGCCTAGAGGATAATTATAGCT</Hsp_qseq>
+      <Hsp_hseq>TGA-AGTCGCT-GTTTTGGCTGTAGGATAGCGGTGGTCTCGATTAGCCTAGAGGATAATTATAGCT</Hsp_hseq>
+      <Hsp_midline>||| ||| ||| ||||||||||||||||||||||||||||||||||||||||||||||||||||||</Hsp_midline>
+    </Hsp>
+  </Hit_hsps>
+</Hit>
+<Hit>
+  <Hit_num>2</Hit_num>
+  <Hit_id>seq1</Hit_id>
+  <Hit_def>No definition line</Hit_def>
+  <Hit_accession>seq1</Hit_accession>
+  <Hit_len>167</Hit_len>
+  <Hit_hsps>
+    <Hsp>
+      <Hsp_num>1</Hsp_num>
+      <Hsp_bit-score>303.971</Hsp_bit-score>
+      <Hsp_score>164</Hsp_score>
+      <Hsp_evalue>6.63753e-87</Hsp_evalue>
+      <Hsp_query-from>237</Hsp_query-from>
+      <Hsp_query-to>400</Hsp_query-to>
+      <Hsp_hit-from>164</Hsp_hit-from>
+      <Hsp_hit-to>1</Hsp_hit-to>
+      <Hsp_query-frame>1</Hsp_query-frame>
+      <Hsp_hit-frame>-1</Hsp_hit-frame>
+      <Hsp_identity>164</Hsp_identity>
+      <Hsp_positive>164</Hsp_positive>
+      <Hsp_gaps>0</Hsp_gaps>
+      <Hsp_align-len>164</Hsp_align-len>
+      <Hsp_qseq>TCCTAGCCGATCTAATCGGAGACTATCTAGGCGACATATAAAATTTTGACGAGCTATAATTATCCTCTAGGCTAATCGAGACCACCGCTATCCTACAGCCAAAACAGCGACTTCATCATCGAGCCGCACTATCCTCTACGGCGAGCGCTCTCTACGAGCATCAT</Hsp_qseq>
+      <Hsp_hseq>TCCTAGCCGATCTAATCGGAGACTATCTAGGCGACATATAAAATTTTGACGAGCTATAATTATCCTCTAGGCTAATCGAGACCACCGCTATCCTACAGCCAAAACAGCGACTTCATCATCGAGCCGCACTATCCTCTACGGCGAGCGCTCTCTACGAGCATCAT</Hsp_hseq>
+      <Hsp_midline>||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||</Hsp_midline>
+    </Hsp>
+    <Hsp>
+      <Hsp_num>2</Hsp_num>
+      <Hsp_bit-score>102.686</Hsp_bit-score>
+      <Hsp_score>55</Hsp_score>
+      <Hsp_evalue>2.5988e-26</Hsp_evalue>
+      <Hsp_query-from>54</Hsp_query-from>
+      <Hsp_query-to>118</Hsp_query-to>
+      <Hsp_hit-from>50</Hsp_hit-from>
+      <Hsp_hit-to>113</Hsp_hit-to>
+      <Hsp_query-frame>1</Hsp_query-frame>
+      <Hsp_hit-frame>1</Hsp_hit-frame>
+      <Hsp_identity>63</Hsp_identity>
+      <Hsp_positive>63</Hsp_positive>
+      <Hsp_gaps>3</Hsp_gaps>
+      <Hsp_align-len>66</Hsp_align-len>
+      <Hsp_qseq>TGATAGT-GCTGGTTTTGGCTGTAGGATAGCGGTGGTCTCGATTAGCCTAGAGGATAATTATAGCT</Hsp_qseq>
+      <Hsp_hseq>TGA-AGTCGCT-GTTTTGGCTGTAGGATAGCGGTGGTCTCGATTAGCCTAGAGGATAATTATAGCT</Hsp_hseq>
+      <Hsp_midline>||| ||| ||| ||||||||||||||||||||||||||||||||||||||||||||||||||||||</Hsp_midline>
+    </Hsp>
+  </Hit_hsps>
+</Hit>
+</Iteration_hits>
+  <Iteration_stat>
+    <Statistics>
+      <Statistics_db-num>2</Statistics_db-num>
+      <Statistics_db-len>567</Statistics_db-len>
+      <Statistics_hsp-len>11</Statistics_hsp-len>
+      <Statistics_eff-space>212005</Statistics_eff-space>
+      <Statistics_kappa>0.46</Statistics_kappa>
+      <Statistics_lambda>1.28</Statistics_lambda>
+      <Statistics_entropy>0.85</Statistics_entropy>
+    </Statistics>
+  </Iteration_stat>
+</Iteration>
+</BlastOutput_iterations>
+</BlastOutput>
+
