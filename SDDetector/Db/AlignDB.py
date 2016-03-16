@@ -15,7 +15,7 @@ class AlignDB(SqliteDB):
         self._createDBSchema()
 
     def _createDBSchema(self):
-       """Create Database Schema"""
+        """Create Database Schema"""
 
         self._createAlignmentTable()
 
@@ -102,10 +102,19 @@ class AlignDB(SqliteDB):
 
 
     def selectAllIds(self):
-        """Select all alignments"""
+        """Select all ids alignments"""
 
         cursor = self.conn.execute('''select id from alignment''')
         return [ row[0] for row in cursor ]
+
+
+    def selectAllAlignments(self):
+        """Select all alignments"""
+
+        cursor = self.conn.execute('''select id, query, sbjct, qstart,
+                                   qend, sstart, send, length, identities,
+                                   qstrand, sstrand from alignment''')
+        return [ Alignment(row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8], row[9], row[10], id=row[0]) for row in cursor ]
 
 
     def selectAlignmentById(self, id):

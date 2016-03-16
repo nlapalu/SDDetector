@@ -27,7 +27,7 @@ class Detector(object):
     def __del__(self):
         """Destructor"""
 
-        if self.db:
+        if (self.db and self.dbFile != ':memory:'):
             self.db.deleteDB()
 
     def parseAttributesFromArgsCLI(self):
@@ -44,8 +44,8 @@ class Detector(object):
 
         parser.add_argument("-v", "--verbosity", type=int, choices=[1,2,3],
                             help="increase output verbosity 1=error, 2=info, 3=debug")
-        parser.add_argument("-i", "--minIdent", type=int, default=0.9,
-                            help="minimum alignment percentage identity")
+        parser.add_argument("-i", "--minIdent", type=float, default=0.9,
+                            help="minimum alignment percentage identity, [default=0.9], range [0-1]")
         parser.add_argument("-g", "--maxGap", type=int, default=3000,
                             help="maximum gap size allowed to chain two fragments, in bp \
                             [default=3000]")
@@ -90,7 +90,10 @@ class Detector(object):
         else:
             logging.debug("SQLite db stored in {}".format(self.dbFile))
 
-        self.minIdentity = args.minIdent
+        if (args.minIdent < 0 or args.minIdent > 1):
+            raise Exception('minimum identity not in range [0-1], example: 0.95')
+        else:
+            self.minIdentity = args.minIdent
         self.maxGap=args.maxGap
         self.chainLength=args.chainLength
         self.exportDBAllSteps=args.exportall
@@ -106,19 +109,23 @@ class Detector(object):
         logging.info('Loading alignments into database')
         self.loadAlignmentsInDb()
         if self.exportDBAllSteps:
-            pass
+            logging.info('Exporting matches after loading in database in gff3 format, file: {}.loading'.format(self.outputFile))
+            self.exportMatches('{}.loading'.format(self.outputFile))
         logging.info('Removing self-self matches')
         self.detectAndRemoveSelfMatchAlignments()
         if self.exportDBAllSteps:
-            pass
+            logging.info('Exporting matches after removing self-matches in gff3 format, file: {}.selfmatch'.format(self.outputFile))
+            self.exportMatches('{}.selfmatch'.format(self.outputFile))
         logging.info('Removing Alignment below the identity threshold: {}'.format(self.minIdentity))
         self.detectAndRemoveAlignmentBelowIdentityThreshold()
         if self.exportDBAllSteps:
-            pass
+            logging.info('Exporting matches after removing mimimal identity in gff3 format, file: {}.minidentity'.format(self.outputFile))
+            self.exportMatches('{}.minidentity'.format(self.outputFile))
         logging.info('Removing suboptimal matches')
         self.detectAndRemoveSuboptimalAlignments()
         if self.exportDBAllSteps:
-            pass
+            logging.info('Exporting matches after removing suboptimal alignments in gff3 format, file: {}.suboptimal'.format(self.outputFile))
+            self.exportMatches('{}.suboptimal'.format(self.outputFile))
         logging.info('Chaining alignments with parameters: maximum Gap between fargments = {} bp, minimum chain length = {} bp'.format(self.maxGap, self.chainLength))
         self.chaineAlignmentsTogether(maxGap=self.maxGap, chainLength=self.chainLength)
         logging.info('Exporting chains in gff3 format, file: {}'.format(self.outputFile))
@@ -216,6 +223,18 @@ class Detector(object):
         with open(outputFile, 'w') as f:
             for id, chain in enumerate(self.lSortedChains):
                 f.write(chain.convertChain(id+1, format))
+        f.close()
+
+
+    def exportMatches(self, outputFile, format='gff3'):
+        """Export Matches in gff3|bed format"""
+
+        if format not in ['gff3','bed']:
+            raise Exception('format {} is not supported for export'.format(format))
+ 
+        with open(outputFile, 'w') as f:
+            for algmt in self.db.selectAllAlignments():
+                f.write(algmt.convertToGff3())
         f.close()
 
 
