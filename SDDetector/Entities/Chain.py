@@ -38,7 +38,6 @@ class Chain(object):
     def getIdListOfAlgmts(self):
         """return the ID list of the alignments"""
 
-        print [ algmt.id for algmt in self.lAlgmts ]
         return [ algmt.id for algmt in self.lAlgmts ]
 
 
