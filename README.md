@@ -14,11 +14,11 @@ prerequesite:
 * Python 2.7.X
 * BioPython, only if you want to parse Blast results from xml format
 
-`wget https://github.com/nlapalu/SDDetector/archive/master.zip`
-
-`unzip master.zip`
-
-`cd SDDetector-master`
+```
+wget https://github.com/nlapalu/SDDetector/archive/master.zip
+unzip master.zip
+cd SDDetector-master
+```
 
 If you want to test the code:
 
