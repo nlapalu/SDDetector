@@ -215,7 +215,6 @@ class Detector(object):
 
                 for chain in chainer.lChains:
                     if chain.getLength() > chainLength:
-                        print 'length: {}  chain {}'.format(chain.getLength(), chain)
                         lSelectedChains.append(chain)
 
         self.lSortedChains = chainer.sortListOfChains(lSelectedChains)
