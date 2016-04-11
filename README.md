@@ -27,17 +27,19 @@ genome_TE.gff is the Transposable, Repeat elements annotation file in gff3
 
 __Convert the genome fasta file in a soft-masked fasta file (upper cases to lower cases)__
 
-maskFastaFromBed -fi genome.fasta -fo genome_masked.fasta -bed genome_TE.gff -soft
+`maskFastaFromBed -fi genome.fasta -fo genome_masked.fasta -bed genome_TE.gff -soft`
 
 __Index your genome with masking information__
 
-convert2blastmask -in genome_masked.fasta -parse_seqids -masking_algorithm REPET -masking_options "REPET, URGI" -outfmt maskinfo_asn1_bin -out genome_masked.asnb
-makeblastdb -dbtype nucl -in genome_masked.fasta -out genome_masked -parse_seqids -mask_data genome_masked.asnb
+`convert2blastmask -in genome_masked.fasta -parse_seqids -masking_algorithm REPET -masking_options "REPET, URGI" -outfmt maskinfo_asn1_bin -out genome_masked.asnb`
+`makeblastdb -dbtype nucl -in genome_masked.fasta -out genome_masked -parse_seqids -mask_data genome_masked.asnb`
 
 __Check your masking info:__
 
-blastdbcmd -db genome_masked -info
+`blastdbcmd -db genome_masked -info`
 
+
+```
 Database: /tmp/genome_masked.fasta
     28 sequences; 50,819,261 total bases
 
@@ -50,17 +52,17 @@ Algorithm ID  Algorithm name      Algorithm options
 
 Volumes:
     /tmp/genome_masked
-
+```
 
 ### Perfom blast analysis
 
 __Blast in XML format__
 
-blastn -num_threads 2 -task megablast -db seq -query seq.fasta -out blast.xml -outfmt 5 -db_soft_mask 100
+`blastn -num_threads 2 -task megablast -db seq -query seq.fasta -out blast.xml -outfmt 5 -db_soft_mask 100`
 
 __Blast in tab-delimited format with required fields__
 
-blastn -num_threads 2 -task megablast -db seq -query seq.fasta -out blast.tab -outfmt "6 qseqid sseqid qstart qend sstart send length nident" -db_soft_mask 100
+`blastn -num_threads 2 -task megablast -db seq -query seq.fasta -out blast.tab -outfmt "6 qseqid sseqid qstart qend sstart send length nident" -db_soft_mask 100`
 
 ### Detect Segmental Duplications
 
