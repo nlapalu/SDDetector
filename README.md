@@ -14,7 +14,23 @@ prerequesite:
 * Python 2.7.X
 * BioPython, only if you want to parse Blast results from xml format
 
+`wget https://github.com/nlapalu/SDDetector/archive/master.zip`
 
+`unzip master.zip`
+
+`cd SDDetector-master`
+
+If you want to test the code:
+
+`python setup.py test`
+
+System install (as root):
+
+`python setup.py install`
+
+or user install (you will have to (re)set your PYTHONPATH and PATH):
+
+`python setup.py install prefix==/my/user/directory`
 
 ### Additional tools
 
@@ -42,7 +58,6 @@ __Check your masking info:__
 
 `blastdbcmd -db genome_masked -info`
 
-
 ```
 Database: /tmp/genome_masked.fasta
     28 sequences; 50,819,261 total bases
@@ -57,7 +72,6 @@ Algorithm ID  Algorithm name      Algorithm options
 Volumes:
     /tmp/genome_masked
 ```
-
 ### Perfom blast analysis
 
 __Blast in XML format:__
