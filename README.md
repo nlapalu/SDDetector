@@ -88,7 +88,7 @@ __Detection from xml format:__
 
 `segmental_duplication_detector.py blast.xml xml sdd_0.9_3000_5000.gff3 :memory: -g 3000 -l 5000 -a`
 
-__Detection from tab-delimited format:__:
+__Detection from tab-delimited format:__
 
 `segmental_duplication_detector.py blast.tab tab sdd_0.9_3000_5000.gff3 :memory: -g 3000 -l 5000 -a`
 
