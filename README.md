@@ -1,7 +1,9 @@
-# SDDetector
-Segmental Duplication Detection tool
+# SDDetector: a segmental duplication detection tool
 
-## Author
+SDDetector has been developed to detect segmental duplications in complete genome. The principle is based on the bioinfortmatic protocol proposed by *Kahja et al.*. Segmental duplications are defined as regions having a sequence similarity greater than 90% and a length greater than 5000 nt. Regions could be fragmented du to inversion/insertion/deletion events, so a maximium gap of 3000 nt is allowed between fragments. To fit with your genome specificity, SDDetector allows parameters modification to increase/reduce the sequene similarity threshold, the minimal length of the regions and the maximal gap size.
+For an efficient detection, transposable and repetitive elements must be masked before sequence similarity search. If you do not provide a repetitive element annotation, results will contain a lot of false-positive regions. We recommend to perform a TE detection with the REPET package(*Flutre et al.*) or at least a minimal masking step with RepetMasker().
+
+SSDetector is developed by Nicolas Lapalu at INRA - BIOGER. Please do not hesitate to contact me (nlapalu at versailles dot inra dot fr) if you have any comments or questions.
 
 ## Install
 
@@ -12,11 +14,12 @@ prerequesite:
 * Python 2.7.X
 * BioPython, only if you want to parse Blast results from xml format
 
+
+
 ### Additional tools
 
 * bedtools
 * ncbiblast+
-
 
 ## Example
 
@@ -32,6 +35,7 @@ __Convert the genome fasta file in a soft-masked fasta file (upper cases to lowe
 __Index your genome with masking information__
 
 `convert2blastmask -in genome_masked.fasta -parse_seqids -masking_algorithm REPET -masking_options "REPET, URGI" -outfmt maskinfo_asn1_bin -out genome_masked.asnb`
+
 `makeblastdb -dbtype nucl -in genome_masked.fasta -out genome_masked -parse_seqids -mask_data genome_masked.asnb`
 
 __Check your masking info:__
@@ -56,20 +60,32 @@ Volumes:
 
 ### Perfom blast analysis
 
-__Blast in XML format__
+__Blast in XML format:__
 
-`blastn -num_threads 2 -task megablast -db seq -query seq.fasta -out blast.xml -outfmt 5 -db_soft_mask 100`
+`blastn -num_threads 2 -task megablast -db genome_masked -query genome.fasta -out blast.xml -outfmt 5 -db_soft_mask 100`
 
-__Blast in tab-delimited format with required fields__
+__Blast in tab-delimited format with required fields:__
 
-`blastn -num_threads 2 -task megablast -db seq -query seq.fasta -out blast.tab -outfmt "6 qseqid sseqid qstart qend sstart send length nident" -db_soft_mask 100`
+`blastn -num_threads 2 -task megablast -db genome_masked -query genome.fasta -out blast.tab -outfmt "6 qseqid sseqid qstart qend sstart send length nident" -db_soft_mask 100`
 
 ### Detect Segmental Duplications
+
+__Detection from xml format:__
+
+`segmental_duplication_detector.py blast.xml xml sdd_0.9_3000_5000.gff3 :memory: -g 3000 -l 5000 -a`
+
+__Detection from tab-delimited format:__:
+
+`segmental_duplication_detector.py blast.tab tab sdd_0.9_3000_5000.gff3 :memory: -g 3000 -l 5000 -a`
 
 ## How to cite
 
 If you use SDDetector, please cite:
 
+**__SDDetector, Lapalu.N, https://github.com/nlapalu/SDDetector__**
+
 ## References
 
-
+* Flutre T, Duprat E, Feuillet C, Quesneville H. Considering transposable element diversification in de novo annotation approaches. PLoS One. 2011 Jan 31;6(1):e16526. doi: 10.1371/journal.pone.0016526. 
+* Khaja R, MacDonald JR, Zhang J, Scherer SW. Methods for identifying and mapping recent segmental and gene duplications in eukaryotic genomes. Methods Mol Biol. 2006;338:9-20.
+* Smit, AFA, Hubley, R & Green, P. RepeatMasker Open-4.0. 2013-2015 <http://www.repeatmasker.org>. 
