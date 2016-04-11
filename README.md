@@ -39,8 +39,8 @@ or user install (you will have to (re)set your PYTHONPATH and PATH):
 
 ## Example
 
-genome.fasta is your genome in multi-fasta file
-genome_TE.gff is the Transposable, Repeat elements annotation file in gff3  
+* genome.fasta is your genome in multi-fasta file
+* genome_TE.gff is the Transposable, Repeat elements annotation file in gff3  
 
 ### Build a masked blast database
 
