@@ -1,0 +1,4 @@
+# command to obtain data
+makeblastdb -dbtype nucl -in seq.fasta -out seq -parse_seqids
+blastn -num_threads 7 -task megablast -db seq -query seq.fasta -out blast.xml -outfmt 5
+blastn -num_threads 7 -task megablast -db seq -query seq.fasta -out blast.tab -outfmt "6 qseqid sseqid qstart qend sstart send length nident"

@@ -25,6 +25,11 @@ class Alignment(object):
       
         return (self.query,self.sbjct,self.qstart,self.qend,self.sstart,self.send,self.length,self.identities,self.qstrand,self.sstrand, self.id) == (other.query,other.sbjct,other.qstart,other.qend,other.sstart,other.send,other.length,other.identities,other.qstrand,other.sstrand, other.id)
 
+    def __repr__(self):
+        """representation"""
+
+        return ('{}-{}-{}-{}-{}-{}-{}-{}-{}-{}-{}'.format(self.query,self.sbjct,self.qstart,self.qend,self.sstart,self.send,self.length,self.identities,self.qstrand,self.sstrand, self.id))
+
     def convertToGff3(self):
         """Write alignment in gff3 format"""
 

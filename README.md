@@ -1,9 +1,9 @@
 # SDDetector: a segmental duplication detection tool
 
-SDDetector has been developed to detect segmental duplications in complete genome. The principle is based on the bioinfortmatic protocol proposed by *Kahja et al.*. Segmental duplications are defined as regions having a sequence similarity greater than 90% and a length greater than 5000 nt. Regions could be fragmented du to inversion/insertion/deletion events, so a maximium gap of 3000 nt is allowed between fragments. To fit with your genome specificity, SDDetector allows parameters modification to increase/reduce the sequene similarity threshold, the minimal length of the regions and the maximal gap size.
-For an efficient detection, transposable and repetitive elements must be masked before sequence similarity search. If you do not provide a repetitive element annotation, results will contain a lot of false-positive regions. We recommend to perform a TE detection with the REPET package(*Flutre et al.*) or at least a minimal masking step with RepetMasker().
+SDDetector has been developed to detect segmental duplications in complete genomes. The principle is based on the bioinformatic protocol proposed by *Kahja et al.* Segmental duplications are defined as regions having a sequence similarity greater than 90% and a length greater than 5000 nt. Regions could be fragmented due to inversion/insertion/deletion events, so a maximium gap of 3000 nt is allowed between fragments. Then, fragments are chained together and the chains with required criteria are reported as portential duplication regions. To fit with your genome specificity, SDDetector allows parameters modification to increase/reduce the sequence similarity threshold, the minimal length of the regions and the maximal gap size.
+For an efficient detection, transposable and repetitive elements must be masked before sequence similarity search. If you do not provide a repetitive element annotation, results will contain a lot of false-positive regions. We recommend to perform a TE detection with the REPET package(*Flutre et al.*) or at least a minimal masking step with RepetMasker(*Smit et al.*).
 
-SSDetector is developed by Nicolas Lapalu at INRA - BIOGER. Please do not hesitate to contact me (nlapalu at versailles dot inra dot fr) if you have any comments or questions.
+SSDetector is developed by Nicolas Lapalu at [INRA-BIOGER](http://www.versailles-grignon.inra.fr/bioger). Please do not hesitate to contact me (nlapalu at versailles dot inra dot fr) if you have any comments or questions.
 
 ## Install
 
@@ -82,7 +82,7 @@ __Detection from tab-delimited format:__:
 
 If you use SDDetector, please cite:
 
-**__SDDetector, Lapalu.N, https://github.com/nlapalu/SDDetector__**
+*__SDDetector, Lapalu.N, https://github.com/nlapalu/SDDetector__*
 
 ## References
 

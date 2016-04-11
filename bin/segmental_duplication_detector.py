@@ -76,8 +76,7 @@ class Detector(object):
         if self.inputFormat == 'xml':
             self.inputFile= args.inputFile
         elif self.inputFormat == 'tab':
-            raise Exception('tab format not yet implemented')
-            exit(1)
+            self.inputFile == 'tab'
         else:
             raise Exception('untractable blast format')
             exit(1)
@@ -141,8 +140,7 @@ class Detector(object):
         if self.inputFormat == 'xml':
             self.parser = BlastXMLParser(self.inputFile)
         elif self.inputFormat == 'tab':
-            raise Exception('tab format parser not yet implemented')
-            exit(1)
+            self.parser = BlastTabParser(self.inputFile)
         else:
             raise Exception('untractable blast format')
             exit(1)
