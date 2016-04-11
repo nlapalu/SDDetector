@@ -7,7 +7,13 @@ import os
 
 from SDDetector.Db.AlignDB import AlignDB
 from SDDetector.Utils.AlignmentChainer import AlignmentChainer
-from SDDetector.Parser.Blast.BlastXMLParser import BlastXMLParser
+from SDDetector.Parser.Blast.BlastTabParser import BlastTabParser
+
+try:
+    from SDDetector.Parser.Blast.BlastXMLParser import BlastXMLParser
+    Biopython_available = True
+except ImportError:
+    Biopython_available = False 
 
 
 class Detector(object):
@@ -73,14 +79,14 @@ class Detector(object):
         logging.getLogger().setLevel(self.logLevel)
 
         self.inputFormat = args.inputFormat.lower()
-        if self.inputFormat == 'xml':
-            self.inputFile= args.inputFile
-        elif self.inputFormat == 'tab':
-            self.inputFile == 'tab'
-        else:
+        if self.inputFormat == 'xml' and Biopython_available == False :
+            raise Exception('BioPython is not installed, xml parsing not available. \
+                             Please choose tab format, or install BioPython')
+        if self.inputFormat not in ['xml','tab']:
             raise Exception('untractable blast format')
             exit(1)
         
+        self.inputFile= args.inputFile
         self.outputFile = args.outputFile 
 
         self.dbFile = args.db
@@ -137,8 +143,11 @@ class Detector(object):
     def parseAlignments(self):
         """Parse Alignments"""
 
-        if self.inputFormat == 'xml':
+        if self.inputFormat == 'xml' and Biopython_available == True:
             self.parser = BlastXMLParser(self.inputFile)
+        elif self.inputFormat == 'xml' and Biopython_available == False:
+            raise Exception('BioPython is not installed, xml parsing not available. \
+                             Please choose tab format, or install BioPython')
         elif self.inputFormat == 'tab':
             self.parser = BlastTabParser(self.inputFile)
         else:
