@@ -4,6 +4,7 @@ import sqlite3
 import unittest
 
 from SDDetector.Entities.Alignment import Alignment
+from SDDetector.Entities.Region import Region
 from SDDetector.Parser.Blast.BlastXMLParser import BlastXMLParser
 
 class TestBlastXMLParser(unittest.TestCase):
@@ -29,6 +30,21 @@ class TestBlastXMLParser(unittest.TestCase):
 
         self.assertEqual(iBlastXMLParser.getAllAlignments()[4],lAlignments[4])
 
+    def test_getAlignmentsFromTupleOfRegions(self):
+        """Test getAlignmentsFromTupleOfRegions method"""
+
+        iBlastXMLParser = BlastXMLParser("test-data/blast.xml")
+        lRegions = [(Region('seq1',1,167,1),Region('seq1',1,167,1)),
+                    (Region('seq1',1,164,-1),Region('seq2',237,400,1)),
+                    (Region('seq2',288,351,-1),Region('seq2',54,118,1))]
+        lAlignments = [('ATGATGCTCGTAGAGAGCGCTCGCCGTAGAGGATAGTGCGGCTCGATGATGAAGTCGCTGTTTTGGCTGTAGGATAGCGGTGGTCTCGATTAGCCTAGAGGATAATTATAGCTCGTCAAAATTTTATATGTCGCCTAGATAGTCTCCGATTAGATCGGCTAGGATCG','ATGATGCTCGTAGAGAGCGCTCGCCGTAGAGGATAGTGCGGCTCGATGATGAAGTCGCTGTTTTGGCTGTAGGATAGCGGTGGTCTCGATTAGCCTAGAGGATAATTATAGCTCGTCAAAATTTTATATGTCGCCTAGATAGTCTCCGATTAGATCGGCTAGGATCG'),
+                       ('TCCTAGCCGATCTAATCGGAGACTATCTAGGCGACATATAAAATTTTGACGAGCTATAATTATCCTCTAGGCTAATCGAGACCACCGCTATCCTACAGCCAAAACAGCGACTTCATCATCGAGCCGCACTATCCTCTACGGCGAGCGCTCTCTACGAGCATCAT','TCCTAGCCGATCTAATCGGAGACTATCTAGGCGACATATAAAATTTTGACGAGCTATAATTATCCTCTAGGCTAATCGAGACCACCGCTATCCTACAGCCAAAACAGCGACTTCATCATCGAGCCGCACTATCCTCTACGGCGAGCGCTCTCTACGAGCATCAT'),
+                       ('TGA-AGTCGCT-GTTTTGGCTGTAGGATAGCGGTGGTCTCGATTAGCCTAGAGGATAATTATAGCT','TGATAGT-GCTGGTTTTGGCTGTAGGATAGCGGTGGTCTCGATTAGCCTAGAGGATAATTATAGCT')]
+
+        self.assertEqual(iBlastXMLParser.getAlignmentsFromTupleOfRegions(lRegions),lAlignments)
+
+
+ 
 
 if __name__ == "__main__":
     suite = unittest.TestLoader().loadTestsFromTestCase(TestBlastXMLParser)

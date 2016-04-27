@@ -67,7 +67,7 @@ class Chain(object):
                 strand = '-'
 
             if format == 'gff3':
-                lines.append('{}\tSegDupAna\tmatch_part\t{}\t{}\t.\t{}\t.\tID=match{};Target={} {} {};length={};identities={};identity_percentage={:.2f}\n'.format(algmt.sbjct,algmt.sstart,algmt.send,strand,algmt.id,algmt.query,algmt.qstart,algmt.qend,algmt.length,algmt.identities,(algmt.identities/float(algmt.length))))
+                lines.append('{}\tSegDupAna\tmatch_part\t{}\t{}\t.\t{}\t.\tID=match{};Parent={};Target={} {} {};length={};identities={};identity_percentage={:.2f}\n'.format(algmt.sbjct,algmt.sstart,algmt.send,strand,algmt.id,id,algmt.query,algmt.qstart,algmt.qend,algmt.length,algmt.identities,(algmt.identities/float(algmt.length))))
             if format == 'bed':
                 lines.append('{}\t'.format(algmt.sbjct))
         if format == 'gff3':
