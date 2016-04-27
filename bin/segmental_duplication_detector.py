@@ -105,7 +105,7 @@ class Detector(object):
         self.exportBed=args.bed
 
     def runSDDetection(self):
-        """run segmental detection detection"""
+        """run segmental duplication detection"""
 
         self.db = AlignDB(dbfile=self.dbFile)
 
