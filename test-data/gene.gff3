@@ -1,0 +1,97 @@
+##gff-version 3
+Chr1	SDDetector	gene	23988	24919	.	-	.	ID=G00001;Name=G00001
+Chr1	SDDetector	mRNA	23988	24919	.	-	.	ID=G00001.1;Name=C6 zinc finger protein mRNA;Parent=G00001;product=C6 zinc finger protein
+Chr1	SDDetector	exon	23988	24083	.	-	.	ID=G00001_exon_1;Name=G00001_exon_1;Parent=G00001.1;gene_id=G00001;product=C6 zinc finger protein
+Chr1	SDDetector	exon	24274	24427	.	-	.	ID=G00001_exon_2;Name=G00001_exon_2;Parent=G00001.1;gene_id=G00001;product=C6 zinc finger protein
+Chr1	SDDetector	exon	24489	24919	.	-	.	ID=G00001_exon_3;Name=G00001_exon_3;Parent=G00001.1;gene_id=G00001;product=C6 zinc finger protein
+Chr1	SDDetector	CDS	23988	24083	.	-	0	ID=G00001.1_cds_1;Name=C6 zinc finger protein CDS;Parent=G00001.1;gene_id=G00001;product=C6 zinc finger protein
+Chr1	SDDetector	CDS	24274	24427	.	-	1	ID=G00001.1_cds_1;Name=C6 zinc finger protein CDS;Parent=G00001.1;gene_id=G00001;product=C6 zinc finger protein
+Chr1	SDDetector	CDS	24489	24919	.	-	0	ID=G00001.1_cds_1;Name=C6 zinc finger protein CDS;Parent=G00001.1;gene_id=G00001;product=C6 zinc finger protein
+Chr1	SDDetector	gene	26447	29173	.	+	.	ID=G00002;Name=G00002
+Chr1	SDDetector	mRNA	26447	29173	.	+	.	ID=G00002.1;Name=Beta-glucosidase mRNA;Parent=G00002;product=Beta-glucosidase
+Chr1	SDDetector	exon	26447	26543	.	+	.	ID=G00002_exon_1;Name=G00002_exon_1;Parent=G00002.1;gene_id=G00002;product=Beta-glucosidase
+Chr1	SDDetector	exon	26610	27216	.	+	.	ID=G00002_exon_2;Name=G00002_exon_2;Parent=G00002.1;gene_id=G00002;product=Beta-glucosidase
+Chr1	SDDetector	exon	27285	27600	.	+	.	ID=G00002_exon_3;Name=G00002_exon_3;Parent=G00002.1;gene_id=G00002;product=Beta-glucosidase
+Chr1	SDDetector	exon	27659	29173	.	+	.	ID=G00002_exon_4;Name=G00002_exon_4;Parent=G00002.1;gene_id=G00002;product=Beta-glucosidase
+Chr1	SDDetector	CDS	26447	26543	.	+	0	ID=G00002.1_cds_1;Name=Beta-glucosidase CDS;Parent=G00002.1;gene_id=G00002;product=Beta-glucosidase
+Chr1	SDDetector	CDS	26610	27216	.	+	2	ID=G00002.1_cds_1;Name=Beta-glucosidase CDS;Parent=G00002.1;gene_id=G00002;product=Beta-glucosidase
+Chr1	SDDetector	CDS	27285	27600	.	+	1	ID=G00002.1_cds_1;Name=Beta-glucosidase CDS;Parent=G00002.1;gene_id=G00002;product=Beta-glucosidase
+Chr1	SDDetector	CDS	27659	29173	.	+	0	ID=G00002.1_cds_1;Name=Beta-glucosidase CDS;Parent=G00002.1;gene_id=G00002;product=Beta-glucosidase
+Chr1	SDDetector	gene	29646	32499	.	+	.	ID=G00003;Name=G00003
+Chr1	SDDetector	mRNA	29646	32499	.	+	.	ID=G00003.1;Name=Alpha-l-rhamnosidase mRNA;Parent=G00003;product=Alpha-l-rhamnosidase
+Chr1	SDDetector	exon	29646	31868	.	+	.	ID=G00003_exon_1;Name=G00003_exon_1;Parent=G00003.1;gene_id=G00003;product=Alpha-l-rhamnosidase
+Chr1	SDDetector	exon	32293	32499	.	+	.	ID=G00003_exon_2;Name=G00003_exon_2;Parent=G00003.1;gene_id=G00003;product=Alpha-l-rhamnosidase
+Chr1	SDDetector	CDS	29646	31868	.	+	0	ID=G00003.1_cds_1;Name=Alpha-l-rhamnosidase CDS;Parent=G00003.1;gene_id=G00003;product=Alpha-l-rhamnosidase
+Chr1	SDDetector	CDS	32293	32499	.	+	0	ID=G00003.1_cds_1;Name=Alpha-l-rhamnosidase CDS;Parent=G00003.1;gene_id=G00003;product=Alpha-l-rhamnosidase
+Chr1	SDDetector	gene	34904	36526	.	+	.	ID=G00004;Name=G00004
+Chr1	SDDetector	mRNA	34904	36526	.	+	.	ID=G00004.1;Name=Lactose permease mRNA;Parent=G00004;product=Lactose permease
+Chr1	SDDetector	exon	34904	35049	.	+	.	ID=G00004_exon_1;Name=G00004_exon_1;Parent=G00004.1;gene_id=G00004;product=Lactose permease
+Chr1	SDDetector	exon	35110	36526	.	+	.	ID=G00004_exon_2;Name=G00004_exon_2;Parent=G00004.1;gene_id=G00004;product=Lactose permease
+Chr1	SDDetector	CDS	34904	35049	.	+	0	ID=G00004.1_cds_1;Name=Lactose permease CDS;Parent=G00004.1;gene_id=G00004;product=Lactose permease
+Chr1	SDDetector	CDS	35110	36526	.	+	1	ID=G00004.1_cds_1;Name=Lactose permease CDS;Parent=G00004.1;gene_id=G00004;product=Lactose permease
+Chr1	SDDetector	gene	37257	38159	.	-	.	ID=G00005;Name=G00005
+Chr1	SDDetector	mRNA	37257	38159	.	-	.	ID=G00005.1;Name=Low-density lipoprotein receptor YWTD mRNA;Parent=G00005;product=Low-density lipoprotein receptor YWTD
+Chr1	SDDetector	exon	37257	38159	.	-	.	ID=G00005_exon_1;Name=G00005_exon_1;Parent=G00005.1;gene_id=G00005;product=Low-density lipoprotein receptor YWTD
+Chr1	SDDetector	CDS	37257	38159	.	-	0	ID=G00005.1_cds_1;Name=Low-density lipoprotein receptor YWTD CDS;Parent=G00005.1;gene_id=G00005;product=Low-density lipoprotein receptor YWTD
+Chr1	SDDetector	gene	38897	39862	.	-	.	ID=G00006;Name=G00006
+Chr1	SDDetector	mRNA	38897	39862	.	-	.	ID=G00006.1;Name=3-hydroxyacyl-CoA dehydrogenase mRNA;Parent=G00006;product=3-hydroxyacyl-CoA dehydrogenase
+Chr1	SDDetector	exon	38897	39862	.	-	.	ID=G00006_exon_1;Name=G00006_exon_1;Parent=G00006.1;gene_id=G00006;product=3-hydroxyacyl-CoA dehydrogenase
+Chr1	SDDetector	CDS	38897	39862	.	-	0	ID=G00006.1_cds_1;Name=3-hydroxyacyl-CoA dehydrogenase CDS;Parent=G00006.1;gene_id=G00006;product=3-hydroxyacyl-CoA dehydrogenase
+Chr1	SDDetector	gene	40985	42715	.	+	.	ID=G00007;Name=G00007
+Chr1	SDDetector	mRNA	40985	42715	.	+	.	ID=G00007.1;Name=Alpha methylacyl-CoA racemase%2C putative mRNA;Parent=G00007;product=Alpha methylacyl-CoA racemase%2C putative
+Chr1	SDDetector	exon	40985	42715	.	+	.	ID=G00007_exon_1;Name=G00007_exon_1;Parent=G00007.1;gene_id=G00007;product=Alpha methylacyl-CoA racemase%2C putative
+Chr1	SDDetector	CDS	40985	42715	.	+	0	ID=G00007.1_cds_1;Name=Alpha methylacyl-CoA racemase%2C putative CDS;Parent=G00007.1;gene_id=G00007;product=Alpha methylacyl-CoA racemase%2C putative
+Chr1	SDDetector	gene	44175	46631	.	+	.	ID=G00008;Name=G00008
+Chr1	SDDetector	mRNA	44175	46631	.	+	.	ID=G00008.1;Name=Ank-repeat protein mbp1 mRNA;Parent=G00008;product=Ank-repeat protein mbp1
+Chr1	SDDetector	exon	44175	46214	.	+	.	ID=G00008_exon_1;Name=G00008_exon_1;Parent=G00008.1;gene_id=G00008;product=Ank-repeat protein mbp1
+Chr1	SDDetector	exon	46296	46631	.	+	.	ID=G00008_exon_2;Name=G00008_exon_2;Parent=G00008.1;gene_id=G00008;product=Ank-repeat protein mbp1
+Chr1	SDDetector	CDS	44175	46214	.	+	0	ID=G00008.1_cds_1;Name=Ank-repeat protein mbp1 CDS;Parent=G00008.1;gene_id=G00008;product=Ank-repeat protein mbp1
+Chr1	SDDetector	CDS	46296	46631	.	+	0	ID=G00008.1_cds_1;Name=Ank-repeat protein mbp1 CDS;Parent=G00008.1;gene_id=G00008;product=Ank-repeat protein mbp1
+Chr1	SDDetector	gene	46843	48256	.	-	.	ID=G00009;Name=G00009
+Chr1	SDDetector	mRNA	46843	48256	.	-	.	ID=G00009.1;Name=C6 zinc finger protein mRNA;Parent=G00009;product=C6 zinc finger protein
+Chr1	SDDetector	exon	46843	47497	.	-	.	ID=G00009_exon_1;Name=G00009_exon_1;Parent=G00009.1;gene_id=G00009;product=C6 zinc finger protein
+Chr1	SDDetector	exon	47553	47686	.	-	.	ID=G00009_exon_2;Name=G00009_exon_2;Parent=G00009.1;gene_id=G00009;product=C6 zinc finger protein
+Chr1	SDDetector	exon	47705	48256	.	-	.	ID=G00009_exon_3;Name=G00009_exon_3;Parent=G00009.1;gene_id=G00009;product=C6 zinc finger protein
+Chr1	SDDetector	CDS	46843	47497	.	-	1	ID=G00009.1_cds_1;Name=C6 zinc finger protein CDS;Parent=G00009.1;gene_id=G00009;product=C6 zinc finger protein
+Chr1	SDDetector	CDS	47553	47686	.	-	0	ID=G00009.1_cds_1;Name=C6 zinc finger protein CDS;Parent=G00009.1;gene_id=G00009;product=C6 zinc finger protein
+Chr1	SDDetector	CDS	47705	48256	.	-	0	ID=G00009.1_cds_1;Name=C6 zinc finger protein CDS;Parent=G00009.1;gene_id=G00009;product=C6 zinc finger protein
+Chr1	SDDetector	gene	49227	50330	.	-	.	ID=G00010;Name=G00010
+Chr1	SDDetector	mRNA	49227	50330	.	-	.	ID=G00010.1;Name=Phytanoyl-CoA dioxygenase mRNA;Parent=G00010;product=Phytanoyl-CoA dioxygenase
+Chr1	SDDetector	exon	49227	49578	.	-	.	ID=G00010_exon_1;Name=G00010_exon_1;Parent=G00010.1;gene_id=G00010;product=Phytanoyl-CoA dioxygenase
+Chr1	SDDetector	exon	49667	50042	.	-	.	ID=G00010_exon_2;Name=G00010_exon_2;Parent=G00010.1;gene_id=G00010;product=Phytanoyl-CoA dioxygenase
+Chr1	SDDetector	exon	50126	50330	.	-	.	ID=G00010_exon_3;Name=G00010_exon_3;Parent=G00010.1;gene_id=G00010;product=Phytanoyl-CoA dioxygenase
+Chr1	SDDetector	CDS	49227	49578	.	-	1	ID=G00010.1_cds_1;Name=Phytanoyl-CoA dioxygenase CDS;Parent=G00010.1;gene_id=G00010;product=Phytanoyl-CoA dioxygenase
+Chr1	SDDetector	CDS	49667	50042	.	-	2	ID=G00010.1_cds_1;Name=Phytanoyl-CoA dioxygenase CDS;Parent=G00010.1;gene_id=G00010;product=Phytanoyl-CoA dioxygenase
+Chr1	SDDetector	CDS	50126	50330	.	-	0	ID=G00010.1_cds_1;Name=Phytanoyl-CoA dioxygenase CDS;Parent=G00010.1;gene_id=G00010;product=Phytanoyl-CoA dioxygenase
+Chr1	SDDetector	gene	52671	54951	.	+	.	ID=G00011;Name=G00011
+Chr1	SDDetector	mRNA	52671	54951	.	+	.	ID=G00011.1;Name=ATP-dependent rRNA helicase RRP3;Parent=G00011;product=ATP-dependent rRNA helicase RRP3
+Chr1	SDDetector	exon	52671	52841	.	+	.	ID=G00011_exon_1;Name=G00011_exon_1;Parent=G00011.1;gene_id=G00011;product=ATP-dependent rRNA helicase RRP3
+Chr1	SDDetector	exon	52901	53322	.	+	.	ID=G00011_exon_2;Name=G00011_exon_2;Parent=G00011.1;gene_id=G00011;product=ATP-dependent rRNA helicase RRP3
+Chr1	SDDetector	exon	53512	53554	.	+	.	ID=G00011_exon_3;Name=G00011_exon_3;Parent=G00011.1;gene_id=G00011;product=ATP-dependent rRNA helicase RRP3
+Chr1	SDDetector	exon	53767	54334	.	+	.	ID=G00011_exon_4;Name=G00011_exon_4;Parent=G00011.1;gene_id=G00011;product=ATP-dependent rRNA helicase RRP3
+Chr1	SDDetector	exon	54419	54483	.	+	.	ID=G00011_exon_5;Name=G00011_exon_5;Parent=G00011.1;gene_id=G00011;product=ATP-dependent rRNA helicase RRP3
+Chr1	SDDetector	exon	54619	54951	.	+	.	ID=G00011_exon_6;Name=G00011_exon_6;Parent=G00011.1;gene_id=G00011;product=ATP-dependent rRNA helicase RRP3
+Chr1	SDDetector	CDS	52671	52841	.	+	0	ID=G00011.1_cds_1;Name=ATP-dependent rRNA helicase RRP3 CDS;Parent=G00011.1;gene_id=G00011;product=ATP-dependent rRNA helicase RRP3
+Chr1	SDDetector	CDS	52901	53322	.	+	0	ID=G00011.1_cds_1;Name=ATP-dependent rRNA helicase RRP3 CDS;Parent=G00011.1;gene_id=G00011;product=ATP-dependent rRNA helicase RRP3
+Chr1	SDDetector	CDS	53512	53554	.	+	1	ID=G00011.1_cds_1;Name=ATP-dependent rRNA helicase RRP3 CDS;Parent=G00011.1;gene_id=G00011;product=ATP-dependent rRNA helicase RRP3
+Chr1	SDDetector	CDS	53767	54334	.	+	0	ID=G00011.1_cds_1;Name=ATP-dependent rRNA helicase RRP3 CDS;Parent=G00011.1;gene_id=G00011;product=ATP-dependent rRNA helicase RRP3
+Chr1	SDDetector	CDS	54419	54483	.	+	2	ID=G00011.1_cds_1;Name=ATP-dependent rRNA helicase RRP3 CDS;Parent=G00011.1;gene_id=G00011;product=ATP-dependent rRNA helicase RRP3
+Chr1	SDDetector	CDS	54619	54951	.	+	0	ID=G00011.1_cds_1;Name=ATP-dependent rRNA helicase RRP3 CDS;Parent=G00011.1;gene_id=G00011;product=ATP-dependent rRNA helicase RRP3
+Chr1	SDDetector	gene	55539	58096	.	-	.	ID=G00012;Name=G00012
+Chr1	SDDetector	mRNA	55539	58096	.	-	.	ID=G00012.1;Name=Kinesin-like protein mRNA;Parent=G00012;product=Kinesin-like protein
+Chr1	SDDetector	exon	55539	56540	.	-	.	ID=G00012_exon_1;Name=G00012_exon_1;Parent=G00012.1;gene_id=G00012;product=Kinesin-like protein
+Chr1	SDDetector	exon	56598	57695	.	-	.	ID=G00012_exon_2;Name=G00012_exon_2;Parent=G00012.1;gene_id=G00012;product=Kinesin-like protein
+Chr1	SDDetector	exon	57755	58096	.	-	.	ID=G00012_exon_3;Name=G00012_exon_3;Parent=G00012.1;gene_id=G00012;product=Kinesin-like protein
+Chr1	SDDetector	CDS	55539	56540	.	-	0	ID=G00012.1_cds_1;Name=Kinesin-like protein CDS;Parent=G00012.1;gene_id=G00012;product=Kinesin-like protein
+Chr1	SDDetector	CDS	56598	57695	.	-	0	ID=G00012.1_cds_1;Name=Kinesin-like protein CDS;Parent=G00012.1;gene_id=G00012;product=Kinesin-like protein
+Chr1	SDDetector	CDS	57755	58096	.	-	0	ID=G00012.1_cds_1;Name=Kinesin-like protein CDS;Parent=G00012.1;gene_id=G00012;product=Kinesin-like protein
+Chr1	SDDetector	gene	61221	63006	.	+	.	ID=G00013;Name=G00013
+Chr1	SDDetector	mRNA	61221	63006	.	+	.	ID=G00013.1;Name=hypothetical protein mRNA;Parent=G00013;product=hypothetical protein
+Chr1	SDDetector	exon	61221	61989	.	+	.	ID=G00013_exon_1;Name=G00013_exon_1;Parent=G00013.1;gene_id=G00013;product=hypothetical protein
+Chr1	SDDetector	exon	62051	63006	.	+	.	ID=G00013_exon_2;Name=G00013_exon_2;Parent=G00013.1;gene_id=G00013;product=hypothetical protein
+Chr1	SDDetector	CDS	61221	61989	.	+	0	ID=G00013.1_cds_1;Name=hypothetical protein CDS;Parent=G00013.1;gene_id=G00013;product=hypothetical protein
+Chr1	SDDetector	CDS	62051	63006	.	+	2	ID=G00013.1_cds_1;Name=hypothetical protein CDS;Parent=G00013.1;gene_id=G00013;product=hypothetical protein
+Chr1	SDDetector	gene	63675	63914	.	-	.	ID=G00014;Name=G00014
+Chr1	SDDetector	mRNA	63675	63914	.	-	.	ID=G00014.1;Name=Antigenic cell wall mRNA;Parent=G00014;product=Antigenic cell wall
+Chr1	SDDetector	exon	63675	63914	.	-	.	ID=G00014_exon_1;Name=G00014_exon_1;Parent=G00014.1;gene_id=G00014;product=Antigenic cell wall
+Chr1	SDDetector	CDS	63675	63914	.	-	0	ID=G00014.1_cds_1;Name=Antigenic cell wall CDS;Parent=G00014.1;gene_id=G00014;product=Antigenic cell wall
