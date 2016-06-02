@@ -70,7 +70,7 @@ class GffDuplicationParser(object):
         duplication = self._buildDuplication(seq1Dup,lRegions)
         lDuplications.append(duplication)
 
-        input.closed
+        input.close()
         return lDuplications
 
     def _buildDuplication(self,seq1Dup,lRegions):
