@@ -3,6 +3,8 @@
 import argparse
 import logging
 
+from SDDetector.Entities.Region import Region
+
 from SDDetector.Parser.Gff.GffDuplicationParser import GffDuplicationParser
 from SDDetector.Parser.Gff.GffGeneParser import GffGeneParser
 from SDDetector.Parser.Blast.BlastXMLParser import BlastXMLParser
@@ -89,14 +91,23 @@ class GeneAnalyzer(object):
         self.db.insertlGenes(iGffGeneParser.getAllGenes())
         
         #lGenesInDuplications = iGffGeneParser.getGenesIncludedInBoundaries(lDuplication)
-
-
-    def extractDuplicationBoundaries(self):
-        """extract duplication boundaries"""
-
-        for dup in self.Duplication:
-            pass
         
+        for dup in self.lDuplications:
+            (lGeneSeq1,lGeneSeq2) = self._extractGeneInDuplication(dup)
+            lLinks = self._buildGeneLinks(dup)
+
+    def _buildGeneLinks(self,dup):
+        """build"""
+
+        pass
+
+    def _extractGeneInDuplication(self,dup):
+        """extract """
+
+        lGeneSeq1 = self.db.getlGenesFromCoordinates(dup.seq1,dup.start1,dup.end1)
+        lGeneSeq2 = self.db.getlGenesFromCoordinates(dup.seq2,dup.start2,dup.end2)
+
+        return (lGeneSeq1,lGeneSeq2)
 
 if __name__ == "__main__":
 
