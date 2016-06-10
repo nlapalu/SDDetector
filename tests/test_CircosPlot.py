@@ -9,9 +9,10 @@ class TestCircosPlot(unittest.TestCase):
 
     def setUp(self):
         GenomeFile = ('test-data/test2.fasta')
-        SDFile = ('test-data/sdd2.gff3')
-        GeneFile = ('test-data/gene.gff3')
-        self.plot = CircosPlot(GenomeFile=GenomeFile,SDFile=SDFile,GeneFile=GeneFile)
+        SDFile = ('test-data/sdd3.gff3')
+        GeneFile = ('test-data/gene2.gff3')
+        TEFile = ('test-data/TE2.gff3')
+        self.plot = CircosPlot(GenomeFile=GenomeFile,SDFile=SDFile,GeneFile=GeneFile,TEFile=TEFile)
 
     def tearDown(self):
         pass
@@ -21,7 +22,8 @@ class TestCircosPlot(unittest.TestCase):
        
         self.plot.writeSeqDataFile() 
         self.plot.writeSegDupDataFile()
-        self.plot.writeGeneDataFile() 
+        self.plot.writeGeneDataFile()
+        self.plot.writeTEDataFile() 
         self.plot.writeCircosConf()
 
     def test_writeSeqDataFile(self):
@@ -42,6 +44,27 @@ class TestCircosPlot(unittest.TestCase):
 
         GeneDataFile = self.plot.writeGeneDataFile() 
         self.assertTrue(filecmp.cmp(GeneDataFile,'test-data/gene.txt'))
+
+    def test_writeGeneLinkDataFile(self):
+        """Test writeGeneLinkDataFile"""
+
+        GeneLinkDataFile = self.plot.writeGeneLinkDataFile()
+        self.assertTrue(filecmp.cmp(GeneLinkDataFile,'test-data/gene-link.txt'))
+
+    def test_writeTEDataFile(self):
+        """Test writeTEDataFile"""
+
+        TEDataFile = self.plot.writeTEDataFile()
+        self.assertTrue(filecmp.cmp(TEDataFile, 'test-data/TE.txt'))
+
+
+    def test_writeSimilarityDataFile(self):
+        """Test writeSimilarityDataFile"""
+
+        #SimilarityDataFile = self.plot.writeSimilarityDataFile()
+        #self.assertTrue(filecmp.cmp(SimilarityDataFile,'test-data/similarity.txt'))
+        pass
+
 
 if __name__ == "__main__":
     suite = unittest.TestLoader().loadTestsFromTestCase(TestCircosPlot)

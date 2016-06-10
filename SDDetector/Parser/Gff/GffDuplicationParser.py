@@ -38,7 +38,7 @@ class GffDuplicationParser(object):
                             lRegions = []
  
                         # new match = new Duplication
-                        m = re.match(r".*ID=(\w+);.*",values[8])
+                        m = re.match(r".*ID=([^;]);{0,1}.*",values[8])
                         if m:
                             currentDupID = m.group(1) 
                             seq1Dup = (values[0],int(values[3]),int(values[4]))
@@ -47,7 +47,7 @@ class GffDuplicationParser(object):
                
                     # new match_part 
                     if values[2] == 'match_part':
-                        m1 = re.match(r".*Parent=(\w+);.*",values[8])
+                        m1 = re.match(r".*Parent=([^;]);{0,1}.*",values[8])
                         if m1:
                             if currentDupID == m1.group(1):
                                 reg1Strand = 1

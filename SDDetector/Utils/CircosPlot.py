@@ -6,16 +6,18 @@ import os
 
 from SDDetector.Parser.Gff.GffDuplicationParser import GffDuplicationParser
 from SDDetector.Parser.Gff.GffGeneParser import GffGeneParser
+from SDDetector.Parser.Gff.GffTEParser import GffTEParser
 from SDDetector.Utils.FastaFileIndexer import FastaFileIndexer
 
 class CircosPlot(object):
 
-    def __init__(self, GenomeFile='',SDFile='', GeneFile='', logLevel='ERROR'):
+    def __init__(self, GenomeFile='',SDFile='', GeneFile='', TEFile='', logLevel='ERROR'):
         """Constuctor"""
 
         self.GenomeFile = GenomeFile
         self.SDFile = SDFile
         self.GeneFile = GeneFile
+        self.TEFile = TEFile
 
     def writeDataFiles(self):
         """Write all data files"""
@@ -91,13 +93,22 @@ class CircosPlot(object):
             f.write('chromosomes_breaks = {}\n'.format(self.getRegionsNotToDraw(unit)))
             f.write('chromosomes_display_default = no\n')
 
-            # segmental duplications
+            # links
             f.write('<links>\n')
             f.write('ribbon = yes\n')
             f.write('flat = yes\n')
+            # segmental duplications
             f.write('<link>\n')
             f.write('file = segdup.txt\n')
             f.write('color = vvlgrey\n')
+            f.write('radius = 0.8r\n')
+            f.write('bezier_radius = 0r\n')
+            f.write('thickness = 2\n')
+            f.write('</link>\n')
+            # genes
+            f.write('<link>\n')
+            f.write('file = gene-link.txt\n')
+            f.write('color = blue\n')
             f.write('radius = 0.8r\n')
             f.write('bezier_radius = 0r\n')
             f.write('thickness = 2\n')
@@ -140,9 +151,23 @@ class CircosPlot(object):
             f.write('</background>\n')
             f.write('</backgrounds>\n')
             f.write('</plot>\n')
-            f.write('</plots>\n') 
 
-            # links - genes
+
+            # genes
+            f.write('<plot>\n')
+            f.write('type = tile\n')
+            f.write('layers_overflow = collapse\n')
+            f.write('file = TE.txt\n')
+            f.write('r1 = 0.83r\n')
+            f.write('r0 = 0.81r\n')
+            f.write('layers = 2\n')
+            f.write('orientation = center\n')
+            f.write('margin      = 0.02u\n')
+            f.write('thickness   = 12\n')
+            f.write('padding     = 1\n')
+            f.write('color = red\n')
+            f.write('</plot>\n')
+            f.write('</plots>\n') 
 
 
         f.close()
@@ -265,10 +290,42 @@ class CircosPlot(object):
                 f.write('{} {} {} {}\n'.format(gene.seqid,gene.start,gene.end,gene.id))
         f.close()
 
-        return genedatafile 
+        return genedatafile
 
+    def writeGeneLinkDataFile(self):
+        """Write gene links data file"""
+ 
+        genelinkdatafile = 'gene-link.txt'
+        #self.lRegionsToDraw = []
+        #parser = GffDuplicationParser(self.SDFile)
+        #lNonRedDuplications = parser.getNonRedondantDuplications()
+        #with open(genelinkdatafile,'w') as f:
+        #    for link in lLinks:
+        #        f.write('{} {} {} {} {} {}\n'.format(link.seq1, link.start1, link.end1, dup.seq2, dup.start2, dup.end2))
+        #        self.lRegionsToDraw.append((dup.seq1,float(dup.start1),float(dup.end1)))
+        #        self.lRegionsToDraw.append((dup.seq2,float(dup.start2),float(dup.end2)))
+        #f.close()
+        
+        return genelinkdatafile 
+
+    def writeSimilarityFile(self):
+        """Write similarity fiel"""
+
+        similaritydatafile = 'similarity.txt'
+        parser = ""
+        lSimilarities = ""
+
+ 
     def writeTEDataFile(self):
         """"Write TEs data file"""
 
-        pass
+        tedatafile = 'TE.txt'
+        parser = GffTEParser(self.TEFile)
+        lTEs = parser.getAllTEs()
+        with open(tedatafile,'w') as f:
+            for TE in lTEs:
+                f.write('{} {} {} {}\n'.format(TE.seqid,TE.start,TE.end,TE.id))
+        f.close()
+
+        return tedatafile
 
