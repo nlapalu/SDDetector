@@ -4,6 +4,7 @@ import argparse
 import logging
 
 from SDDetector.Entities.Region import Region
+from SDDetector.Entities.GeneLink import GeneLink
 
 from SDDetector.Parser.Gff.GffDuplicationParser import GffDuplicationParser
 from SDDetector.Parser.Gff.GffGeneParser import GffGeneParser
@@ -72,8 +73,8 @@ class GeneAnalyzer(object):
                 lRegions.append(region)
         
         iBlastXMLParser = BlastXMLParser(self.BlastXMLFile)
-        #lAlignmentTuples = iBlastXMLParser.getAlignmentsFromTupleOfRegions(lRegions)
-        lAlignmentTuples = []
+        lAlignmentTuples = iBlastXMLParser.getAlignmentsFromTupleOfRegions(lRegions)
+        #lAlignmentTuples = []
 
         index = 0
         for dup in self.lDuplications:
@@ -94,12 +95,23 @@ class GeneAnalyzer(object):
         
         for dup in self.lDuplications:
             (lGeneSeq1,lGeneSeq2) = self._extractGeneInDuplication(dup)
-            lLinks = self._buildGeneLinks(dup)
+            lLinks = self._buildGeneLinks(lGeneSeq1,lGeneSeq2,dup)
 
-    def _buildGeneLinks(self,dup):
+    def _buildGeneLinks(self,lGeneSeq1,lGeneSeq2,dup):
         """build"""
 
-        pass
+        lLinks = []
+        for gene1 in lGeneSeq1:
+            seq2Start = self._getAlgmtCorrespondingBase()
+            seq2End = 
+            for gene2 in lGeneSeq2:
+                if (gene2.start < seq2Start and gene2.end < seq2Start) or (gene2.start > seq2End and gene2.end > seq2End):
+                    next
+                else:
+                   lLinks.append(GeneLink(dup=dup,gene1=gene1,gene2=gene2)) 
+                
+        # todo set : + logging.debug
+      
 
     def _extractGeneInDuplication(self,dup):
         """extract """

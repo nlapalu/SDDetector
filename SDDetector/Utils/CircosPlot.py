@@ -4,20 +4,24 @@ import argparse
 import logging
 import os
 
+from SDDetector.Entities.GeneLink import GeneLink
 from SDDetector.Parser.Gff.GffDuplicationParser import GffDuplicationParser
 from SDDetector.Parser.Gff.GffGeneParser import GffGeneParser
 from SDDetector.Parser.Gff.GffTEParser import GffTEParser
+from SDDetector.Parser.Blast.BlastXMLParser import BlastXMLParser
 from SDDetector.Utils.FastaFileIndexer import FastaFileIndexer
+from SDDetector.Db.GeneDB import GeneDB
 
 class CircosPlot(object):
 
-    def __init__(self, GenomeFile='',SDFile='', GeneFile='', TEFile='', logLevel='ERROR'):
+    def __init__(self, GenomeFile='',SDFile='', GeneFile='', TEFile='', BlastXMLFile='', logLevel='ERROR'):
         """Constuctor"""
 
         self.GenomeFile = GenomeFile
         self.SDFile = SDFile
         self.GeneFile = GeneFile
         self.TEFile = TEFile
+        self.BlastXMLFile = BlastXMLFile
 
     def writeDataFiles(self):
         """Write all data files"""
@@ -192,7 +196,7 @@ class CircosPlot(object):
         lRegionsToDraw = [self.lRegionsToDraw[0]]
         for i in self.lRegionsToDraw[1:]:
            modif = False
-           print i
+           #print i
            for idx,j in enumerate(lRegionsToDraw) :
                if i[0] == j[0]:
                    if (i[1] < j[1] and i[2] < j[1]) or (i[1] > j[2] and i[2] > j[2]):
@@ -219,13 +223,13 @@ class CircosPlot(object):
                        next
            if modif == False: 
                lRegionsToDraw.append(i)
-           print modif
-           print lRegionsToDraw
+           #print modif
+           #print lRegionsToDraw
        
-        print "HAH" 
-        print lRegionsToDraw
-        print "tete"
-        print self.lRegionsToDraw
+        #print "HAH" 
+        #print lRegionsToDraw
+        #print "tete"
+        #print self.lRegionsToDraw
 
 
 
@@ -294,19 +298,96 @@ class CircosPlot(object):
 
     def writeGeneLinkDataFile(self):
         """Write gene links data file"""
+
+        parserDup = GffDuplicationParser(self.SDFile)
+        lDuplications = parserDup.getNonRedondantDuplications()
+        lRegions = []
+        for dup in lDuplications:
+            for region in dup.lRegions:
+                lRegions.append(region)
+ 
+        parserBlast = BlastXMLParser(self.BlastXMLFile)
+        lAlignmentTuples = parserBlast.getAlignmentsFromTupleOfRegions(lRegions)
+        #print lAlignmentTuples
+        #print lRegions
+
+
+        index = 0
+        for dup in lDuplications:
+            lAlgmts = []
+            for region in dup.lRegions:
+#                print region
+#                print index
+#                print lAlignmentTuples[index][0]
+#                print lAlignmentTuples[index][1]
+                lAlgmts.append((lAlignmentTuples[index][0],lAlignmentTuples[index][1]))
+                index += 1
+            dup.lSeqAlgmts = lAlgmts
+            dup.dSeqToSeq = dup.getdSeqToSeq() 
+
+        parserGene = GffGeneParser(self.GeneFile)
+        self.db = GeneDB(dbfile='gene.db')
+        self.db.insertlGenes(parserGene.getAllGenes())
+       
+        lLinks = [] 
+        for dup in lDuplications:
+            (lGeneSeq1,lGeneSeq2) = self._extractGeneInDuplication(dup)
+            lLinks.extend(self._buildGeneLinks(lGeneSeq1,lGeneSeq2,dup))
+
+
  
         genelinkdatafile = 'gene-link.txt'
-        #self.lRegionsToDraw = []
-        #parser = GffDuplicationParser(self.SDFile)
-        #lNonRedDuplications = parser.getNonRedondantDuplications()
-        #with open(genelinkdatafile,'w') as f:
-        #    for link in lLinks:
-        #        f.write('{} {} {} {} {} {}\n'.format(link.seq1, link.start1, link.end1, dup.seq2, dup.start2, dup.end2))
-        #        self.lRegionsToDraw.append((dup.seq1,float(dup.start1),float(dup.end1)))
-        #        self.lRegionsToDraw.append((dup.seq2,float(dup.start2),float(dup.end2)))
-        #f.close()
-        
+        with open(genelinkdatafile,'w') as f:
+            for link in lLinks:
+                f.write('{} {} {} {} {} {}\n'.format(link.gene1.seqid, link.gene1.start, link.gene1.end, link.gene2.seqid, link.gene2.start, link.gene2.end))
+        f.close()
+       
+        ###TODO### Remove from here
+        for link in lLinks:
+            # analyse CDS Share Alignment
+          
+
+            # analyse NON-CDS Share Alignment
+
+
+
+ 
         return genelinkdatafile 
+
+    def _buildGeneLinks(self,lGeneSeq1,lGeneSeq2,dup):
+        """build"""
+
+        lLinks = []
+        for gene1 in lGeneSeq1:
+            print gene1.id
+            (seq2ID,val1) = dup.dSeqToSeq[gene1.seqid][gene1.start]
+            (seq2ID,val2) = dup.dSeqToSeq[gene1.seqid][gene1.end]
+            seq2Start = min(val1,val2)
+            seq2End = max(val1,val2)
+#            print  'start {} end {}'.format(seq2Start,seq2End)
+            for gene2 in lGeneSeq2:
+#                print 'gene2 {} start {} end {}'.format(gene2.seqid, gene2.start, gene2.end)
+                if (gene2.start < seq2Start and gene2.end < seq2Start) or (gene2.start > seq2End and gene2.end > seq2End):
+                    next
+                else:
+                   print 'gene1 -  gene2 : {} {}'.format(gene1.id,gene2.id)
+                   lLinks.append(GeneLink(dup=dup,gene1=gene1,gene2=gene2)) 
+        return lLinks        
+        # todo set : + logging.debug
+      
+
+    def _extractGeneInDuplication(self,dup):
+        """extract """
+
+        lGeneSeq1 = self.db.getlGenesFromCoordinates(dup.seq1,dup.start1,dup.end1)
+        lGeneSeq2 = self.db.getlGenesFromCoordinates(dup.seq2,dup.start2,dup.end2)
+
+        return (lGeneSeq1,lGeneSeq2)
+
+
+
+
+
 
     def writeSimilarityFile(self):
         """Write similarity fiel"""

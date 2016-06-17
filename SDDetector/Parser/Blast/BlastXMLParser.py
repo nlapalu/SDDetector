@@ -55,20 +55,19 @@ class BlastXMLParser(object):
                 lindex.append((reg1.seq,reg1.end,reg1.start,reg2.seq,reg2.start,reg2.end))
             else:
                 lindex.append((reg1.seq,reg1.start,reg1.end,reg2.seq,reg2.start,reg2.end))
-
+        print "INDEX {}".format(lindex)
 
         lRegionAlgmts = [ () for i in range(len(lRegions)) ]
 
         with open(self.inputBlastXMLFile,  'r') as input :
 
             blast_records = NCBIXML.parse(input)
-
             for blast_record in blast_records:
                 logging.debug('QUERY: {}'.format(blast_record.query))
-
                 for alignment in blast_record.alignments:
                     logging.debug('SUBJECT: {}'.format(alignment.hit_id))
                     for hsp in alignment.hsps:
+                        print '{}-{}-{}-{}-{}-{}'.format(alignment.hit_id,hsp.sbjct_start,hsp.sbjct_end,blast_record.query,hsp.query_start,hsp.query_end) 
                         if (alignment.hit_id,hsp.sbjct_start,hsp.sbjct_end,blast_record.query,hsp.query_start,hsp.query_end) in lindex:
                             index = lindex.index((alignment.hit_id,hsp.sbjct_start,hsp.sbjct_end,blast_record.query,hsp.query_start,hsp.query_end))
                             lRegionAlgmts[index] = (hsp.sbjct,hsp.query)
