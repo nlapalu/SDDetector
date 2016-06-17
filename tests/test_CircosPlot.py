@@ -9,10 +9,13 @@ class TestCircosPlot(unittest.TestCase):
 
     def setUp(self):
         GenomeFile = ('test-data/test2.fasta')
+#        SDFile = ('test-data/sdd4.gff3')
         SDFile = ('test-data/sdd3.gff3')
         GeneFile = ('test-data/gene2.gff3')
         TEFile = ('test-data/TE2.gff3')
-        self.plot = CircosPlot(GenomeFile=GenomeFile,SDFile=SDFile,GeneFile=GeneFile,TEFile=TEFile)
+#        BlastXMLFile = ('test-data/blast4.xml')
+        BlastXMLFile = ('test-data/blast2.xml')
+        self.plot = CircosPlot(GenomeFile=GenomeFile,SDFile=SDFile,GeneFile=GeneFile,TEFile=TEFile,BlastXMLFile=BlastXMLFile)
 
     def tearDown(self):
         pass

@@ -66,7 +66,7 @@ class GffGeneParser(object):
         """Return the fist value of the tag property"""
         m = re.search(r".*{mytag}=([^;]*);{{0,1}}.*".format(mytag = tag),line)
         if m:
-            print "ID {}".format(m.group(1))
+#            print "ID {}".format(m.group(1))
             return m.group(1).split(',')[0]
         else:
             raise Exception('Cannot find tag {} in string \'{}\''.format(tag, line))

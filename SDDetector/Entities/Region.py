@@ -16,5 +16,9 @@ class Region(object):
         """Equality on all args"""
 
         return (self.seq,self.start,self.end,self.strand) == (other.seq,other.start,other.end,other.strand)
-      
+
+    def __repr__(self):
+        """repr"""
+
+        return '{}-{}-{}-{}'.format(self.seq,self.start,self.end,self.strand)      
  
