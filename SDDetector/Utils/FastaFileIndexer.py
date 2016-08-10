@@ -40,10 +40,8 @@ class FastaFileIndexer(object):
                     currentSeq = re.split('[\s\|]+',m.group(1))[0]
                     self.lSeq.append(currentSeq)
                     self.dSeq[currentSeq] = ''
-                    print 'cur {}'.format(currentSeq)
                 else:
                     mySeq.append(line.replace('\n',''))
-                    #self.dSeq[currentSeq] += line.replace('\n','')
 
     def write(self):
         """write"""

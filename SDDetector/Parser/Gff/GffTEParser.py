@@ -4,8 +4,6 @@ import logging
 import re
 
 from SDDetector.Entities.Feature import Feature 
-#from SDDetector.Entities.Region import Region
-
 
 class GffTEParser(object):
 
