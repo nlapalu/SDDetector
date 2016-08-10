@@ -36,14 +36,15 @@ class Duplication(object):
             nbIndel2 = 0
             for base in self.lSeqAlgmts[i][1]:
                 #print base
-                index2 +=1
                 if base != '-':
+                    index2 +=1
                     lreg2.append(index2)
                 else:
                     lreg2.append(None)
                     nbIndel2 +=1
                 #print index2
-            if index2 != (reg2.end + nbIndel2):
+            #if index2 != (reg2.end + nbIndel2):
+            if index2 != reg2.end:
                 # todo log
                 sys.exit('exit problem with nb of base/algnmt')
 
@@ -51,13 +52,14 @@ class Duplication(object):
                 index1 = reg1.start-1
                 nbIndel1 = 0
                 for base in self.lSeqAlgmts[i][0]:
-                    index1 +=1
                     if base != '-':
+                        index1 +=1
                         lreg1.append(index1)
                     else:
                         lreg1.append(None)
                         nbIndel1 += 1
-                if index1 != (reg1.end + nbIndel1):
+                #if index1 != (reg1.end + nbIndel1):
+                if index1 != reg1.end:
                     # todo log
                     #print index1
                     #print reg1.end
@@ -68,13 +70,14 @@ class Duplication(object):
                 index1 = reg1.end+1
                 nbIndel1 = 0
                 for base in self.lSeqAlgmts[i][0]:
-                    index1 -=1
                     if base != '-':
+                        index1 -=1
                         lreg1.append(index1)
                     else:
                         lreg1.append(None)
                         nbIndel1 += 1
-                if index1 != (reg1.start - nbIndel1):
+                #if index1 != (reg1.start - nbIndel1):
+                if index1 != reg1.start:
                     # todo log
                     sys.exit('exit 3 problem with nb of base/algnmt')
  
@@ -82,33 +85,54 @@ class Duplication(object):
                 sys.exit('error algmt list')
 
             for i,pos in enumerate(lreg1):
-                dSeqToSeq[reg1.seq][pos] = (reg2.seq,lreg2[i])
+                if pos != None:
+                    dSeqToSeq[reg1.seq][pos] = (reg2.seq,lreg2[i])
             for i,pos in enumerate(lreg2):
-                dSeqToSeq[reg2.seq][pos] = (reg1.seq,lreg1[i])
+                if pos != None:
+                    dSeqToSeq[reg2.seq][pos] = (reg1.seq,lreg1[i])
          
         return dSeqToSeq
+
+
+#    def get
+
 
 
     def getSeqAlignment(self,seqid,start,end):
         """return the alignment"""
 
         seqIndex = None
-        if seqid == self.seq1:
-            seqIndex = 0
-        elif seqid == self.seq2:
-            seqIndex = 1
-        else:
-            #TODO: log
-            sys.exit("Error this sequence is not in this duplication")
-
         myRegionIndex = None
         myRegionStrand = None
-        for i, reg in enumerate (self.lRegions):
-            if start >= reg[seqIndex].start and end <= reg[seqIndex].end:
-                myRegionIndex = i
-                myRegion = reg[seqIndex]
-        if myRegionIndex == None:
-            sys.exit("Error region of this sequence not in this duplication")
+
+        if self.seq1 != self.seq2:
+            if seqid == self.seq1:
+                seqIndex = 0
+            elif seqid == self.seq2:
+                seqIndex = 1
+            else:
+                #TODO: log
+                sys.exit("Error this sequence is not in this duplication")
+        
+            for i, reg in enumerate (self.lRegions):
+                if start >= reg[seqIndex].start and end <= reg[seqIndex].end:
+                    myRegionIndex = i
+                    myRegion = reg[seqIndex]
+            if myRegionIndex == None:
+                print self.__repr__()
+                sys.exit("Error region of this sequence not in this duplication : {}-{}".format(start,end))
+        else:
+            for index in range(0,2):
+                for i, reg in enumerate(self.lRegions):
+                    if start >= reg[index].start and end <= reg[index].end:
+                        myRegionIndex = i
+                        myRegion = reg[index]
+                        seqIndex = index
+            if myRegionIndex == None:
+                print self.__repr__()
+                sys.exit("Error region of this sequence not in this duplication : {}-{}".format(start,end))
+   
+                
 
         algmt = ''
         if myRegion.strand == 1:
@@ -140,7 +164,7 @@ class Duplication(object):
         else:
             sys.exit("missing strand")
 
-        return(algmt) 
+        return(algmt, myRegion.strand) 
 
 
     def __eq__(self, other):

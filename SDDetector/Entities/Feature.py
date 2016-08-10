@@ -2,7 +2,6 @@
 
 class Feature(object):
 
-
     def __init__(self, id, seqid, start, end, strand, type):
         """Feature constructor"""
 

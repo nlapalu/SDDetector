@@ -3,6 +3,7 @@
 import argparse
 import logging
 import os
+import math
 
 from SDDetector.Entities.GeneLink import GeneLink
 from SDDetector.Parser.Gff.GffDuplicationParser import GffDuplicationParser
@@ -74,19 +75,30 @@ class CircosPlot(object):
             f.write('</ideogram>\n')
 
             # ticks
+            f.write('show_ticks = yes\n')
+            f.write('show_tick_labels = yes\n')
             f.write('<ticks>\n')
             f.write('radius           = 1r\n')
             f.write('color            = black\n')
             f.write('thickness        = 2p\n')
-            f.write('multiplier       = 1e-2\n')
+            f.write('multiplier       = 1e-3\n')
             f.write('format           = %d\n')
             f.write('<tick>\n')
-            f.write('spacing        = 0.01u\n')
-            f.write('size           = 15p\n')
+            f.write('spacing        = 0.05u\n')
+            f.write('size           = 12p\n')
+            f.write('thickness      = 2p\n')
+            f.write('color = black\n')
             f.write('show_label     = yes\n')
-            f.write('label_size     = 20p\n')
-            f.write('label_offset   = 10p\n')
+            f.write('label_size     = 14p\n')
+            f.write('label_offset   = 3p\n')
             f.write('format         = %d\n')
+            f.write('</tick>\n')
+            f.write('<tick>\n')
+            f.write('spacing = 0.01u\n')
+            f.write('size = 4p\n')
+            f.write('thickness = 2p\n')
+            f.write('color = dgrey\n')
+            f.write('show_label = no\n')
             f.write('</tick>\n')
             f.write('</ticks>\n')
 
@@ -145,7 +157,7 @@ class CircosPlot(object):
             f.write('link_dims      = 4p,4p,8p,4p,4p\n')
             f.write('link_thickness = 2p\n')
             f.write('link_color     = red\n')
-            f.write('label_size   = 24p\n')
+            f.write('label_size   = 20p\n')
             f.write('label_font   = condensed\n')
             f.write('padding  = 0p\n')
             f.write('rpadding = 0p\n')
@@ -261,10 +273,20 @@ class CircosPlot(object):
         self.lSequences = parser.lSeq
  
         with open(seqdatafile,'w') as f:
-            for seq in parser.lSeq:
-                f.write('chr - {} {} {} {} {}\n'.format(seq,seq,0,len(parser.dSeq[seq]),seq))
+            for i,seq in enumerate(parser.lSeq):
+                f.write('chr - {} {} {} {} {}\n'.format(seq,seq,0,len(parser.dSeq[seq]),self.getColorByIndex(i)))
         f.close()
         return seqdatafile
+
+
+    def getColorByIndex(self,index):
+        """Return a color"""
+
+        lColors = ['180,60,45','180,130,45','180,180,45','130,180,50','65,180,50',
+                   '45,180,170','45,115,180','115,45,180','195,55,135','194,55,80',
+                   '245,25,10','240,230,15','83,245,20','12,245,145','12,235,242',
+                   '10,100,242','128,15,242','227,15,242','242,12,104','242,240,208']
+        return lColors[index % 20]
         
 
     def writeSegDupDataFile(self):
@@ -345,10 +367,54 @@ class CircosPlot(object):
         ###TODO### Remove from here
         for link in lLinks:
             # analyse CDS Share Alignment
-          
+            print 'Gene: ({},{}); sequence: ({},{}); strand: ({},{})'.format(link.gene1.id, link.gene2.id,link.gene1.seqid,link.gene2.seqid,link.gene1.strand,link.gene2.strand)
+            #print 'Algmt: {}'.format(link.getCDSAlignment())
+            #print 'Effect: {}'.format(link.getEffect())
+            lAlignEffect, nbMutations, r1, r2 = link.getEffect()
 
-            # analyse NON-CDS Share Alignment
+            nbBases = len(lAlignEffect[0])
+            size = 60
+            indexSize = 0
+            indexBase = 0
+            algmtGene = ''
 
+            if link.gene1.strand == 1:
+                algmt1Start, algmt1End = (r1.start, r1.end)
+            else:
+                algmt1Start, algmt1End = (r1.end, r1.start)
+            if link.gene2.strand == 1:
+                algmt2Start, algmt2End = (r2.start, r2.end)
+            else:
+                algmt2Start, algmt2End = (r2.end, r2.start)
+            
+
+            start1 = algmt1Start
+            start2 = algmt2Start
+            end1 = 0
+            end2 = 0
+            while indexBase < nbBases:
+                nbHyphen1 = lAlignEffect[2][indexBase:indexBase+size].count('-')
+                nbHyphen2 = lAlignEffect[4][indexBase:indexBase+size].count('-')
+                
+                if link.gene1.strand == -1:
+                    end1 = start1-size-nbHyphen1
+                else:
+                    end1 = start1+size-nbHyphen1
+                if link.gene2.strand == -1:
+                    end2 = start2-size-nbHyphen2
+                else:
+                    end2 = start2+size-nbHyphen2
+                
+                scale1 = str(start1) + ' '*(size-len(str(start1))-len(str(end1))) + str(end1)
+                scale2 = str(start2) + ' '*(size-len(str(start2))-len(str(end2))) + str(end2)
+
+
+                algmtGene += '{}\n{}\n{}\n{}\n{}\n{}\n{}\n{}\n{}\n\n'.format(scale1,lAlignEffect[0][indexBase:indexBase+size],lAlignEffect[1][indexBase:indexBase+size],lAlignEffect[2][indexBase:indexBase+size],lAlignEffect[3][indexBase:indexBase+size],lAlignEffect[4][indexBase:indexBase+size],lAlignEffect[5][indexBase:indexBase+size],lAlignEffect[6][indexBase:indexBase+size],scale2)
+                indexBase += size
+                start1 = end1+1
+                start2 = end2+1
+
+            print algmtGene
 
 
  
@@ -385,16 +451,68 @@ class CircosPlot(object):
         return (lGeneSeq1,lGeneSeq2)
 
 
-
-
-
-
-    def writeSimilarityFile(self):
+    def writeSimilarityDataFile(self):
         """Write similarity fiel"""
 
         similaritydatafile = 'similarity.txt'
-        parser = ""
-        lSimilarities = ""
+        parserDup = GffDuplicationParser(self.SDFile)
+        lDuplications = parserDup.getNonRedondantDuplications()
+        lRegions = []
+        for dup in lDuplications:
+            for region in dup.lRegions:
+                lRegions.append(region)
+
+        parserBlast = BlastXMLParser(self.BlastXMLFile)
+        lAlignmentTuples = parserBlast.getAlignmentsFromTupleOfRegions(lRegions)
+
+        index = 0
+        for dup in lDuplications:
+            lAlgmts = []
+            for region in dup.lRegions:
+                lAlgmts.append((lAlignmentTuples[index][0],lAlignmentTuples[index][1]))
+                index += 1
+            dup.lSeqAlgmts = lAlgmts
+            dup.dSeqToSeq = dup.getdSeqToSeq() 
+
+        length = 100
+        overlap = 0
+        lStatus = []
+        with open(similaritydatafile, 'w') as f:
+            for dup in lDuplications:
+                for i,(reg1,reg2) in enumerate(dup.lRegions):
+                    for j,d in enumerate(dup.lSeqAlgmts[i][0]):
+                        if dup.lSeqAlgmts[i][0][j] != dup.lSeqAlgmts[i][1][j]:
+                            lStatus.append(0)
+                        else:
+                            lStatus.append(1)
+
+                    lvalues = self._slidingWindow(lStatus,length,overlap)
+                    for h,value in enumerate(lvalues):
+                        if reg1.strand == 1:
+                            f.write("{} {} {} {}\n".format(reg1.seq,reg1.start+(h*(length-overlap)),reg1.start+(h*(length-overlap))+length,value))
+                        elif reg1.strand == -1:
+                            f.write("{} {} {} {}\n".format(reg1.seq,reg1.end-(h*(length-overlap)),reg1.end-(h*(length-overlap))-length,value))
+                    for h,value in enumerate(lvalues):
+                        if reg2.strand == 1:
+                            f.write("{} {} {} {}\n".format(reg2.seq,reg2.start+(h*(length-overlap)),reg2.start+(h*(length-overlap))+length,value))
+                        elif reg1.strand == -1:
+                            f.write("{} {} {} {}\n".format(reg2.seq,reg2.end-(h*(length-overlap)),reg2.end-(h*(length-overlap))-length,value))
+
+                    lStatus = []
+
+        f.close()
+        return similaritydatafile
+        
+           
+
+    def _slidingWindow(self,lStatus,length,overlap):
+        """sliding window"""
+
+        lvalues = []
+        for i in range(0,len(lStatus),length-overlap):
+            if (i+length) < (len(lStatus)-1):
+                lvalues.append(sum(lStatus[i:i+length])/float(length)*100)
+        return lvalues 
 
  
     def writeTEDataFile(self):

@@ -67,15 +67,14 @@ class BlastXMLParser(object):
                 for alignment in blast_record.alignments:
                     logging.debug('SUBJECT: {}'.format(alignment.hit_id))
                     for hsp in alignment.hsps:
-                        print '{}-{}-{}-{}-{}-{}'.format(alignment.hit_id,hsp.sbjct_start,hsp.sbjct_end,blast_record.query,hsp.query_start,hsp.query_end) 
+                        logging.debug('{}-{}-{}-{}-{}-{}'.format(alignment.hit_id,hsp.sbjct_start,hsp.sbjct_end,blast_record.query,hsp.query_start,hsp.query_end))
                         if (alignment.hit_id,hsp.sbjct_start,hsp.sbjct_end,blast_record.query,hsp.query_start,hsp.query_end) in lindex:
                             index = lindex.index((alignment.hit_id,hsp.sbjct_start,hsp.sbjct_end,blast_record.query,hsp.query_start,hsp.query_end))
                             lRegionAlgmts[index] = (hsp.sbjct,hsp.query)
 
-        input.closed
+        input.close()
         return lRegionAlgmts
 
-      
 
 if __name__ == "__main__":
     blastXMLParser = BlastXMLParser()

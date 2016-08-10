@@ -17,7 +17,7 @@ class TestGffTEParser(unittest.TestCase):
         """Test getAllTEs method"""
 
         iGffTEParser = GffTEParser("test-data/TE.gff3")
-        lTEs = [Feature('TE','mp1029-1_seq2_RLX-chim_CollD-B-R14-Map20','seq2',17438,17470,-1),Feature('TE','mp1029-2_seq2_RLX-chim_CollD-B-R14-Map20','seq2',17438,17783,-1)]
+        lTEs = [Feature('mp1029-1_seq2_RLX-chim_CollD-B-R14-Map20','seq2',17438,17470,-1,'TE'),Feature('mp1029-2_seq2_RLX-chim_CollD-B-R14-Map20','seq2',17438,17783,-1,'TE')]
 
         self.assertEqual(iGffTEParser.getAllTEs(),lTEs)
 

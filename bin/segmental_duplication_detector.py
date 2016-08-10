@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 
-
 import argparse
 import logging
 import os
@@ -39,9 +38,14 @@ class Detector(object):
     def parseAttributesFromArgsCLI(self):
         """Parse arguments from command line"""
 
+        program = 'SDDetector'
         version = 0.1
         description = "SDDetector: detects segmental duplications in genome"
+
+        parser = argparse.ArgumentParser(prog=program)
         parser = argparse.ArgumentParser(description=description)
+        parser.add_argument('--version', action='version', version='{} {}'.format(program,version))
+
         parser.add_argument("inputFile", help="Input Blast file", type=str)
         parser.add_argument("inputFormat", help="Input Blast format [xml|tab]", type=str)
         parser.add_argument("outputFile", help="Output File in gff3 format", type=str)
@@ -63,6 +67,8 @@ class Detector(object):
                             self-matches, identity threshold, suboptimal matches")
         parser.add_argument("-b", "--bed", action="store_true",
                             help="export also results in bed format")
+        parser.add_argument("-c", "--circos", action="store_true",
+                            help="write circos conf and associated data files")
 
         args = parser.parse_args()
         self._setAttributesFromArgsCLI(args)
@@ -99,10 +105,11 @@ class Detector(object):
             raise Exception('minimum identity not in range [0-1], example: 0.95')
         else:
             self.minIdentity = args.minIdent
-        self.maxGap=args.maxGap
-        self.chainLength=args.chainLength
-        self.exportDBAllSteps=args.exportall
-        self.exportBed=args.bed
+        self.maxGap = args.maxGap
+        self.chainLength = args.chainLength
+        self.exportDBAllSteps = args.exportall
+        self.exportBed = args.bed
+        self.circos = args.circos
 
     def runSDDetection(self):
         """run segmental duplication detection"""
@@ -138,6 +145,9 @@ class Detector(object):
         if self.exportBed:
             logging.info('Exporting chains in bed format, file: {}.bed'.format(self.outputFile))
             self.exportChains('{}.bed'.format(self.outputFile), format='bed')
+        if self.circos:
+            logging.info('Writing circos conf and associated files')
+            pass
 
         
     def parseAlignments(self):
