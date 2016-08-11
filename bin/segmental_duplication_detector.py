@@ -67,8 +67,6 @@ class Detector(object):
                             self-matches, identity threshold, suboptimal matches")
         parser.add_argument("-b", "--bed", action="store_true",
                             help="export also results in bed format")
-        parser.add_argument("-c", "--circos", action="store_true",
-                            help="write circos conf and associated data files")
 
         args = parser.parse_args()
         self._setAttributesFromArgsCLI(args)
@@ -109,7 +107,6 @@ class Detector(object):
         self.chainLength = args.chainLength
         self.exportDBAllSteps = args.exportall
         self.exportBed = args.bed
-        self.circos = args.circos
 
     def runSDDetection(self):
         """run segmental duplication detection"""
@@ -145,9 +142,6 @@ class Detector(object):
         if self.exportBed:
             logging.info('Exporting chains in bed format, file: {}.bed'.format(self.outputFile))
             self.exportChains('{}.bed'.format(self.outputFile), format='bed')
-        if self.circos:
-            logging.info('Writing circos conf and associated files')
-            pass
 
         
     def parseAlignments(self):
