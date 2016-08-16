@@ -46,6 +46,8 @@ class Duplication(object):
             #if index2 != (reg2.end + nbIndel2):
             if index2 != reg2.end:
                 # todo log
+                print index2
+
                 sys.exit('exit problem with nb of base/algnmt')
 
             if reg1.strand == 1:

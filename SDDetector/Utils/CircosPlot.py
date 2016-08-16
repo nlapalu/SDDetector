@@ -15,15 +15,15 @@ from SDDetector.Db.GeneDB import GeneDB
 
 class CircosPlot(object):
 
-#    def __init__(self, GenomeFile='',SDFile='', GeneFile='', TEFile='', BlastXMLFile='', logLevel='ERROR'):
     def __init__(self, logLevel='ERROR'):
         """Constuctor"""
-
-#        self.GenomeFile = GenomeFile
-#        self.SDFile = SDFile
-#        self.GeneFile = GeneFile
-#        self.TEFile = TEFile
-#        self.BlastXMLFile = BlastXMLFile
+ 
+        self.lRegionsToDraw = []
+        self.lSeqNames = []
+        self.lGeneLinks = []
+        self.lGenes = []
+        self.lTEs = []
+        self.similarity = False
 
     def writeDataFiles(self):
         """Write all data files"""
@@ -55,14 +55,19 @@ class CircosPlot(object):
             f.write('<ideogram>\n') 
             f.write('<spacing>\n')
             f.write('default = 0.005r\n')
-            f.write('break   = 0.3r\n')
+            f.write('break   = 0.04r\n')
             f.write('axis_break_at_edge = yes\n')
             f.write('axis_break         = yes\n')
             f.write('axis_break_style   = 2\n')
+ 
+            f.write('<pairwise {} {}>\n'.format(self.lSeqNames[0],self.lSeqNames[-1]))
+            f.write('spacing = 4r\n')
+            f.write('</paiwise>\n')
+
             f.write('<break_style 2>\n')
-            f.write('stroke_color     = black\n')
+            f.write('#stroke_color = black\n')
             f.write('stroke_thickness = 5p\n')
-            f.write('thickness        = 2r\n')
+            f.write('thickness = 2r\n')
             f.write('</break>\n')
             f.write('</spacing>\n')
             f.write('radius = 0.9r\n')
@@ -114,78 +119,133 @@ class CircosPlot(object):
             f.write('<links>\n')
             f.write('ribbon = yes\n')
             f.write('flat = yes\n')
+
             # segmental duplications
-            f.write('<link>\n')
-            f.write('file = segdup.txt\n')
-            f.write('color = vvlgrey\n')
-            f.write('radius = 0.8r\n')
-            f.write('bezier_radius = 0r\n')
-            f.write('thickness = 2\n')
-            f.write('</link>\n')
-            # genes
-            f.write('<link>\n')
-            f.write('file = gene-link.txt\n')
-            f.write('color = blue\n')
-            f.write('radius = 0.8r\n')
-            f.write('bezier_radius = 0r\n')
-            f.write('thickness = 2\n')
-            f.write('</link>\n')
+            if self.lDuplications:
+                f.write('<link>\n')
+                f.write('file = segdup.txt\n')
+                f.write('color = vvlgrey\n')
+                f.write('radius = 0.73r\n')
+                f.write('bezier_radius = 0r\n')
+                f.write('thickness = 2\n')
+                f.write('</link>\n')
+            # gene-links
+            if self.lGeneLinks:
+                f.write('<link>\n')
+                f.write('file = gene-link.txt\n')
+                f.write('color = blue\n')
+                f.write('radius = 0.73r\n')
+                f.write('bezier_radius = 0r\n')
+                f.write('thickness = 2\n')
+                f.write('stroke_color = black\n')
+                f.write('stroke_thickness = 1\n')
+                f.write('</link>\n')
             f.write('</links>\n')
 
             # genes
             f.write('<plots>\n')
-            f.write('<plot>\n')
-            f.write('type = tile\n')
-            f.write('layers_overflow = collapse\n')
-            f.write('file = gene.txt\n')
-            f.write('r1 = 0.83r\n')
-            f.write('r0 = 0.81r\n')
-            f.write('layers = 2\n')
-            f.write('orientation = center\n')
-            f.write('margin      = 0.02u\n')
-            f.write('thickness   = 12\n')
-            f.write('padding     = 1\n')
-            f.write('color = green\n')
-            f.write('</plot>\n')
+            if self.lGenes:
+                f.write('<plot>\n')
+                f.write('type = tile\n')
+                f.write('layers_overflow = collapse\n')
+                f.write('file = gene.txt\n')
+                f.write('r1 = 0.84r\n')
+                f.write('r0 = 0.81r\n')
+                f.write('layers = 2\n')
+                f.write('orientation = center\n')
+                f.write('margin = 0.02u\n')
+                f.write('thickness = 12\n')
+                f.write('padding = 1\n')
+                f.write('color = green\n')
+                f.write('stroke_color = black\n')
+                f.write('stroke_thickness = 1\n')
+                f.write('<backgrounds>\n')
+                f.write('<background>\n')
+                f.write('color = vvlgrey\n')
+                f.write('</background>\n')
+                f.write('</backgrounds>\n')
+                f.write('</plot>\n')
+                f.write('<plot>\n')
+                f.write('type = text\n')
+                f.write('color = black\n')
+                f.write('file = gene.txt\n')
+                f.write('r0 = 0.84r\n')
+                f.write('r1 = 0.99r\n')
+                f.write('show_links = yes\n')
+                f.write('link_dims = 4p,4p,8p,4p,4p\n')
+                f.write('link_thickness = 2p\n')
+                f.write('link_color = red\n')
+                f.write('label_size = 20p\n')
+                f.write('label_font  = condensed\n')
+                f.write('padding = 0p\n')
+                f.write('rpadding = 0p\n')
+                f.write('<backgrounds>\n')
+                f.write('<background>\n')
+                f.write('color = vvlgrey\n')
+                f.write('</background>\n')
+                f.write('</backgrounds>\n')
+                f.write('</plot>\n')
 
-            f.write('<plot>\n')
-            f.write('type             = text\n')
-            f.write('color            = black\n')
-            f.write('file             = gene.txt\n')
-            f.write('r0 = 0.84r\n')
-            f.write('r1 = 0.99r\n')
-            f.write('show_links     = yes\n')
-            f.write('link_dims      = 4p,4p,8p,4p,4p\n')
-            f.write('link_thickness = 2p\n')
-            f.write('link_color     = red\n')
-            f.write('label_size   = 20p\n')
-            f.write('label_font   = condensed\n')
-            f.write('padding  = 0p\n')
-            f.write('rpadding = 0p\n')
-            f.write('<backgrounds>\n')
-            f.write('<background>\n')
-            f.write('color = vvlgrey\n')
-            f.write('</background>\n')
-            f.write('</backgrounds>\n')
-            f.write('</plot>\n')
-
-
-            # genes
-            f.write('<plot>\n')
-            f.write('type = tile\n')
-            f.write('layers_overflow = collapse\n')
-            f.write('file = TE.txt\n')
-            f.write('r1 = 0.83r\n')
-            f.write('r0 = 0.81r\n')
-            f.write('layers = 2\n')
-            f.write('orientation = center\n')
-            f.write('margin      = 0.02u\n')
-            f.write('thickness   = 12\n')
-            f.write('padding     = 1\n')
-            f.write('color = red\n')
-            f.write('</plot>\n')
+            # TEs
+            if self.lTEs:
+                f.write('<plot>\n')
+                f.write('type = tile\n')
+                f.write('layers_overflow = collapse\n')
+                f.write('file = TE.txt\n')
+                f.write('r1 = 0.84r\n')
+                f.write('r0 = 0.81r\n')
+                f.write('layers = 2\n')
+                f.write('orientation = center\n')
+                f.write('margin      = 0.02u\n')
+                f.write('thickness   = 12\n')
+                f.write('padding     = 1\n')
+                f.write('color = red\n')
+                f.write('stroke_color = black\n')
+                f.write('stroke_thickness = 1\n')
+                f.write('</plot>\n')
+            
+            # Similarity
+            if self.similarity:
+                f.write('<plot>\n')
+                f.write('type = line\n')
+                f.write('thickness = 2\n')
+                f.write('file = similarity.txt\n')
+                f.write('color = black\n')
+                f.write('min = 85\n')
+                f.write('max = 102\n')
+                f.write('r0 = 0.74r\n')
+                f.write('r1 = 0.8r\n')
+                f.write('<backgrounds>\n')
+                f.write('<background>\n')
+                f.write('color     = vvlgreen\n')
+                f.write('y0        = 95\n')
+                f.write('</background>\n')
+                f.write('<background>\n')
+                f.write('color     = vvlred\n')
+                f.write('y1        = 90\n')
+                f.write('</background>\n')
+                f.write('</backgrounds>\n')
+                f.write('<axes>\n')
+                f.write('<axis>\n')
+                f.write('color     = dgrey\n')
+                f.write('thickness = 1\n')
+                f.write('spacing   = 0.1r\n')
+                f.write('</axis>\n')
+                f.write('</axes>\n')
+                f.write('<rules>\n')
+                f.write('<rule>\n')
+                f.write('condition    = var(value) > 95\n')
+                f.write('color        = dgreen\n')
+                f.write('#fill_color   = dgreen_a1\n')
+                f.write('</rule>\n')
+                f.write('<rule>\n')
+                f.write('condition    = var(value) < 90\n')
+                f.write('color        = dred\n')
+                f.write('#fill_color   = dred_a1\n')
+                f.write('</rule>\n')
+                f.write('</rules>\n')
+                f.write('</plot>\n')
             f.write('</plots>\n') 
-
 
         f.close()
 
@@ -193,7 +253,7 @@ class CircosPlot(object):
         """pass"""
 
         dSequences = { seq[0] : '-' for seq in self.lRegionsToDraw }
-        return ';'.join([x for x in self.lSequences if x in dSequences])
+        return ';'.join([x for x in self.lSeqNames if x in dSequences])
          
 
     def getRegionsToDraw(self, unit):
@@ -265,19 +325,16 @@ class CircosPlot(object):
              
 
 
-    def writeSeqDataFile(self):
+    def writeSeqDataFile(self, lSeqs, SeqDataFile):
         """Write Sequence data file=Karyotype"""
 
-        seqdatafile = 'genome.txt'
-        parser = FastaFileIndexer(self.GenomeFile)
-        parser.read()
-        self.lSequences = parser.lSeq
+        self.lSeqNames = [ seq[0] for seq in lSeqs ]
  
-        with open(seqdatafile,'w') as f:
-            for i,seq in enumerate(parser.lSeq):
-                f.write('chr - {} {} {} {} {}\n'.format(seq,seq,0,len(parser.dSeq[seq]),self.getColorByIndex(i)))
+        with open(SeqDataFile,'w') as f:
+            for i,seq in enumerate(lSeqs):
+                f.write('chr - {} {} {} {} {}\n'.format(seq[0],seq[0],0,seq[1],self.getColorByIndex(i)))
         f.close()
-        return seqdatafile
+        return SeqDataFile
 
 
     def getColorByIndex(self,index):
@@ -290,111 +347,51 @@ class CircosPlot(object):
         return lColors[index % 20]
         
 
-    def writeSegDupDataFile(self):
+    def writeSegDupDataFile(self, lDuplications, SDDataFile):
         """Write Segmental Duplication data file"""
  
-        sddatafile = 'segdup.txt'
         self.lRegionsToDraw = []
-        parser = GffDuplicationParser(self.SDFile)
-        lNonRedDuplications = parser.getNonRedondantDuplications()
-        with open(sddatafile,'w') as f:
-            for dup in lNonRedDuplications:
+        self.lDuplications = lDuplications
+        with open(SDDataFile,'w') as f:
+            for dup in lDuplications:
                 f.write('{} {} {} {} {} {}\n'.format(dup.seq1, dup.start1, dup.end1, dup.seq2, dup.start2, dup.end2))
                 self.lRegionsToDraw.append((dup.seq1,float(dup.start1),float(dup.end1)))
                 self.lRegionsToDraw.append((dup.seq2,float(dup.start2),float(dup.end2)))
         f.close()
         
-        return sddatafile 
+        return SDDataFile 
 
-    def writeGeneDataFile(self):
+    def writeGeneDataFile(self, lGenes, GeneDataFile):
         """Write gene data file"""
 
-        genedatafile = 'gene.txt'
-        parser =  GffGeneParser(self.GeneFile)
-        lGenes = parser.getAllGenes()
-        with open(genedatafile,'w') as f:
+        self.lGenes = lGenes
+        with open(GeneDataFile,'w') as f:
             for gene in lGenes:
                 f.write('{} {} {} {}\n'.format(gene.seqid,gene.start,gene.end,gene.id))
         f.close()
 
-        return genedatafile
+        return GeneDataFile
 
-    def writeGeneLinkDataFile(self, lGeneLinks):
+    def writeGeneLinkDataFile(self, lGeneLinks, GeneLinkDataFile):
         """Write gene links data file"""
 
-#        parserDup = GffDuplicationParser(self.SDFile)
-#        lDuplications = parserDup.getNonRedondantDuplications()
-#        lRegions = []
-#        for dup in lDuplications:
-#            for region in dup.lRegions:
-#                lRegions.append(region)
- 
-#        parserBlast = BlastXMLParser(self.BlastXMLFile)
-#        lAlignmentTuples = parserBlast.getAlignmentsFromTupleOfRegions(lRegions)
-#        #print lAlignmentTuples
-#        #print lRegions
-
-
-#        index = 0
-#        for dup in lDuplications:
-#            lAlgmts = []
-#            for region in dup.lRegions:
-#                print region
-#                print index
-#                print lAlignmentTuples[index][0]
-#                print lAlignmentTuples[index][1]
-#                lAlgmts.append((lAlignmentTuples[index][0],lAlignmentTuples[index][1]))
-#                index += 1
-#            dup.lSeqAlgmts = lAlgmts
-#            dup.dSeqToSeq = dup.getdSeqToSeq() 
-
-#        parserGene = GffGeneParser(self.GeneFile)
-#        self.db = GeneDB(dbfile='gene.db')
-#        self.db.insertlGenes(parserGene.getAllGenes())
-       
-#        lLinks = [] 
-#        for dup in lDuplications:
-#            (lGeneSeq1,lGeneSeq2) = self._extractGeneInDuplication(dup)
-#            lLinks.extend(self._buildGeneLinks(lGeneSeq1,lGeneSeq2,dup))
-
-
- 
-        genelinkdatafile = 'gene-link.txt'
-        with open(genelinkdatafile,'w') as f:
+        self.lGeneLinks = lGeneLinks
+        with open(GeneLinkDataFile,'w') as f:
             for link in lGeneLinks:
                 f.write('{} {} {} {} {} {}\n'.format(link.gene1.seqid, link.gene1.start, link.gene1.end, link.gene2.seqid, link.gene2.start, link.gene2.end))
         f.close()
        
-        return genelinkdatafile 
+        return GeneLinkDataFile
 
 
-    def writeSimilarityDataFile(self):
-        """Write similarity fiel"""
+    def writeSimilarityDataFile(self, lDuplications, SimilarityDataFile):
+        """Write similarity file"""
 
-        similaritydatafile = 'similarity.txt'
-        parserDup = GffDuplicationParser(self.SDFile)
-        lDuplications = parserDup.getNonRedondantDuplications()
-        lRegions = []
-        for dup in lDuplications:
-            for region in dup.lRegions:
-                lRegions.append(region)
-
-        parserBlast = BlastXMLParser(self.BlastXMLFile)
-        lAlignmentTuples = parserBlast.getAlignmentsFromTupleOfRegions(lRegions)
-
-        index = 0
-        for dup in lDuplications:
-            lAlgmts = []
-            for region in dup.lRegions:
-                lAlgmts.append((lAlignmentTuples[index][0],lAlignmentTuples[index][1]))
-                index += 1
-            dup.lSeqAlgmts = lAlgmts
-            dup.dSeqToSeq = dup.getdSeqToSeq() 
-
+        self.lDuplications = lDuplications
         length = 100
         overlap = 0
         lStatus = []
-        with open(similaritydatafile, 'w') as f:
+        with open(SimilarityDataFile, 'w') as f:
             for dup in lDuplications:
                 for i,(reg1,reg2) in enumerate(dup.lRegions):
                     for j,d in enumerate(dup.lSeqAlgmts[i][0]):
@@ -418,7 +415,8 @@ class CircosPlot(object):
                     lStatus = []
 
         f.close()
-        return similaritydatafile
+        self.similarity = True
+        return SimilarityDataFile
         
            
 
@@ -432,16 +430,14 @@ class CircosPlot(object):
         return lvalues 
 
  
-    def writeTEDataFile(self):
+    def writeTEDataFile(self, lTEs, TEDataFile):
         """"Write TEs data file"""
 
-        tedatafile = 'TE.txt'
-        parser = GffTEParser(self.TEFile)
-        lTEs = parser.getAllTEs()
-        with open(tedatafile,'w') as f:
+        self.lTEs = lTEs
+        with open(TEDataFile,'w') as f:
             for TE in lTEs:
                 f.write('{} {} {} {}\n'.format(TE.seqid,TE.start,TE.end,TE.id))
         f.close()
 
-        return tedatafile
+        return TEDataFile
 

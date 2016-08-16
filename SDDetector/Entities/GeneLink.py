@@ -190,7 +190,7 @@ class GeneLink(object):
         if (self.gene2.strand == -1 and r2.strand == 1) or (self.gene2.strand == 1 and r2.strand == -1):
             algmtGene2 = self.reverseComplement(algmtGene2)
 
-        nbMutations = 0
+        lStrMutations = []
         lMutations = [' '] * len(algmtGene1)
         lCodonsPosGene1 = [' '] * len(algmtGene1)
         lCodonsPosGene2 = [' '] * len(algmtGene2)
@@ -214,8 +214,8 @@ class GeneLink(object):
 
         for i,val in enumerate(algmtGene1):
             if algmtGene1[i].upper() != algmtGene2[i].upper():
-                print "{} : {} - {} --- ({}-{},{}-{})".format(i,algmtGene1[i],algmtGene2[i],r1.seq,indexAlgmt1,r2.seq,indexAlgmt2)
-                nbMutations += 1
+#                print "{} : {} - {} --- ({}-{},{}-{})".format(i,algmtGene1[i],algmtGene2[i],r1.seq,indexAlgmt1,r2.seq,indexAlgmt2)
+                lStrMutations.append("{} : {} - {} --- ({}-{},{}-{})\n".format(i+1,algmtGene1[i],algmtGene2[i],r1.seq,indexAlgmt1,r2.seq,indexAlgmt2))
                 lMutations[i] = '|'
 
             if algmtGene1[i] != '-':
@@ -281,7 +281,7 @@ class GeneLink(object):
         lAlignEffect.append(''.join(lCodonsPosGene2))
         lAlignEffect.append(''.join(lCodonPosAlgmt2))
 
-        return (lAlignEffect,nbMutations,r1,r2)
+        return (lAlignEffect,lStrMutations,r1,r2)
         
 
     def reverseComplement(self,algmt):
