@@ -1,6 +1,6 @@
 # SDDetector: a segmental duplication detection tool
 
-SDDetector has been developed to detect segmental duplications in complete genomes. The principle is based on the bioinformatic protocol proposed by *Kahja et al.* Segmental duplications are defined as regions having a sequence similarity greater than 90% and a length greater than 5000 nt. Regions could be fragmented due to inversion/insertion/deletion events, so a maximium gap of 3000 nt is allowed between fragments. Then, fragments are chained together and the chains with required criteria are reported as portential duplication regions. To fit with your genome specificity, SDDetector allows parameters modification to increase/reduce the sequence similarity threshold, the minimal length of the regions and the maximal gap size.
+SDDetector has been developed to detect segmental duplications in complete genomes. The principle is based on the bioinformatic protocol proposed by *Kahja et al.* Segmental duplications are defined as regions having a sequence similarity greater than 90% and a length greater than 5000 nt. Regions could be fragmented due to inversion/insertion/deletion events, so a maximium gap of 3000 nt is allowed between fragments. Then, fragments are chained together and the chains with required criteria are reported as potential duplication regions. To fit with your genome specificity, SDDetector allows parameters modification to increase/reduce the sequence similarity threshold, the minimal length of the regions and the maximal gap size.
 For an efficient detection, transposable and repetitive elements must be masked before sequence similarity search. If you do not provide a repetitive element annotation, results will contain a lot of false-positive regions. We recommend to perform a TE detection with the REPET package(*Flutre et al.*) or at least a minimal masking step with RepetMasker(*Smit et al.*).
 
 SSDetector is developed by Nicolas Lapalu at [INRA-BIOGER](http://www.versailles-grignon.inra.fr/bioger). Please do not hesitate to contact me (nlapalu at versailles dot inra dot fr) if you have any comments or questions.
@@ -37,7 +37,7 @@ or user install (you will have to (re)set your PYTHONPATH and PATH):
 * bedtools
 * ncbiblast+
 
-## Example
+## Running SDDetector
 
 * genome.fasta is your genome in multi-fasta file
 * genome_TE.gff is the Transposable, Repeat elements annotation file in gff3  
@@ -91,6 +91,83 @@ __Detection from xml format:__
 __Detection from tab-delimited format:__
 
 `segmental_duplication_detector.py blast.tab tab sdd_0.9_3000_5000.gff3 :memory: -g 3000 -l 5000 -a`
+
+### Analyze duplicated genes
+
+If you ask for a Blast XML output and you have a gene annotation file in gff3 format, you can use the SDAnalyzer tool.
+
+__Analyze polymorphism between duplicated genes:__
+
+`segmental_duplication_gene_analyzer.py ...`
+
+For each couple of gene, you get the list of the polymorphisms with positions, and an alignment-like representation with translation.
+This view allows a comprehensive impact of each polymorphism on protein sequences (synonimous, non-synomimous mutations).
+
+```
+Gene: (G0001,G0002); sequence: (seq11,seq11); strand: (-1,1)33 : G - - --- (seq11-40161,seq11-554869)
+34 : C - - --- (seq11-40160,seq11-554869)
+35 : G - - --- (seq11-40159,seq11-554869)
+46 : G - A --- (seq11-40148,seq11-554879)
+66 : G - A --- (seq11-40128,seq11-554899)
+80 : C - T --- (seq11-40114,seq11-554913)
+95 : G - A --- (seq11-40099,seq11-554928)
+168 : A - T --- (seq11-40026,seq11-555001)
+172 : C - A --- (seq11-40022,seq11-555005)
+190 : A - G --- (seq11-40004,seq11-555023)
+234 : C - T --- (seq11-39960,seq11-555067)
+239 : C - T --- (seq11-39955,seq11-555072)
+246 : T - C --- (seq11-39948,seq11-555079)
+266 : G - A --- (seq11-39928,seq11-555099)
+267 : T - A --- (seq11-39927,seq11-555100)
+278 : T - C --- (seq11-39916,seq11-555111)
+288 : C - A --- (seq11-39906,seq11-555121)
+297 : T - C --- (seq11-39897,seq11-555130)
+351 : C - T --- (seq11-39843,seq11-555184)
+405 : T - G --- (seq11-39789,seq11-555238)
+429 : A - G --- (seq11-39765,seq11-555262)
+477 : T - C --- (seq11-39717,seq11-555310)
+518 : A - G --- (seq11-39676,seq11-555351)
+541 : G - C --- (seq11-39653,seq11-555374)
+577 : C - G --- (seq11-39617,seq11-555410)
+619 : A - G --- (seq11-39575,seq11-555452)
+641 : T - G --- (seq11-39553,seq11-555474)
+691 : G - A --- (seq11-39503,seq11-555524)
+754 : T - C --- (seq11-39440,seq11-555587)
+779 : C - A --- (seq11-39415,seq11-555612)
+40193                                                  40133
+ M  T  P  H  S  L  T  D  K  Q  A  R  Q  R  L  E  A  L  Q  L 
+------------------------------------------------------------
+ATGACGCCGCACAGCTTGACGGACAAGCAGCGGCGCCAGCGCCTTGAAGCCCTGCAACTT
+                                |||          |              
+ATGACGCCGCACAGCTTGACGGACAAGCAGCG---CCAGCGCCTTAAAGCCCTGCAACTT
+--------------------------------   -------------------------
+ M  T  P  H  S  L  T  D  K  Q  R     Q  R  L  K  A  L  Q  L 
+554837                                                554894
+
+40134                                                  40074
+ Y  L  N  E  P  E  P  V  L  I  C  A  P  C  G  Y  A  L  K  P 
+------------------------------------------------------------
+TACTTGAACGAGCCTGAACCGGTCCTCATCTGCCGGCCTTGCGGTTACGCATTGAAGCCG
+     |             |              |                         
+TACTTAAACGAGCCTGAACTGGTCCTCATCTGCCAGCCTTGCGGTTACGCATTGAAGCCG
+------------------------------------------------------------
+ Y  L  N  E  P  E  L  V  L  I  C  Q  P  C  G  Y  A  L  K  P 
+554895                                                554955
+
+.....
+```
+
+## Example
+
+Examples are provided in data directory. If you want to test your install and have a look to the expected file formats, you can run a complete analysis.
+
+### Example 1: genome X
+
+untar data ...
+
+`circos ...`
+
+![image][images/test.jpeg]
 
 ## How to cite
 
