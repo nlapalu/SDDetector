@@ -100,8 +100,8 @@ __Analyze polymorphism between duplicated genes:__
 
 `segmental_duplication_gene_analyzer.py ...`
 
-For each couple of gene, you get the list of the polymorphisms with positions, and an alignment-like representation with translation.
-This view allows a comprehensive impact of each polymorphism on protein sequences (synonimous, non-synomimous mutations).
+For each couple of genes, you get the list of the polymorphisms with positions, and an alignment-like representation with translation.
+This view allows a comprehensive impact of each polymorphism on protein sequences (synonymous, non-synonymous mutations).
 
 ```
 Gene: (G0001,G0002); sequence: (seq11,seq11); strand: (-1,1)33 : G - - --- (seq11-40161,seq11-554869)
@@ -167,7 +167,7 @@ untar data ...
 
 `circos ...`
 
-![image][images/test.jpeg]
+![image](images/test.jpeg)
 
 ## How to cite
 
