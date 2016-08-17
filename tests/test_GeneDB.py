@@ -8,7 +8,6 @@ from SDDetector.Entities.Gene import Gene
 from SDDetector.Entities.Transcript import Transcript
 from SDDetector.Entities.CDS import CDS
 
-
 class TestGeneDB(unittest.TestCase):
 
     def setUp(self):

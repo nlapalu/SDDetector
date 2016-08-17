@@ -33,9 +33,11 @@ class TestSuite(Command):
             t = TextTestRunner(verbosity = 2)
             t.run(suite)
 
+execfile('SDDetector/version.py'). 
+
 setup(name='SDDetector',
-      version='0.1',
-      description='Segmental Duplication Detection ',
+      version = __version__,
+      description='Segmental Duplication Detection',
       url='http://github.com/nlapalu/sddetector',
       author='Nicolas Lapalu',
       author_email='nicolas.lapalu@versailles.inra.fr',

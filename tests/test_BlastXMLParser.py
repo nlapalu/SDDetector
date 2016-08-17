@@ -44,8 +44,6 @@ class TestBlastXMLParser(unittest.TestCase):
         self.assertEqual(iBlastXMLParser.getAlignmentsFromTupleOfRegions(lRegions),lAlignments)
 
 
- 
-
 if __name__ == "__main__":
     suite = unittest.TestLoader().loadTestsFromTestCase(TestBlastXMLParser)
     unittest.TextTestRunner(verbosity=2).run(suite)

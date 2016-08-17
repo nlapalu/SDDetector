@@ -44,9 +44,6 @@ class TestEffectPredictor(unittest.TestCase):
         self.assertEquals((3,3),EP.extractVariantFromAlignment(seq3,seq4))
 
 
-
-    
-
 if __name__ == "__main__":
     suite = unittest.TestLoader().loadTestsFromTestCase(TestEffectPredictor)
     unittest.TextTestRunner(verbosity=2).run(suite)

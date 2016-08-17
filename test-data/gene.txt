@@ -1,0 +1,2 @@
+seq1 12 600 GENE1
+seq2 100 1000 GENE2

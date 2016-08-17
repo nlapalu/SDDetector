@@ -73,7 +73,6 @@ class TestAlignDB(unittest.TestCase):
 
         self.assertEquals([2,3,4],self.db.selectSuboptimalAlgmts())
         
-
     def test_selectAlignmentsWithDefinedIdOrderBySbjctCoord(self):
         """Test selectAlignmentsWithDefinedIdOrderBySbjctCoord"""
 
@@ -89,9 +88,6 @@ class TestAlignDB(unittest.TestCase):
 
         self.assertEquals([al1,al3,al4,al5],self.db.selectAlignmentsWithDefinedIdOrderBySbjctCoord([5,4,3,1]))
         
-        
-
-
 if __name__ == "__main__":
     suite = unittest.TestLoader().loadTestsFromTestCase(TestAlignDB)
     unittest.TextTestRunner(verbosity=2).run(suite)

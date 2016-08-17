@@ -55,7 +55,7 @@ class BlastXMLParser(object):
                 lindex.append((reg1.seq,reg1.end,reg1.start,reg2.seq,reg2.start,reg2.end))
             else:
                 lindex.append((reg1.seq,reg1.start,reg1.end,reg2.seq,reg2.start,reg2.end))
-        print "INDEX {}".format(lindex)
+#        print "INDEX {}".format(lindex)
 
         lRegionAlgmts = [ () for i in range(len(lRegions)) ]
 

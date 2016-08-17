@@ -104,7 +104,8 @@ For each couple of genes, you get the list of the polymorphisms with positions, 
 This view allows a comprehensive impact of each polymorphism on protein sequences (synonymous, non-synonymous mutations).
 
 ```
-Gene: (G0001,G0002); sequence: (seq11,seq11); strand: (-1,1)33 : G - - --- (seq11-40161,seq11-554869)
+Gene: (G0001,G0002); sequence: (seq11,seq11); strand: (-1,1)
+33 : G - - --- (seq11-40161,seq11-554869)
 34 : C - - --- (seq11-40160,seq11-554869)
 35 : G - - --- (seq11-40159,seq11-554869)
 46 : G - A --- (seq11-40148,seq11-554879)
