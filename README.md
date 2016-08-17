@@ -167,7 +167,7 @@ untar data ...
 
 `circos ...`
 
-![image](images/test.jpeg)
+![image](images/test.jpg)
 
 ## How to cite
 
