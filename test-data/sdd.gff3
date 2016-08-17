@@ -1,20 +1,20 @@
-seq1	SegDupAna	match	6010863	6029759	.	.	.	ID=chain3;length=18896
-seq1	SegDupAna	match_part	6010863	6029759	.	+	.	ID=match8777;Parent=chain3;Target=seq8 4391356 4410272;length=18924;identities=18395;identity_percentage=0.97
-seq2	SegDupAna	match	26727	32020	.	.	.	ID=chain5;length=3440
-seq2	SegDupAna	match_part	26727	29266	.	-	.	ID=match12567;Parent=chain5;Target=seq11 522092 524615;length=2542;identities=2395;identity_percentage=0.94
-seq2	SegDupAna	match_part	31119	32020	.	-	.	ID=match12569;Parent=chain5;Target=seq11 521201 522101;length=902;identities=860;identity_percentage=0.95
-seq8	SegDupAna	match	4391356	4410272	.	.	.	ID=chain22;length=18916
-seq8	SegDupAna	match_part	4391356	4410272	.	+	.	ID=match177;Parent=chain22;Target=seq1 6010863 6029759;length=18924;identities=18395;identity_percentage=0.97
-seq11	SegDupAna	match	26582	33594	.	.	.	ID=chain26;length=7012
-seq11	SegDupAna	match_part	26582	33594	.	-	.	ID=match12139;Parent=chain26;Target=seq11 584193 591205;length=7013;identities=7006;identity_percentage=1.00
-seq11	SegDupAna	match	38277	40563	.	.	.	ID=chain27;length=2177
-seq11	SegDupAna	match_part	38277	38402	.	+	.	ID=match12419;Parent=chain27;Target=seq11 554466 554591;length=126;identities=124;identity_percentage=0.98
-seq11	SegDupAna	match_part	38511	40563	.	-	.	ID=match12141;Parent=chain27;Target=seq11 554467 556516;length=2053;identities=1997;identity_percentage=0.97
-seq11	SegDupAna	match	521201	524615	.	.	.	ID=chain28;length=3414
-seq11	SegDupAna	match_part	521201	522101	.	-	.	ID=match1603;Parent=chain28;Target=seq2 31119 32020;length=902;identities=860;identity_percentage=0.95
-seq11	SegDupAna	match_part	522092	524615	.	-	.	ID=match1593;Parent=chain28;Target=seq2 26727 29266;length=2542;identities=2395;identity_percentage=0.94
-seq11	SegDupAna	match	554466	556516	.	.	.	ID=chain29;length=2050
-seq11	SegDupAna	match_part	554466	554591	.	+	.	ID=match12427;Parent=chain29;Target=seq11 38277 38402;length=126;identities=124;identity_percentage=0.98
-seq11	SegDupAna	match_part	554467	556516	.	-	.	ID=match12142;Parent=chain29;Target=seq11 38511 40563;length=2053;identities=1997;identity_percentage=0.97
-seq11	SegDupAna	match	584193	591205	.	.	.	ID=chain30;length=7012
-seq11	SegDupAna	match_part	584193	591205	.	-	.	ID=match12140;Parent=chain30;Target=seq11 26582 33594;length=7013;identities=7006;identity_percentage=1.00
+seq1	SDDetector	match	6010863	6029759	.	.	.	ID=chain3;length=18896
+seq1	SDDetector	match_part	6010863	6029759	.	+	.	ID=match8777;Parent=chain3;Target=seq8 4391356 4410272;length=18924;identities=18395;identity_percentage=0.97
+seq2	SDDetector	match	26727	32020	.	.	.	ID=chain5;length=3440
+seq2	SDDetector	match_part	26727	29266	.	-	.	ID=match12567;Parent=chain5;Target=seq11 522092 524615;length=2542;identities=2395;identity_percentage=0.94
+seq2	SDDetector	match_part	31119	32020	.	-	.	ID=match12569;Parent=chain5;Target=seq11 521201 522101;length=902;identities=860;identity_percentage=0.95
+seq8	SDDetector	match	4391356	4410272	.	.	.	ID=chain22;length=18916
+seq8	SDDetector	match_part	4391356	4410272	.	+	.	ID=match177;Parent=chain22;Target=seq1 6010863 6029759;length=18924;identities=18395;identity_percentage=0.97
+seq11	SDDetector	match	26582	33594	.	.	.	ID=chain26;length=7012
+seq11	SDDetector	match_part	26582	33594	.	-	.	ID=match12139;Parent=chain26;Target=seq11 584193 591205;length=7013;identities=7006;identity_percentage=1.00
+seq11	SDDetector	match	38277	40563	.	.	.	ID=chain27;length=2177
+seq11	SDDetector	match_part	38277	38402	.	+	.	ID=match12419;Parent=chain27;Target=seq11 554466 554591;length=126;identities=124;identity_percentage=0.98
+seq11	SDDetector	match_part	38511	40563	.	-	.	ID=match12141;Parent=chain27;Target=seq11 554467 556516;length=2053;identities=1997;identity_percentage=0.97
+seq11	SDDetector	match	521201	524615	.	.	.	ID=chain28;length=3414
+seq11	SDDetector	match_part	521201	522101	.	-	.	ID=match1603;Parent=chain28;Target=seq2 31119 32020;length=902;identities=860;identity_percentage=0.95
+seq11	SDDetector	match_part	522092	524615	.	-	.	ID=match1593;Parent=chain28;Target=seq2 26727 29266;length=2542;identities=2395;identity_percentage=0.94
+seq11	SDDetector	match	554466	556516	.	.	.	ID=chain29;length=2050
+seq11	SDDetector	match_part	554466	554591	.	+	.	ID=match12427;Parent=chain29;Target=seq11 38277 38402;length=126;identities=124;identity_percentage=0.98
+seq11	SDDetector	match_part	554467	556516	.	-	.	ID=match12142;Parent=chain29;Target=seq11 38511 40563;length=2053;identities=1997;identity_percentage=0.97
+seq11	SDDetector	match	584193	591205	.	.	.	ID=chain30;length=7012
+seq11	SDDetector	match_part	584193	591205	.	-	.	ID=match12140;Parent=chain30;Target=seq11 26582 33594;length=7013;identities=7006;identity_percentage=1.00

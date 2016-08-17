@@ -5,6 +5,7 @@ import logging
 import os
 import sys
 
+from SDDetector.version import __version__
 from SDDetector.Entities.Region import Region
 from SDDetector.Entities.GeneLink import GeneLink
 
@@ -47,12 +48,11 @@ class Analyzer(object):
         if os.path.exists('gene.db'): 
             os.remove('gene.db')
 
-
     def parseAttributesFromArgsCLI(self):
         """Parse arguments from command line"""
 
         program = 'SDAnalyzer'
-        version = 0.1
+        version = __version__
         description = "SDAnalyzer: analyzes segmental duplications in genome"
 
         parser = argparse.ArgumentParser(prog=program)
@@ -87,13 +87,22 @@ class Analyzer(object):
         if args.verbosity == 3:
             self.logLevel = 'DEBUG'
         logging.getLogger().setLevel(self.logLevel)
-
         self.SDFile = args.SDFile
+        if not os.path.exists(self.SDFile):
+            raise Exception('File {} does not exist'.format(self.SDFile))
         self.BlastXMLFile = args.BlastXMLFile
+        if not os.path.exists(self.BlastXMLFile):
+            raise Exception('File {} does not exist'.format(self.BlastXMLFile))
         self.GeneFile = args.GeneFile
+        if not os.path.exists(self.GeneFile):
+            raise Exception('File {} does not exist'.format(self.GeneFile))
         self.TEFile = args.TEFile
+        if not os.path.exists(self.TEFile):
+            raise Exception('File {} does not exist'.format(self.TEFile))
         self.circos = args.circos
         self.GenomeFile = args.GenomeFile
+        if not os.path.exists(self.GenomeFile):
+            raise Exception('File {} does not exist'.format(self.GenomeFile))
         self.outputFile = args.outputFile
 
 
@@ -104,9 +113,7 @@ class Analyzer(object):
             logging.info('Writing polymorphism effect in {}'.format(self.outputFile))
             for link in self.lGeneLinks:
                 # analyse CDS Share Alignment
-                f.write('Gene: ({},{}); sequence: ({},{}); strand: ({},{})'.format(link.gene1.id, link.gene2.id,link.gene1.seqid,link.gene2.seqid,link.gene1.strand,link.gene2.strand))
-                #print 'Algmt: {}'.format(link.getCDSAlignment())
-                #print 'Effect: {}'.format(link.getEffect())
+                f.write('Gene: ({},{}); sequence: ({},{}); strand: ({},{})\n'.format(link.gene1.id, link.gene2.id,link.gene1.seqid,link.gene2.seqid,link.gene1.strand,link.gene2.strand))
                 lAlignEffect, lMutations, r1, r2 = link.getEffect()
                 for strMutation in lMutations:
                     f.write(strMutation)
@@ -156,9 +163,6 @@ class Analyzer(object):
                 f.write(algmtGene)
         f.close()
 
-
-
-
     def runAnalyze(self):
         """run analyze"""
 
@@ -173,7 +177,6 @@ class Analyzer(object):
         logging.info('Parsing Blast xml file')
         iBlastXMLParser = BlastXMLParser(self.BlastXMLFile)
         lAlignmentTuples = iBlastXMLParser.getAlignmentsFromTupleOfRegions(lRegions)
-        #print lAlignmentTuples
 
         index = 0
         for dup in self.lDuplications:
@@ -219,8 +222,6 @@ class Analyzer(object):
             logging.info('Generating circos files')
             self.writeCircosPlotFiles()
 
-
-
     def writeCircosPlotFiles(self):
         """write circos files"""
 
@@ -258,29 +259,22 @@ class Analyzer(object):
         logging.info('Writing circos configuration file in {}'.format(CircosConfFile))
         cPlot.writeCircosConf()
 
-
-
     def _buildGeneLinks(self,lGeneSeq1,lGeneSeq2,dup):
         """build"""
 
         lLinks = []
         for gene1 in lGeneSeq1:
-            #print gene1.id
             (seq2ID,val1) = dup.dSeqToSeq[gene1.seqid][gene1.start]
             (seq2ID,val2) = dup.dSeqToSeq[gene1.seqid][gene1.end]
             seq2Start = min(val1,val2)
             seq2End = max(val1,val2)
-#            print  'start {} end {}'.format(seq2Start,seq2End)
             for gene2 in lGeneSeq2:
-#                print 'gene2 {} start {} end {}'.format(gene2.seqid, gene2.start, gene2.end)
                 if (gene2.start < seq2Start and gene2.end < seq2Start) or (gene2.start > seq2End and gene2.end > seq2End):
                     next
                 else:
-                   #print 'gene1 -  gene2 : {} {}'.format(gene1.id,gene2.id)
                    lLinks.append(GeneLink(dup=dup,gene1=gene1,gene2=gene2)) 
         return lLinks        
         # todo set : + logging.debug
-
       
     def _extractGeneInDuplication(self,dup):
         """extract """

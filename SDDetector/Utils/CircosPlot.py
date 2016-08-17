@@ -59,8 +59,8 @@ class CircosPlot(object):
             f.write('axis_break_at_edge = yes\n')
             f.write('axis_break         = yes\n')
             f.write('axis_break_style   = 2\n')
- 
-            f.write('<pairwise {} {}>\n'.format(self.lSeqNames[0],self.lSeqNames[-1]))
+            lSeqToDraw = self.getSequencesToDraw().split(';') 
+            f.write('<pairwise {} {}>\n'.format(lSeqToDraw[0],lSeqToDraw[-1]))
             f.write('spacing = 4r\n')
             f.write('</paiwise>\n')
 

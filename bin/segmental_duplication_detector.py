@@ -4,6 +4,7 @@ import argparse
 import logging
 import os
 
+from SDDetector.version import __version__
 from SDDetector.Db.AlignDB import AlignDB
 from SDDetector.Utils.AlignmentChainer import AlignmentChainer
 from SDDetector.Parser.Blast.BlastTabParser import BlastTabParser
@@ -39,7 +40,7 @@ class Detector(object):
         """Parse arguments from command line"""
 
         program = 'SDDetector'
-        version = 0.1
+        version = __version__
         description = "SDDetector: detects segmental duplications in genome"
 
         parser = argparse.ArgumentParser(prog=program)

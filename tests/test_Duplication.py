@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 
-
 import unittest
 
 from SDDetector.Entities.Duplication import Duplication
@@ -146,8 +145,6 @@ class TestDuplication(unittest.TestCase):
         self.assertEquals('T----ATAT',dup.getSeqAlignment('seq5',21,25)[0]) 
 
 
-
 if __name__ == "__main__":
     suite = unittest.TestLoader().loadTestsFromTestCase(TestDuplication)
     unittest.TextTestRunner(verbosity=2).run(suite)
-

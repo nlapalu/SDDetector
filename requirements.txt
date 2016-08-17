@@ -1,1 +1,1 @@
-Biopython (if you want parse blast XML results)
+Biopython

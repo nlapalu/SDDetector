@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 
-
 import unittest
 
 from SDDetector.Entities.Duplication import Duplication
@@ -28,10 +27,6 @@ class TestGffDuplicationParser(unittest.TestCase):
                          Duplication('seq11',554466,556516,'seq11',38277,40563,[(Region('seq11',554466,554591,1),Region('seq11',38277,38402,1)),(Region('seq11',554467,556516,-1),Region('seq11',38511,40563,1))]),
                          Duplication('seq11',584193,591205,'seq11',26582,33594,[(Region('seq11',584193,591205,-1),Region('seq11',26582,33594,1))])]
 
-        #for i in iGffDuplicationParser.getAllDuplications():
-            #print '{}-{}-{}-{}-{}-{}'.format(i.seq1,i.start1,i.end1,i.seq2,i.start2,i.end2)
-         #   for a,b in i.lRegions:
-             #   print '{}-{}-{}-{}-{}-{}-{}-{}'.format(a.seq,a.start,a.end,a.strand,b.seq,b.start,b.end,b.strand)
 
         self.assertEqual(iGffDuplicationParser.getAllDuplications(),lDuplications)
 

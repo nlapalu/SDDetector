@@ -68,7 +68,6 @@ class TestAlignmentChainer(unittest.TestCase):
         self.assertEquals([Chain([al1,al2]),Chain([al3]),Chain([al4])],iAlgmtChainer.lChains)
         self.assertEquals({1:[0], 2:[0], 3:[1], 4:[2]},iAlgmtChainer.dIndex)
 
-
     def test_chainAlignments_Case3(self):
         """Test chainAlignment case3: complex chain with interleaved coordinates"""
 

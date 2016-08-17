@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 
+import os
 import logging
 import re
-import numpy as np
-#from SDDetector.Utils.FastaUtils import FastaUtils as fu
+#import numpy as np
 
 class FastaFileIndexer(object):
 
@@ -18,7 +18,6 @@ class FastaFileIndexer(object):
         self.lSeq = []
         self.dSeq = {}
         self.dIndexSeq = {}
-        #self.fp
         
 
     def read(self):
@@ -43,24 +42,21 @@ class FastaFileIndexer(object):
                 else:
                     mySeq.append(line.replace('\n',''))
 
-    def write(self):
-        """write"""
+#    def write(self):
+#        """write"""
 
-        size = self.getMaxSize()
-        lSeq = []
-        for i, seq in enumerate(self.dSeq):
-            print seq, i
-            self.dIndexSeq[seq] = i
-            l = ['a']*size
-            print len(self.dSeq[seq])
-            l[0:len(self.dSeq[seq])]
-            lSeq.append(l)
+#        size = self.getMaxSize()
+#        lSeq = []
+#        for i, seq in enumerate(self.dSeq):
+#            self.dIndexSeq[seq] = i
+#            l = ['a']*size
+#            l[0:len(self.dSeq[seq])]
+#            lSeq.append(l)
              
-            
-        genome = np.array(lSeq, dtype='a1')
-        fp = np.memmap('{}.idx'.format(self.filename),dtype='a1',mode='w+', shape=(len(lSeq),size))
-        fp[:] = genome[:]
-        del fp,genome
+#        genome = np.array(lSeq, dtype='a1')
+#        fp = np.memmap('{}.idx'.format(self.filename),dtype='a1',mode='w+', shape=(len(lSeq),size))
+#        fp[:] = genome[:]
+#        del fp,genome
         
     def getMaxSize(self):
         """Return the size of the longest sequence"""
@@ -91,4 +87,6 @@ class FastaFileIndexer(object):
 
     def delete(self):
         """delete index"""
-        pass
+
+        logging.info('Deleting index: {}.idx'.format(self.filename)) 
+        os.remove('{}.idx'.format(self.filename))
