@@ -67,11 +67,11 @@ class Chain(object):
                 strand = '-'
 
             if format == 'gff3':
-                lines.append('{}\tSegDupAna\tmatch_part\t{}\t{}\t.\t{}\t.\tID=match{};Parent={};Target={} {} {};length={};identities={};identity_percentage={:.2f}\n'.format(algmt.sbjct,algmt.sstart,algmt.send,strand,algmt.id,id,algmt.query,algmt.qstart,algmt.qend,algmt.length,algmt.identities,(algmt.identities/float(algmt.length))))
+                lines.append('{}\tSDDetector\tmatch_part\t{}\t{}\t.\t{}\t.\tID=match{};Parent=chain{};Target={} {} {};length={};identities={};identity_percentage={:.2f}\n'.format(algmt.sbjct,algmt.sstart,algmt.send,strand,algmt.id,id,algmt.query,algmt.qstart,algmt.qend,algmt.length,algmt.identities,(algmt.identities/float(algmt.length))))
             if format == 'bed':
                 lines.append('{}\t'.format(algmt.sbjct))
         if format == 'gff3':
-            lines.insert(0, '{}\tSegDupAna\tmatch\t{}\t{}\t.\t.\t.\tID=chain{};length={}\n'.format(algmt.sbjct,sstartMin,sendMax,id,self.getLength()))
+            lines.insert(0, '{}\tSDDetector\tmatch\t{}\t{}\t.\t.\t.\tID=chain{};length={}\n'.format(algmt.sbjct,sstartMin,sendMax,id,self.getLength()))
 
         return ''.join(lines)
 

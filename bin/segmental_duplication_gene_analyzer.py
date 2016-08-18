@@ -97,8 +97,9 @@ class Analyzer(object):
         if not os.path.exists(self.GeneFile):
             raise Exception('File {} does not exist'.format(self.GeneFile))
         self.TEFile = args.TEFile
-        if not os.path.exists(self.TEFile):
-            raise Exception('File {} does not exist'.format(self.TEFile))
+        if self.TEFile:
+            if not os.path.exists(self.TEFile):
+                raise Exception('File {} does not exist'.format(self.TEFile))
         self.circos = args.circos
         self.GenomeFile = args.GenomeFile
         if not os.path.exists(self.GenomeFile):
@@ -117,6 +118,7 @@ class Analyzer(object):
                 lAlignEffect, lMutations, r1, r2 = link.getEffect()
                 for strMutation in lMutations:
                     f.write(strMutation)
+                f.write('\n')
 
                 nbBases = len(lAlignEffect[0])
                 size = 60
