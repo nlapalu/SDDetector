@@ -14,11 +14,15 @@ class TestFastaFileIndexer(unittest.TestCase):
         pass
 
     def test_read(self):
-        #self.index.read()
-        pass
+        self.index.read()
+        self.assertEquals(['seq1','seq2'],self.index.lSeq)
+        self.assertEquals(167,len(self.index.dSeq['seq1']))
+        self.assertEquals(400,len(self.index.dSeq['seq2']))
+
  
     def test_write(self):
-        self.index.read()
+        pass
+#        self.index.read()
 #        self.index.write()
 #        self.index.delete()
 

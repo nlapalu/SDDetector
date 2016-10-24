@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import sys
+import logging
 
 class Duplication(object):
 
@@ -18,7 +19,39 @@ class Duplication(object):
         self.dSeqToSeq = {} 
         if self.lRegions and self.lSeqAlgmts:
             self.dSeqToSeq = self.getdSeqToSeq()
+        self.DuplicationType = self.setDuplicationType()
 
+    def setDuplicationType(self):
+        """set if duplication type: mirror, bridge, intra,inter """
+
+        if (self.seq1, self.start1, self.end1) == (self.seq2, self.start2, self.end2):
+            return 'mirror'
+        if self.seq1 == self.seq2:
+            if self.isOverlapping:
+                return 'bridge'
+            if not self.isOverlapping: 
+                return 'intra'
+        if self.seq1 != self.seq2:
+            return 'inter'
+        else:
+            logging.error('Could not detect duplication type for duplication: {}'.format(self.seq1,self.start1, self.end1, self.seq2, self.start2, self.end2))
+            return None
+
+    def isOverlapping(self):
+        """test if seq1 overlapps seq2"""
+
+        start = min(self.start1, self.start2)
+        if start == self.start1:
+            if self.end1 < self.start2:
+                return False
+            else:
+                return True
+        else:
+            if self.end2 < self.start1:
+                return False
+            else:
+                return True
+            
 
     def getdSeqToSeq(self):
         """get """
@@ -117,12 +150,14 @@ class Duplication(object):
                 sys.exit("Error this sequence is not in this duplication")
         
             for i, reg in enumerate (self.lRegions):
+                logging.debug('request:{}-{}-{}, region:{}-{}'.format(seqid,start,end,reg[seqIndex].start,reg[seqIndex].end))
                 if start >= reg[seqIndex].start and end <= reg[seqIndex].end:
                     myRegionIndex = i
                     myRegion = reg[seqIndex]
-            if myRegionIndex == None:
+            if myRegionIndex == None and start > 0 and end > 0:
                 print self.__repr__()
-                sys.exit("Error region of this sequence not in this duplication : {}-{}".format(start,end))
+                logging.info("Error no region span these positions : {}-{}, possibly splitted regions".format(start,end))
+                return (None,None)
         else:
             for index in range(0,2):
                 for i, reg in enumerate(self.lRegions):
@@ -130,10 +165,10 @@ class Duplication(object):
                         myRegionIndex = i
                         myRegion = reg[index]
                         seqIndex = index
-            if myRegionIndex == None:
+            if myRegionIndex == None and start > 0 and end > 0:
                 print self.__repr__()
-                sys.exit("Error region of this sequence not in this duplication : {}-{}".format(start,end))
-   
+                logging.info("Error no region span these positions : {}-{}, possibly splitted regions".format(start,end))
+                return (None,None)
                 
 
         algmt = ''

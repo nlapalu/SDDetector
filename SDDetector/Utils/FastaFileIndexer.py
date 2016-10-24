@@ -41,6 +41,7 @@ class FastaFileIndexer(object):
                     self.dSeq[currentSeq] = ''
                 else:
                     mySeq.append(line.replace('\n',''))
+            self.dSeq[currentSeq] += ''.join(mySeq)
 
 #    def write(self):
 #        """write"""
