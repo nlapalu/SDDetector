@@ -42,8 +42,26 @@ class GeneLink(object):
 #        print self.gene1.start
 #        print self.dup.dSeqToSeq 
 
+        startReverse = None
+        endReverse = None
+        startDeletion = ''
+        endDeletion = ''
         startReverse = self.dup.dSeqToSeq[self.gene1.seqid][self.gene1.start][1]
         endReverse = self.dup.dSeqToSeq[self.gene1.seqid][self.gene1.end][1]
+
+        print 'startreverse avant {}'.format(startReverse)
+        print 'endReverse avant {}'.format(endReverse)
+
+        while (startReverse == None):
+            startReverse = self.dup.dSeqToSeq[self.gene1.seqid][self.gene1.start+1][1]
+            startDeletion +='-'
+        while (endReverse == None):
+            endReverse = self.dup.dSeqToSeq[self.gene1.seqid][self.gene1.end-1][1]
+            endDeletion +='-'
+
+ 
+        print 'startreverse apres {}'.format(startReverse)
+        print 'endReverse apres {}'.format(endReverse)
 
         if startReverse > endReverse:
             strand = -1
@@ -80,15 +98,197 @@ class GeneLink(object):
 
         algmtGene1Start = start 
         algmtGene1End = end
-#        print start
-#        print end
+        print start
+        print end
+
         algmtGene2Start = min(self.dup.dSeqToSeq[self.gene1.seqid][start][1],self.dup.dSeqToSeq[self.gene1.seqid][end][1])
         algmtGene2End = max(self.dup.dSeqToSeq[self.gene1.seqid][start][1],self.dup.dSeqToSeq[self.gene1.seqid][end][1])
+        #FIX-BUG - None pos if deletion.
+        print "algmtGene2Start {}:  val: {} - {}".format(algmtGene2Start,self.dup.dSeqToSeq[self.gene1.seqid][start][1],self.dup.dSeqToSeq[self.gene1.seqid][end][1])
+ 
+        print "algmtGene2End {}:  val: {} - {}".format(algmtGene2End,self.dup.dSeqToSeq[self.gene1.seqid][start][1],self.dup.dSeqToSeq[self.gene1.seqid][end][1])
+        
 
+     
         #for i in range(start,end):
         algmtGene1, algmtGene1Strand = self.dup.getSeqAlignment(self.gene1.seqid,algmtGene1Start,algmtGene1End)
         algmtGene2, algmtGene2Strand = self.dup.getSeqAlignment(self.gene2.seqid,algmtGene2Start,algmtGene2End)
 
+#        print "len alg1 - {}".format(len(algmtGene1))
+#        print "len alg2 - {}".format(len(algmtGene2))
+        
+        if not algmtGene1 or not algmtGene2:
+            return (None,None,None,None)
+
+        if startDeletion:
+            algmtGene2 = startDeletion + algmtGene2
+        if endDeletion:
+            algmtGene2 = algmtGene2 + endDeletion
+
+ #       print 'algmt1: {}'.format(algmtGene1)
+ #       print 'algmt2: {}'.format(algmtGene2)
+ #       print algmtGene2Start
+ #       print algmtGene2End
+ #       print self.gene2.seqid
+ #       print algmtGene2Strand
+
+
+        lPosCDSGene1 = []
+        lPosCDSGene2 = []
+        print self.gene1.id
+        for cds in self.gene1.lTranscripts[0].lCDS:
+            for pos in range(cds.start, cds.end+1):
+               lPosCDSGene1.append(pos) 
+        for cds in self.gene2.lTranscripts[0].lCDS:
+            for pos in range(cds.start, cds.end+1):
+               lPosCDSGene2.append(pos)
+
+        if algmtGene1Strand == -1:
+            index = 0
+            loopEnd = algmtGene1End
+            while loopEnd != algmtGene1Start-1:
+                if algmtGene1[index] != '-':
+                    if loopEnd in lPosCDSGene1:
+                        algmtGene1 = algmtGene1[:index] + algmtGene1[index].upper() + algmtGene1[index+1:]
+                    else:
+                        algmtGene1 = algmtGene1[:index] + algmtGene1[index].lower() + algmtGene1[index+1:]
+                    loopEnd -= 1
+                if algmtGene1[index] == '-':
+                    next
+                index += 1
+              
+        if  algmtGene1Strand == 1:
+            index = 0
+            loopEnd = algmtGene1Start
+            while loopEnd != algmtGene1End+1:
+                if algmtGene1[index] != '-':
+                    if loopEnd in lPosCDSGene1:
+                        algmtGene1 = algmtGene1[:index] + algmtGene1[index].upper() + algmtGene1[index+1:]
+                    else:
+                        algmtGene1 = algmtGene1[:index] + algmtGene1[index].lower() + algmtGene1[index+1:]
+                    loopEnd += 1
+                if algmtGene1[index] == '-':
+                    next
+                index += 1
+
+############################
+############################
+
+
+  #      print "ICI {} {}".format(algmtGene2Strand, self.gene2.strand)
+             
+        if algmtGene2Strand == -1:
+            index = 0
+            loopEnd = algmtGene2End
+            while loopEnd != algmtGene2Start-1:
+                if algmtGene2[index] != '-':
+                    if loopEnd in lPosCDSGene2:
+                        algmtGene2 = algmtGene2[:index] + algmtGene2[index].upper() + algmtGene2[index+1:]
+                    else:
+                        algmtGene2 = algmtGene2[:index] + algmtGene2[index].lower() + algmtGene2[index+1:]
+                    loopEnd -= 1
+                if algmtGene2[index] == '-':
+                    next
+                index += 1
+              
+        if  algmtGene2Strand == 1:
+            index = 0
+            loopEnd = algmtGene2Start
+            while loopEnd != algmtGene2End+1:
+   #             print algmtGene2
+   #             print algmtGene2End+1
+   #             print index
+   #             print loopEnd
+                if algmtGene2[index] != '-':
+                    if loopEnd in lPosCDSGene2:
+                        algmtGene2 = algmtGene2[:index] + algmtGene2[index].upper() + algmtGene2[index+1:]
+                    else:
+                        algmtGene2 = algmtGene2[:index] + algmtGene2[index].lower() + algmtGene2[index+1:]
+                    loopEnd += 1
+                if algmtGene2[index] == '-':
+                    next
+                index += 1
+ 
+
+        #for CDS in gene1.lTranscripts[0].lCDS:
+         #   pass
+
+        #for CDS in gene2
+
+        return (algmtGene1,algmtGene2, Region(self.gene1.seqid,algmtGene1Start,algmtGene1End,algmtGene1Strand),Region(self.gene2.seqid,algmtGene2Start,algmtGene2End,algmtGene2Strand))
+
+ 
+    def getCDSAlignmentOLD(self):
+        """ pass """
+
+        start = None
+        end = None
+        strand = 1
+
+
+#        print self.gene1.seqid
+#        print self.gene1.start
+#        print self.dup.dSeqToSeq 
+
+        startReverse = self.dup.dSeqToSeq[self.gene1.seqid][self.gene1.start][1]
+        endReverse = self.dup.dSeqToSeq[self.gene1.seqid][self.gene1.end][1]
+
+
+        print 'startreverse apres {}'.format(startReverse)
+        print 'endReverse apres {}'.format(endReverse)
+
+        if startReverse > endReverse:
+            strand = -1
+            
+
+
+#        print startReverse
+#        print strand
+#        print endReverse
+#        print self.gene2.start
+        if strand == -1:
+            if startReverse > self.gene2.end:
+                start = self.gene1.start
+            else:
+                #start = self.gene1.start - (self.gene2.end - startReverse)
+                start =  self.dup.dSeqToSeq[self.gene2.seqid][self.gene2.end][1]
+            if endReverse > self.gene2.start:
+                #end = self.gene1.start + (endReverse - self.gene2.start)
+                end = self.dup.dSeqToSeq[self.gene2.seqid][self.gene2.start][1]
+            else:
+                end = self.gene1.end
+        
+        else:
+            if startReverse > self.gene2.start:
+                #start = self.gene1.start - (startReverse-self.gene2.start)
+                start = self.dup.dSeqToSeq[self.gene2.seqid][self.gene2.start][1]
+            else:
+                start = self.gene1.start
+            if endReverse > self.gene2.end:
+                end = self.gene1.end
+            else:
+                #end = self.gene1.end + (self.gene2.end - endReverse)
+                end = self.dup.dSeqToSeq[self.gene2.seqid][self.gene2.end][1]
+
+        algmtGene1Start = start 
+        algmtGene1End = end
+        print start
+        print end
+        algmtGene2Start = min(self.dup.dSeqToSeq[self.gene1.seqid][start][1],self.dup.dSeqToSeq[self.gene1.seqid][end][1])
+        algmtGene2End = max(self.dup.dSeqToSeq[self.gene1.seqid][start][1],self.dup.dSeqToSeq[self.gene1.seqid][end][1])
+
+        #FIX-BUG - None pos if deletion.
+        print "algmtGene2Start {}:  val: {} - {}".format(algmtGene2Start,self.dup.dSeqToSeq[self.gene1.seqid][start][1],self.dup.dSeqToSeq[self.gene1.seqid][end][1])
+ 
+        print "algmtGene2End {}:  val: {} - {}".format(algmtGene2End,self.dup.dSeqToSeq[self.gene1.seqid][start][1],self.dup.dSeqToSeq[self.gene1.seqid][end][1])
+        
+      
+        #for i in range(start,end):
+        algmtGene1, algmtGene1Strand = self.dup.getSeqAlignment(self.gene1.seqid,algmtGene1Start,algmtGene1End)
+        algmtGene2, algmtGene2Strand = self.dup.getSeqAlignment(self.gene2.seqid,algmtGene2Start,algmtGene2End)
+
+        print "len alg1 - {}".format(len(algmtGene1))
+        print "len alg2 - {}".format(len(algmtGene2))
  #       print 'algmt1: {}'.format(algmtGene1)
  #       print 'algmt2: {}'.format(algmtGene2)
  #       print algmtGene2Start
@@ -183,7 +383,11 @@ class GeneLink(object):
     def getEffect(self):
         """pass"""
 
+
         algmtGene1, algmtGene2, r1, r2 = self.getCDSAlignment()
+
+        if algmtGene1 == None or algmtGene2 == None:
+            return (None, None, None, None)
 
         if (self.gene1.strand == -1 and r1.strand == 1) or (self.gene1.strand == 1 and r1.strand == -1):
             algmtGene1 = self.reverseComplement(algmtGene1)
@@ -213,6 +417,7 @@ class GeneLink(object):
 
 
         for i,val in enumerate(algmtGene1):
+            print "LENNNNN {}--{}".format(len(algmtGene1),len(algmtGene2)) 
             if algmtGene1[i].upper() != algmtGene2[i].upper():
 #                print "{} : {} - {} --- ({}-{},{}-{})".format(i,algmtGene1[i],algmtGene2[i],r1.seq,indexAlgmt1,r2.seq,indexAlgmt2)
                 lStrMutations.append("{} : {} - {} --- ({}-{},{}-{})\n".format(i+1,algmtGene1[i],algmtGene2[i],r1.seq,indexAlgmt1,r2.seq,indexAlgmt2))

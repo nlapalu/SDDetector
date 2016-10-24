@@ -43,8 +43,11 @@ class AlignDB(SqliteDB):
                              qstrand,sstrand) values (%s)''' % (','.join('\'{}\''.format(i) for i in (algmt.id,algmt.query,algmt.sbjct, algmt.qstart, algmt.qend, algmt.sstart, algmt.send, algmt.length, algmt.identities, algmt.qstrand, algmt.sstrand))))
                    
 
-    def insertlAlignments(self, lAlignments):
+    def insertlAlignments(self, lAlignments, length=0):
         """Insert a list of alignments"""
+
+        if length > 0:
+            lAlignments = [ algmt for algmt in lAlignments if algmt.length > length ]
 
         self.conn.executemany('''insert into alignment (id, query, sbjct,
                                  qstart, qend, sstart,send, length, identities,
@@ -178,15 +181,24 @@ class AlignDB(SqliteDB):
         return [ row[0] for row in cursor ]
 
 
+#    def selectAlgmtsBelowIdentityThreshold(self, threshold=0.9):
+#        """Select alignments with identity below the defined threshold"""
+
+#        cursor = self.conn.execute('''select id, identities, length from alignment \
+#                                      where identities/ cast(length as real) < {} ''' \
+#                                   .format(threshold))
+
+#        return [ row[0] for row in cursor ]
+
     def selectAlgmtsBelowIdentityThreshold(self, threshold=0.9):
         """Select alignments with identity below the defined threshold"""
 
-        cursor = self.conn.execute('''select id, identities, length from alignment \
-                                      where identities/ cast(length as real) < {} ''' \
-                                   .format(threshold))
+        cursor = self.conn.execute('''select id, identities, qstart, qend, sstart, send
+                                      from alignment ''')
 
-        return [ row[0] for row in cursor ]
+        return [ row[0] for row in cursor if (float(row[1])/(row[3]-row[2]+1)) < threshold ]
 
+ 
     def selectProximalAlgmts(self, id, maxGap=3000):
         """
             Select alignments with a maximal distance of 'maxGap' between the provided 
@@ -211,16 +223,52 @@ class AlignDB(SqliteDB):
 
         cursor = self.conn.execute('''select distinct al2.id from alignment al1, alignment al2 \
                                    where \
-                                   ((al1.sstart > al2.sstart and al1.sstart < al2.send) \
-                                   or (al1.sstart < al2.sstart and al1.send > al2.sstart) \
-                                   or (al1.send > al2.sstart and al1.send < al2.send)) \
-                                   and ((al1.qstart > al2.qstart and al1.qstart < al2.qend) \
-                                   or (al1.qstart < al2.qstart and al1.qend > al2.qstart) \
-                                   or (al1.qend > al2.qstart and al1.qend < al2.qend)) \
+                                   ((al1.sstart >= al2.sstart and al1.sstart < al2.send) \
+                                   or (al1.sstart <= al2.sstart and al1.send > al2.sstart) \
+                                   or (al1.send > al2.sstart and al1.send <= al2.send)) \
+                                   and ((al1.qstart >= al2.qstart and al1.qstart < al2.qend) \
+                                   or (al1.qstart <= al2.qstart and al1.qend > al2.qstart) \
+                                   or (al1.qend > al2.qstart and al1.qend <= al2.qend)) \
                                    and  al1.sbjct = al2.sbjct and al1.query = al2.query \
                                    and al1.length > al2.length''')
  
         return [ row[0] for row in cursor ]
+
+    def selectQueryOnlySuboptimalAlgmts(self, lIds):
+
+        cursor = self.conn.execute('''select distinct al2.id from alignment al1, alignment al2 \
+                                   where \
+                                   ((al1.qstart >= al2.qstart and al1.qstart < al2.qend) \
+                                   or (al1.qstart <= al2.qstart and al1.qend > al2.qstart) \
+                                   or (al1.qend > al2.qstart and al1.qend <= al2.qend)) \
+                                   and al1.query = al2.query \
+                                   and al1.length >= al2.length \
+                                   and al1.id != al2.id \
+                                   and al1.id in ({})\
+                                   and al2.id in ({})'''.format( \
+                                   ','.join(str(id) for id in lIds),\
+                                   ','.join(str(id) for id in lIds)))
+
+        return [ row[0] for row in cursor ]
+
+
+    def selectSubjectOnlySuboptimalAlgmts(self, lIds):
+
+        cursor = self.conn.execute('''select distinct al2.id from alignment al1, alignment al2 \
+                                   where \
+                                   ((al1.sstart >= al2.sstart and al1.sstart < al2.send) \
+                                   or (al1.sstart <= al2.sstart and al1.send > al2.sstart) \
+                                   or (al1.send > al2.sstart and al1.send <= al2.send)) \
+                                   and al1.query = al2.query \
+                                   and al1.length >= al2.length \
+                                   and al1.id != al2.id \
+                                   and al1.id in ({})\
+                                   and al2.id in ({})'''.format( \
+                                   ','.join(str(id) for id in lIds),\
+                                   ','.join(str(id) for id in lIds)))
+
+        return [ row[0] for row in cursor ]
+
 
     def  commit(self):
         """Commit transactions"""

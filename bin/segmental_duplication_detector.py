@@ -9,11 +9,14 @@ from SDDetector.Db.AlignDB import AlignDB
 from SDDetector.Utils.AlignmentChainer import AlignmentChainer
 from SDDetector.Parser.Blast.BlastTabParser import BlastTabParser
 
-try:
-    from SDDetector.Parser.Blast.BlastXMLParser import BlastXMLParser
-    Biopython_available = True
-except ImportError:
-    Biopython_available = False 
+#try:
+#    from SDDetector.Parser.Blast.BlastXMLParser import BlastXMLParser
+#    Biopython_available = True
+#except ImportError:
+#    Biopython_available = False 
+
+
+from SDDetector.Parser.Blast.BlastXMLParserExpat import BlastXMLParserExpat
 
 
 class Detector(object):
@@ -63,6 +66,10 @@ class Detector(object):
         parser.add_argument("-l", "--chainLength", type=int, default=5000,
                             help="minimum chain length (without gaps) to keep, in bp \
                             [default=5000]")
+        parser.add_argument("-t", "--matchLength", type=int, default=0,
+                            help="minimum match length to consider [default=0]")
+        parser.add_argument("-r", "--removeOverDup", action="store_true",
+                            help="remove overlapping duplications, keep the longest")
         parser.add_argument("-a", "--exportall", action="store_true",
                             help="export the content of the db at each step: all, removing \
                             self-matches, identity threshold, suboptimal matches")
@@ -84,9 +91,9 @@ class Detector(object):
         logging.getLogger().setLevel(self.logLevel)
 
         self.inputFormat = args.inputFormat.lower()
-        if self.inputFormat == 'xml' and Biopython_available == False :
-            raise Exception('BioPython is not installed, xml parsing not available. \
-                             Please choose tab format, or install BioPython')
+#        if self.inputFormat == 'xml' and Biopython_available == False :
+#            raise Exception('BioPython is not installed, xml parsing not available. \
+#                             Please choose tab format, or install BioPython')
         if self.inputFormat not in ['xml','tab']:
             raise Exception('untractable blast format')
             exit(1)
@@ -106,6 +113,8 @@ class Detector(object):
             self.minIdentity = args.minIdent
         self.maxGap = args.maxGap
         self.chainLength = args.chainLength
+        self.matchLength = args.matchLength
+        self.removeOverDup = args.removeOverDup
         self.exportDBAllSteps = args.exportall
         self.exportBed = args.bed
 
@@ -138,6 +147,12 @@ class Detector(object):
             self.exportMatches('{}.suboptimal'.format(self.outputFile))
         logging.info('Chaining alignments with parameters: maximum Gap between fargments = {} bp, minimum chain length = {} bp'.format(self.maxGap, self.chainLength))
         self.chaineAlignmentsTogether(maxGap=self.maxGap, chainLength=self.chainLength)
+        if self.removeOverDup:
+            logging.info('Removing overlapping duplications: only the longest one is keep')
+            self.removeOverlappingDuplications()
+        if self.removeOverDup:
+            logging.info('Removing intra-sequence duplications with internal similarity')
+            self.removeDuplicationWithInternalSimilarity()
         logging.info('Exporting chains in gff3 format, file: {}'.format(self.outputFile))
         self.exportChains(self.outputFile)
         if self.exportBed:
@@ -148,11 +163,13 @@ class Detector(object):
     def parseAlignments(self):
         """Parse Alignments"""
 
-        if self.inputFormat == 'xml' and Biopython_available == True:
-            self.parser = BlastXMLParser(self.inputFile)
-        elif self.inputFormat == 'xml' and Biopython_available == False:
-            raise Exception('BioPython is not installed, xml parsing not available. \
-                             Please choose tab format, or install BioPython')
+#        if self.inputFormat == 'xml' and Biopython_available == True:
+#            #self.parser = BlastXMLParser(self.inputFile)
+#        elif self.inputFormat == 'xml' and Biopython_available == False:
+#            raise Exception('BioPython is not installed, xml parsing not available. \
+#                             Please choose tab format, or install BioPython')
+        if self.inputFormat == 'xml':
+            self.parser = BlastXMLParserExpat(self.inputFile)
         elif self.inputFormat == 'tab':
             self.parser = BlastTabParser(self.inputFile)
         else:
@@ -163,7 +180,7 @@ class Detector(object):
     def loadAlignmentsInDb(self):
         """Load Blast Alignments in Database"""
 
-        self.db.insertlAlignments(self.parser.getAllAlignments())
+        self.db.insertlAlignments(self.parser.getAllAlignments(), self.matchLength)
 
 
     def detectAndRemoveSelfMatchAlignments(self):
@@ -222,8 +239,20 @@ class Detector(object):
                     if chain.getLength() > chainLength:
                         lSelectedChains.append(chain)
 
-        self.lSortedChains = chainer.sortListOfChains(lSelectedChains)
+        chainer2 = AlignmentChainer(self.db, maxGap=maxGap)
+        self.lSortedChains = chainer2.sortListOfChains(lSelectedChains)
 
+    def removeOverlappingDuplications(self):
+        """Remove Overlapping Duplications"""
+
+        chainer = AlignmentChainer(self.db)
+        self.lSortedChains = chainer.removeOverlappingChains(self.lSortedChains)
+
+    def removeDuplicationWithInternalSimilarity(self):
+        """Remove Duplication with internal similarity"""
+
+        chainer = AlignmentChainer(self.db)
+        self.lSortedChains = chainer.removeChainsWithInternalSimilarity(self.lSortedChains)
 
     def exportChains(self, outputFile, format='gff3'):
         """Export Chains in gff3|bed format"""

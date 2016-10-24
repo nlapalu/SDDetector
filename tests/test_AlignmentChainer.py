@@ -84,6 +84,41 @@ class TestAlignmentChainer(unittest.TestCase):
         self.assertEquals([Chain([al1,al2]),Chain([al3,al4]),Chain([al5])],iAlgmtChainer.lChains)
         self.assertEquals({1:[0], 2:[0], 3:[1], 4:[1], 5:[2]},iAlgmtChainer.dIndex)
 
+    def test_removeOverlappingChains(self):
+        """Test removeOverlappingChains"""
+
+        al1 = Alignment('q1','s1',1000,1201,2000,2201,202,202,1,1, id=1)
+        al2 = Alignment('q1','s1',1500,2001,3000,3501,502,502,1,1, id=2)
+        al3 = Alignment('q1','s1',1000,1200,2100,2300,201,201,1,1,id=3)
+        al4 = Alignment('q1','s1',1500,2000,3100,3600,501,501,1,1,id=4)
+        al5 = Alignment('q1','s1',123000,124000,160000,161000,1001,1001,1,1,id=5)
+        al1b = Alignment('s1','q1',2000,2201,1000,1201,202,202,1,1, id=16)
+        al2b = Alignment('s1','q1',3000,3501,1500,2001,502,502,1,1, id=11)
+        al3b = Alignment('s1','q1',2100,2300,1000,1200,201,201,1,1,id=31)
+        al4b = Alignment('s1','q1',3100,3600,1500,2000,501,501,1,1,id=41)
+        lAlignments = [al1, al2, al3, al4, al5,al1b, al2b, al3b, al4b]
+        self.db.deleteAllAlignments()
+        self.db.insertlAlignments(lAlignments)
+        iAlgmtChainer = AlignmentChainer(self.db)
+        iAlgmtChainer.chainAlignments(lAlignments)
+        for i in iAlgmtChainer.lChains:
+            print i.convertChain(1)
+
+
+     def test_removeInternalAlignments(self):
+         """..."""
+
+        al1 = Alignment('Chr1','Chr1',12806596,12809714,12796459,12799562,3123,3123,1,1,1)
+        al2 = Alignment('Chr1','Chr1',12810507,12813088,12796459,12799028,2592,2592,1,1,2)
+        lAlignments = [al1, al2]
+        self.db.deleteAllAlignments()
+        self.db.insertlAlignments(lAlignments)
+        iAlgmtChainer = AlignmentChainer(self.db)
+        iAlgmtChainer.chainAlignments(lAlignments)
+
+
+
+
 
 if __name__ == "__main__":
     suite = unittest.TestLoader().loadTestsFromTestCase(TestAlignmentChainer)

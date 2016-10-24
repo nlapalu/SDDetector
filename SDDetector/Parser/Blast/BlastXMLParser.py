@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import logging
+import sys
 
 from Bio.Blast import NCBIXML
 from SDDetector.Entities.Alignment import Alignment
@@ -57,22 +58,41 @@ class BlastXMLParser(object):
                 lindex.append((reg1.seq,reg1.start,reg1.end,reg2.seq,reg2.start,reg2.end))
 #        print "INDEX {}".format(lindex)
 
-        lRegionAlgmts = [ () for i in range(len(lRegions)) ]
+        for i in lindex:
+            print i
+
+        #lRegionAlgmts = [ () for i in range(len(lRegions)) ]
+        dRegionAlgmts = { i: () for i in lindex}
 
         with open(self.inputBlastXMLFile,  'r') as input :
 
             blast_records = NCBIXML.parse(input)
             for blast_record in blast_records:
-                logging.debug('QUERY: {}'.format(blast_record.query))
+                logging.info('QUERY: {}'.format(blast_record.query))
                 for alignment in blast_record.alignments:
-                    logging.debug('SUBJECT: {}'.format(alignment.hit_id))
+                    logging.info('SUBJECT: {}'.format(alignment.hit_id))
                     for hsp in alignment.hsps:
                         logging.debug('{}-{}-{}-{}-{}-{}'.format(alignment.hit_id,hsp.sbjct_start,hsp.sbjct_end,blast_record.query,hsp.query_start,hsp.query_end))
                         if (alignment.hit_id,hsp.sbjct_start,hsp.sbjct_end,blast_record.query,hsp.query_start,hsp.query_end) in lindex:
-                            index = lindex.index((alignment.hit_id,hsp.sbjct_start,hsp.sbjct_end,blast_record.query,hsp.query_start,hsp.query_end))
-                            lRegionAlgmts[index] = (hsp.sbjct,hsp.query)
+                            #index = lindex.index((alignment.hit_id,hsp.sbjct_start,hsp.sbjct_end,blast_record.query,hsp.query_start,hsp.query_end))
+                            index = (alignment.hit_id,hsp.sbjct_start,hsp.sbjct_end,blast_record.query,hsp.query_start,hsp.query_end)
+                            dRegionAlgmts[index] = (hsp.sbjct,hsp.query)
+                            #lRegionAlgmts[index] = (hsp.sbjct,hsp.query)
 
         input.close()
+
+        lRegionAlgmts = [ () for i in range(len(lRegions)) ]
+        for i,val in enumerate(lindex):
+            if val in dRegionAlgmts:
+                lRegionAlgmts[i] = dRegionAlgmts[val]
+            else:
+               print('Error parsing, missing sequence alignment for {}'.format(lindex[i])) 
+        
+
+        for i,a in enumerate(lRegionAlgmts):
+            if len(lRegionAlgmts[i]) != 2:
+                print('Error missing sequence alignment for {}'.format(lindex[i])) 
+
         return lRegionAlgmts
 
 

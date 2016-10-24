@@ -149,32 +149,42 @@ class GeneDB(SqliteDB):
         dCDS = {}
 
 #        cursor = self.conn.execute('''select id, seqid, start, end, strand from gene where seqid = \'{}\' and start < {} and end > {}'''.format(seqid,end,start)) 
-        cursor = self.conn.execute('''select id, seqid, start, end, strand from gene where seqid = \'{}\' and start > {} and end < {}'''.format(seqid,start,end)) 
+        cursor = self.conn.execute('''select id, seqid, start, end, strand from gene where seqid = \'{}\' and start > {} and end < {} order by start'''.format(seqid,start,end)) 
         for row in cursor:        
             dGenes[row[0]] = Gene(row[0],row[1],row[2],row[3],row[4])
 
 #        cursor = self.conn.execute('''select id, seqid, start,end,strand,gene_id from transcript where seqid = \'{}\' and start < {} and end > {}'''.format(seqid,end,start))
         if dGenes:
-            cursor = self.conn.execute('''select id, seqid, start,end,strand,gene_id from transcript where seqid = \'{}\' and start > {} and end < {}'''.format(seqid,start,end)) 
+
+            for i in dGenes:
+                print i
+
+            cursor = self.conn.execute('''select id, seqid, start,end,strand,gene_id from transcript where seqid = \'{}\' and start > {} and end < {} order by start'''.format(seqid,start,end)) 
             for row in cursor:
                 transcript = Transcript(row[0],row[1],row[2],row[3],row[4],row[5])
-                dTranscripts[row[0]] = transcript
 
-                if len(dGenes[transcript.gene_id].lTranscripts) > 0:
-                    dGenes[transcript.gene_id].lTranscripts.append(transcript)
-                else:
-                    dGenes[transcript.gene_id].lTranscripts = [transcript]
+                if transcript.gene_id in dGenes:
+                    dTranscripts[row[0]] = transcript
+                    if len(dGenes[transcript.gene_id].lTranscripts) > 0:
+                        dGenes[transcript.gene_id].lTranscripts.append(transcript)
+                    else:
+                        dGenes[transcript.gene_id].lTranscripts = [transcript]
 
 #        cursor = self.conn.execute('''select cds_id, seqid, start,end,strand,transcript_id from cds where seqid = \'{}\' and start < {} and end > {}'''.format(seqid,end,start)) 
         if dTranscripts:
+
+            for i in dTranscripts:
+                print i
+
             cursor = self.conn.execute('''select cds_id, seqid, start,end,strand,transcript_id from cds where seqid = \'{}\' and start > {} and end < {} order by start'''.format(seqid,start,end)) 
             for row in cursor:
                 cds = CDS(row[0],row[1],row[2],row[3],row[4],row[5])
 
-                if len(dTranscripts[cds.transcript_id].lCDS) > 0:
-                    dTranscripts[cds.transcript_id].lCDS.append(cds)
-                else:
-                    dTranscripts[cds.transcript_id].lCDS = [cds]
+                if cds.transcript_id in dTranscripts:
+                    if len(dTranscripts[cds.transcript_id].lCDS) > 0:
+                        dTranscripts[cds.transcript_id].lCDS.append(cds)
+                    else:
+                        dTranscripts[cds.transcript_id].lCDS = [cds]
 
         return dGenes.values()
 

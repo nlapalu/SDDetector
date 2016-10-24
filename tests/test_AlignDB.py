@@ -72,6 +72,42 @@ class TestAlignDB(unittest.TestCase):
         self.db.insertlAlignments(lAlignments)
 
         self.assertEquals([2,3,4],self.db.selectSuboptimalAlgmts())
+
+    def test_selectSuboptimalAlgmts(self):
+        """Fix bug"""
+
+        al1 = Alignment('Chr1','Chr1',8798183,8824158,8812562,8838548,25998,25998,1,1, id=1)
+        al2 = Alignment('Chr1','Chr1',8798183, 8809780, 8826940, 8838548,11620,11620,1,1,id=2)
+        lAlignments = [al1,al2]
+        self.db.deleteAllAlignments()
+        self.db.insertlAlignments(lAlignments)
+
+        self.assertEquals([2],self.db.selectSuboptimalAlgmts())
+
+
+#8798183	8824158	.	+	.	ID=match21;Parent=chain6;Target=Chr1 8812562 8838548;length=25998;identities=25903;identity_percentage=0.997
+#8798183	8809780	.	+	.	ID=match281;Parent=chain7;Target=Chr1 8826940 8838548;length=11620;identities=11529;identity_percentage=0.994
+
+    def test_selectQueryOnlySuboptimalAlgmts(self):
+
+        al1 = Alignment('Chr1','Chr1',12796459,12799562,12806596,12809714,3123,3123,1,1,1)
+        al2 = Alignment('Chr1','Chr1',12796459,12799028,12810507,12813088,2592,2592,1,1,2)
+        lAlignments = [al1, al2]
+        self.db.deleteAllAlignments()
+        self.db.insertlAlignments(lAlignments)
+
+        self.assertEquals([2],self.db.selectQueryOnlySuboptimalAlgmts([1,2]))
+
+    def test_selectQueryOnlySuboptimalAlgmtsCase2(self):
+
+        al1 = Alignment('Chr1','Chr1',8839058,8839291,8810281,8810514,237,237,1,1,1)
+        al2 = Alignment('Chr1','Chr1',8839058,8839291,8824659,8824892,237,237,1,1,2)
+        lAlignments = [al1, al2]
+        self.db.deleteAllAlignments()
+        self.db.insertlAlignments(lAlignments)
+
+        self.assertEquals([1,2],self.db.selectQueryOnlySuboptimalAlgmts([1,2]))
+
         
     def test_selectAlignmentsWithDefinedIdOrderBySbjctCoord(self):
         """Test selectAlignmentsWithDefinedIdOrderBySbjctCoord"""

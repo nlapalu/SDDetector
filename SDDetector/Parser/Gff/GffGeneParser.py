@@ -33,6 +33,7 @@ class GffGeneParser(object):
         with open(self.inputGffFile, 'r') as input:
             for line in input:
                 if not re.match('^#', line):
+                    line = line.rstrip('\n')
                     values = line.split('\t')
 
                     if values[2] == 'gene':
