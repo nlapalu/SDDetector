@@ -9,7 +9,7 @@ from SDDetector.Entities.Alignment import Alignment
 class AlignDB(SqliteDB):
 
     def __init__(self, dbfile='', logLevel='ERROR'):
-        """AlignDB Constructor""" 
+        """AlignDB Constructor"""
 
         SqliteDB.__init__(self, dbfile=dbfile, logLevel=logLevel)
         self._createDBSchema()
@@ -41,7 +41,7 @@ class AlignDB(SqliteDB):
         self.conn.execute('''insert into alignment (id, query, sbjct,
                              qstart, qend, sstart, send, length, identities,
                              qstrand,sstrand) values (%s)''' % (','.join('\'{}\''.format(i) for i in (algmt.id,algmt.query,algmt.sbjct, algmt.qstart, algmt.qend, algmt.sstart, algmt.send, algmt.length, algmt.identities, algmt.qstrand, algmt.sstrand))))
-                   
+
 
     def insertlAlignments(self, lAlignments, length=0):
         """Insert a list of alignments"""
@@ -68,7 +68,7 @@ class AlignDB(SqliteDB):
         cursor = self.conn.execute('''delete from alignment where id in ({})''' \
                                    .format(','.join(str(id) for id in lIds)))
 
- 
+
     def deleteAllAlignments(self):
         """Delete all alignments"""
 
@@ -90,7 +90,7 @@ class AlignDB(SqliteDB):
             cursor = self.conn.execute('''select id, query, sbjct, qstart,
                                           qend, sstart, send, length,identities,
                                           qstrand, sstrand from alignment''')
-        
+
             for row in cursor :
                 f.write(Alignment(row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8], row[9], row[10], id=row[0]).convertToGff3())
 
@@ -137,14 +137,14 @@ class AlignDB(SqliteDB):
         """Select all sequence name used as subject"""
 
         cursor = self.conn.execute('''select distinct(sbjct) from alignment order by sbjct ASC''' )
-        
+
         return [ row[0] for row in cursor ]
 
     def selectAllQueries(self):
         """Select all sequence name used as query"""
 
         cursor = self.conn.execute('''select distinct(query) from alignment order by query ASC''' )
-        
+
         return [ row[0] for row in cursor ]
 
     def selectAlignmentsWithDefinedSbjctAndQueryOrderBySbjctCoord(self, sbjct, query):
@@ -156,7 +156,7 @@ class AlignDB(SqliteDB):
                                    sbjct = \'{}\' and query = \'{}\' \
                                    order by sstart ASC''' \
                                    .format(sbjct,query))
-        
+
         return [ Alignment(row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8], row[9], row[10], id=row[0]) for row in cursor ]
 
 
@@ -168,7 +168,7 @@ class AlignDB(SqliteDB):
                                    qstrand, sstrand from alignment where \
                                    id in ({}) order by sstart ASC''' \
                                    .format(','.join([ '\'{}\''.format(id) for id in lIds ])))
-        
+
         return [ Alignment(row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8], row[9], row[10], id=row[0]) for row in cursor ]
 
 
@@ -177,7 +177,7 @@ class AlignDB(SqliteDB):
 
         cursor = self.conn.execute('''select id from alignment where query = sbjct \
                                    and qstart = sstart and qend = send ''')
- 
+
         return [ row[0] for row in cursor ]
 
 
@@ -198,40 +198,48 @@ class AlignDB(SqliteDB):
 
         return [ row[0] for row in cursor if (float(row[1])/(row[3]-row[2]+1)) < threshold ]
 
- 
+
     def selectProximalAlgmts(self, id, maxGap=3000):
         """
-            Select alignments with a maximal distance of 'maxGap' between the provided 
+            Select alignments with a maximal distance of 'maxGap' between the provided
             alignment and alignments on identical (subject/query) further up the subject
+            and collinear !!!!
         """
-        
+
         cursor = self.conn.execute('''select al2.id, al2.query, al2.sbjct, al2.qstart,
                                    al2.qend, al2.sstart, al2.send, al2.length, al2.identities,
                                    al2.qstrand, al2.sstrand from alignment al1, alignment al2 where \
                                    (al2.sstart-al1.send) < {} and al1.sstart < al2.sstart \
+                                   and (al2.sstart-al1.send) > -1 \
                                    and al1.sbjct = al2.sbjct and al1.query = al2.query \
+                                   and al1.qstrand = al2.qstrand and al1.sstrand = al2.sstrand \
                                    and al1.id = {} order by al2.sstart''' \
                                    .format(maxGap,id))
-        
+
         return [ Alignment(row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8], row[9], row[10], id=row[0]) for row in cursor ]
 
-    def selectSuboptimalAlgmts(self):
+    def selectSuboptimalAlgmts(self, maxOverlap):
         """
             A suboptimal alignment is an alignment in the sense that the subject and query are
             complety covered or spanned by another alignment.
         """
-
         cursor = self.conn.execute('''select distinct al2.id from alignment al1, alignment al2 \
                                    where \
-                                   ((al1.sstart >= al2.sstart and al1.sstart < al2.send) \
-                                   or (al1.sstart <= al2.sstart and al1.send > al2.sstart) \
-                                   or (al1.send > al2.sstart and al1.send <= al2.send)) \
-                                   and ((al1.qstart >= al2.qstart and al1.qstart < al2.qend) \
-                                   or (al1.qstart <= al2.qstart and al1.qend > al2.qstart) \
-                                   or (al1.qend > al2.qstart and al1.qend <= al2.qend)) \
+                                   ((al1.sstart >= al2.sstart and al1.sstart < al2.send and (al2.send-al1.sstart) >= {} ) \
+                                   or (al1.send > al2.sstart and al1.send <= al2.send and (al1.send-al2.sstart) >= {} )) \
+                                   and ((al1.qstart >= al2.qstart and al1.qstart < al2.qend and (al2.qend-al1.qstart) >= {} )   \
+                                   or (al1.qend > al2.qstart and al1.qend <= al2.qend and (al1.qend-al2.qstart) >= {})) \
                                    and  al1.sbjct = al2.sbjct and al1.query = al2.query \
-                                   and al1.length > al2.length''')
- 
+                                   and al1.length > al2.length'''.format(maxOverlap, maxOverlap,maxOverlap, maxOverlap))
+
+
+                                   #or (al1.sstart <= al2.sstart and al1.send > al2.sstart) \
+                                   #or (al1.qstart <= al2.qstart and al1.qend > al2.qstart) \
+
+#        for row in cursor:
+          #  print "devant: {}".format(self.selectAlignmentById(row[1]))
+#            print "vire : {}".format(self.selectAlignmentById(row[0]))
+
         return [ row[0] for row in cursor ]
 
     def selectQueryOnlySuboptimalAlgmts(self, lIds):

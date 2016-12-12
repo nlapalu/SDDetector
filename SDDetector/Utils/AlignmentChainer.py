@@ -18,6 +18,81 @@ class AlignmentChainer(object):
         logging.basicConfig(level=logLevel)
 
 
+    def chainAlignments2(self, lAlgmts):
+
+        maxOverlap = 0
+
+        for algmt in lAlgmts:
+            if algmt.id not in self.dIndex:
+                chain = Chain([algmt])
+                index = len(self.lChains)
+                self.lChains.append(chain)
+                self.dIndex[algmt.id] = [index]
+
+	    lProximalAlgmts = self.db.selectProximalAlgmts(algmt.id, self.maxGap)
+
+            for proxAlgmt in lProximalAlgmts:
+                if abs(self.distanceBetweenQueryAlgmts(algmt,proxAlgmt)) < self.maxGap and self.distanceBetweenQueryAlgmts(algmt,proxAlgmt) > -maxOverlap:
+                    if abs(self.distanceBetweenSbjctAlgmts(algmt,proxAlgmt)) < self.maxGap and self.distanceBetweenSbjctAlgmts(algmt,proxAlgmt) > -maxOverlap:
+                        if self.distanceBetweenQuerySbjctAlgmts(algmt,proxAlgmt) > -maxOverlap:
+                            if self.distanceBetweenQuerySbjctAlgmts(proxAlgmt,algmt) > -maxOverlap:
+
+                                lChainIdsCurrentAlgmt = self.dIndex[algmt.id]
+                                newChainTodo = False
+                                for chainId in lChainIdsCurrentAlgmt:
+                                    lAlgmtsCurrentChain = self.lChains[chainId].sortListOfAlgmts()
+                                    ToInclude = True
+                                    for cAlgmt in lAlgmtsCurrentChain:
+                                        if self.distanceBetweenQueryAlgmts(proxAlgmt,cAlgmt) < -maxOverlap:
+                                            ToInclude = False
+                                            break
+                                        if self.distanceBetweenSbjctAlgmts(proxAlgmt,cAlgmt) < -maxOverlap:
+                                            ToInclude = False
+                                            break
+                                        if self.distanceBetweenQuerySbjctAlgmts(proxAlgmt,cAlgmt) < -maxOverlap:
+                                            ToInclude = False
+                                            break
+                                        if self.distanceBetweenQuerySbjctAlgmts(cAlgmt,proxAlgmt) < -maxOverlap:
+                                            ToInclude = False
+                                            break
+
+                                        if not self.assertRankForAlgmts(lAlgmtsCurrentChain[::1],proxAlgmt):
+                                            print "NOTASSERRANK !!"
+                                            ToInclude = False
+
+
+                                    if ToInclude:
+                                        if proxAlgmt.id not in self.lChains[chainId].getIdListOfAlgmts():
+                                            self.lChains[chainId].lAlgmts.append(proxAlgmt)
+                                            if proxAlgmt.id in self.dIndex:
+                                                self.dIndex[proxAlgmt.id].append(chainId)
+                                            else:
+                                                self.dIndex[proxAlgmt.id] = [chainId]
+                                        else:
+                                            print "BUGBUGNUG"
+
+                                    else:
+                                        newChainTodo = True
+
+                                if newChainTodo:
+                                    chain = Chain([algmt,proxAlgmt])
+                                    index = len(self.lChains)
+                                    self.lChains.append(chain)
+                                    self.dIndex[algmt.id] = [index]
+
+
+
+    def assertRankForAlgmts(self,lAlgmts,algmt):
+        lAlgmts.append(algmt)
+        lSortedSbjct = lAlgmts.sort(key=lambda algmt: algmt.sstart)
+        lSortedQuery = lAlgmts.sort(key=lambda algmt: algmt.qstart)
+
+        if lSortedSbjct == lSortedQuery or lSortedSbjct == lSortedQuery[::-1]:
+            return True
+        else:
+            return False
+
+
     def chainAlignments(self, lAlgmts):
         """Build the list of chains and keep position of alignments in chains"""
 
@@ -32,7 +107,7 @@ class AlignmentChainer(object):
 	    lProximalAlgmts = self.db.selectProximalAlgmts(algmt.id, self.maxGap)
             for proxAlgmt in lProximalAlgmts:
                 for chainId in lChainIdsCurrentAlgmt:
-                    if self.distanceBetweenQueryAlgmts(algmt,proxAlgmt) < self.maxGap:
+                    if self.distanceBetweenQueryAlgmts(algmt,proxAlgmt) < self.maxGap and self.distanceBetweenQueryAlgmts(algmt,proxAlgmt) > 0:
                         if proxAlgmt.id not in self.lChains[chainId].getIdListOfAlgmts():
                             self.lChains[chainId].lAlgmts.append(proxAlgmt)
                             if proxAlgmt.id in self.dIndex:
@@ -52,22 +127,22 @@ class AlignmentChainer(object):
 
                  a     b   c              d
            q1  --|-----|---|--------------|--
-                 
+
 
            s1  ------------|----|-----|---|--
 
-                           c'   a'    b'  d'   
+                           c'   a'    b'  d'
         """
-       
+
         ltmp = []
-        print "nb chains: {}".format(len(self.lChains))
+        #print "nb chains: {}".format(len(self.lChains))
         for i,chain in enumerate(self.lChains):
             lAlgmtIds = set(self.db.selectQueryOnlySuboptimalAlgmts(chain.getIdListOfAlgmts()))
             lAlgmtIds.union(self.db.selectSubjectOnlySuboptimalAlgmts(chain.getIdListOfAlgmts()))
-            print lAlgmtIds
-            print "nb algmts chain id: {}, nb {}".format(i, chain.getNbAlgmts())  
+        #    print lAlgmtIds
+        #    print "nb algmts chain id: {}, nb {}".format(i, chain.getNbAlgmts())
             chain.deleteListOfAlgmts(lAlgmtIds)
-            print "nb algmts chain id: {}, nb {} - after".format(i, chain.getNbAlgmts())  
+        #    print "nb algmts chain id: {}, nb {} - after".format(i, chain.getNbAlgmts())
             for algmtId in lAlgmtIds:
                 index = self.dIndex[algmtId].index(i)
                 del(self.dIndex[algmtId][index])
@@ -75,29 +150,52 @@ class AlignmentChainer(object):
                 ltmp.append(chain)
             if chain.getNbAlgmts() > 1:
                 for i,algmt in enumerate(chain.sortListOfAlgmts()[:-1]):
-                    if self.distanceBetweenQueryAlgmts(chain.sortListOfAlgmts()[i],chain.sortListOfAlgmts()[i+1]) < self.maxGap: 
+                    if self.distanceBetweenQueryAlgmts(chain.sortListOfAlgmts()[i],chain.sortListOfAlgmts()[i+1]) < self.maxGap:
                         ltmp.append(chain)
-        self.lChains = ltmp 
+        self.lChains = ltmp
 
     def distanceBetweenQueryAlgmts(self, algmt1, algmt2):
-        """Compute and return the distance between 2 alignments"""
+        """Compute and return the distance between 2 alignments
+
+        hypthesis to check !!! algmt1 always start before algmt2 """
 
         if algmt1.qstart < algmt2.qstart:
-            return algmt2.qstart - algmt1.qend
+            return algmt2.qstart - algmt1.qend - 1
         else:
-            return algmt1.qstart - algmt2.qend
+            return algmt1.qstart - algmt2.qend - 1
+
+    def distanceBetweenSbjctAlgmts(self, algmt1, algmt2):
+        """Compute and return the distance between 2 alignments
+
+        algmt1 start before 2"""
+
+
+        if algmt1.sstart < algmt2.sstart:
+            return algmt2.sstart - algmt1.send - 1
+        else:
+            return algmt1.sstart - algmt2.send - 1
+
+    def distanceBetweenQuerySbjctAlgmts(self, algmt1, algmt2):
+        """Compute and return the distance between 2 alignments
+
+        hypthesis to check !!! algmt1 always start before algmt2 """
+
+        if algmt1.sstart < algmt2.qstart:
+            return algmt2.qstart - algmt1.send - 1
+        else:
+            return algmt1.sstart - algmt2.qend - 1
 
 
     def sortListOfChains(self, lChains):
         """Return a sorted list of chains"""
- 
+
         ltmp = []
         for i, chain in enumerate(lChains):
             lAlgmts = chain.sortListOfAlgmts()
             for j,algmt in enumerate(lAlgmts):
                 if j == 0:
                     sstartMin = algmt.sstart
-                    sendMax = algmt.send 
+                    sendMax = algmt.send
                 if algmt.sstart < sstartMin:
                     sstartMin = algmt.sstart
                 if algmt.send > sendMax:
@@ -113,7 +211,7 @@ class AlignmentChainer(object):
 
                  a       b   c              d
            chr1  --|-----|---|--------------|--------------------
-                 
+
 
            chr1  ---------------------|-----|---|----------------|--
 
@@ -122,9 +220,9 @@ class AlignmentChainer(object):
            internal similarity between both alignments
 
         """
-        
+
         ltmp = []
-        
+
         for i,chain in enumerate(lChains):
             if chain.lAlgmts[0].query == chain.lAlgmts[0].sbjct:
                 if (chain.getSStart() >= chain.getQStart() and chain.getSStart() < chain.getQEnd()):
@@ -135,19 +233,19 @@ class AlignmentChainer(object):
                     ltmp.append(i)
 
         lChains = [ chain for i, chain in enumerate(lChains) if i not in ltmp ]
-  
+
         return self.sortListOfChains(lChains)
- 
+
     def removeOverlappingChains(self, lChains):
         """Return a non-overlapping list of chains"""
 
         ltmp = []
-        
+
         for i, chain1 in enumerate(lChains[:-1]):
             for j, chain2 in enumerate(lChains[i+1:]):
                 sTrue = False
                 qTrue = False
-                print 'chain {} (q:{},s:{}) vs chain {} (q:{},s{})'.format(i,chain1.lAlgmts[0].query,chain1.lAlgmts[0].sbjct,i+1,chain2.lAlgmts[0].query,chain2.lAlgmts[0].sbjct)
+        #        print 'chain {} (q:{},s:{}) vs chain {} (q:{},s{})'.format(i,chain1.lAlgmts[0].query,chain1.lAlgmts[0].sbjct,i+1,chain2.lAlgmts[0].query,chain2.lAlgmts[0].sbjct)
 
                 if (chain1.lAlgmts[0].query == chain2.lAlgmts[0].query and chain1.lAlgmts[0].sbjct == chain2.lAlgmts[0].sbjct):
 
@@ -164,8 +262,8 @@ class AlignmentChainer(object):
                     elif (chain1.getQEnd() > chain2.getQStart() and chain1.getQEnd() <= chain2.getQEnd()):
                         qTrue = True
 
-                    print sTrue
-                    print qTrue
+        #            print sTrue
+        #            print qTrue
 
                     if sTrue and qTrue:
                         if chain1.getLength() > chain2.getLength():
@@ -186,5 +284,5 @@ class AlignmentChainer(object):
                                    ltmp.append(i+1)
 
         lChains = [ chain for i, chain in enumerate(lChains) if i not in ltmp ]
-  
+
         return self.sortListOfChains(lChains)
