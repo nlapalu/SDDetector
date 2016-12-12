@@ -120,7 +120,7 @@ class TestAlignDB(unittest.TestCase):
         self.db.deleteAllAlignments()
         self.db.insertlAlignments(lAlignments)
 
-        self.assertEquals([2,1],self.db.selectQueryOnlySuboptimalAlgmts([1,2]))
+        self.assertEquals(sorted([2,1]),self.db.selectQueryOnlySuboptimalAlgmts([1,2]))
 
 
     def test_selectAlignmentsWithDefinedIdOrderBySbjctCoord(self):

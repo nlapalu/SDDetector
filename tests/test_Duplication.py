@@ -122,7 +122,12 @@ class TestDuplication(unittest.TestCase):
                               57: ('Chr1', None), 58: ('Chr1', None),
                               59: ('Chr1', 2), 60: ('Chr1', 1)}}
 
-        dup = Duplication('Chr1' ,1 ,58 ,'Chr5' ,1 ,60 , [(Region('Chr1' ,1 ,58 ,-1),Region('Chr5',1,60,1))],[('ATGTATTCTATCTCATGTTAATGCTAATACTAGTCATGATCAGATACGATGATGAG--TA','ATGTATTCTATCTCATGTTACTGCTAATACTAGTCATGATCAGATACGATGATGATCATA')])
+        dup = Duplication('Chr1' ,1 ,58 ,'Chr5' ,1 ,60 , 
+                          [(Region('Chr1' ,1 ,58 ,-1),Region('Chr5',1,60,1))],
+                          [('ATGTATTCTATCTCATGTTAATGCTAATACTAGTCATGATCAGATACG'
+                            'ATGATGAG--TA',
+                            'ATGTATTCTATCTCATGTTACTGCTAATACTAGTCATGATCAGATACG'
+                            'ATGATGATCATA')])
  
 
         self.maxDiff = None

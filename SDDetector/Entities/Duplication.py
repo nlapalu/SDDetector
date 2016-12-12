@@ -21,15 +21,16 @@ class Duplication(object):
             self.dSeqToSeq = self.getdSeqToSeq()
         self.DuplicationType = self.setDuplicationType()
 
+
     def setDuplicationType(self):
         """set if duplication type: mirror, bridge, intra,inter """
 
         if (self.seq1, self.start1, self.end1) == (self.seq2, self.start2, self.end2):
             return 'mirror'
         if self.seq1 == self.seq2:
-            if self.isOverlapping:
+            if self.isOverlapping():
                 return 'bridge'
-            if not self.isOverlapping:
+            if not self.isOverlapping():
                 return 'intra'
         if self.seq1 != self.seq2:
             return 'inter'
@@ -38,7 +39,7 @@ class Duplication(object):
             return None
 
     def isOverlapping(self):
-        """test if seq1 overlapps seq2"""
+        """test if seq1 overlaps seq2"""
 
         start = min(self.start1, self.start2)
         if start == self.start1:
@@ -73,12 +74,7 @@ class Duplication(object):
                 else:
                     lreg2.append(None)
                     nbIndel2 +=1
-                #print index2
-            #if index2 != (reg2.end + nbIndel2):
             if index2 != reg2.end:
-                # todo log
-                print index2
-
                 sys.exit('exit problem with nb of base/algnmt')
 
             if reg1.strand == 1:
@@ -91,12 +87,7 @@ class Duplication(object):
                     else:
                         lreg1.append(None)
                         nbIndel1 += 1
-                #if index1 != (reg1.end + nbIndel1):
                 if index1 != reg1.end:
-                    # todo log
-                    #print index1
-                    #print reg1.end
-                    #print reg1.seq
                     sys.exit('exit 2 problem with nb of base/algnmt')
 
             elif reg1.strand == -1:
@@ -127,10 +118,6 @@ class Duplication(object):
         return dSeqToSeq
 
 
-#    def get
-
-
-
     def getSeqAlignment(self,seqid,start,end):
         """return the alignment"""
 
@@ -153,7 +140,7 @@ class Duplication(object):
                     myRegionIndex = i
                     myRegion = reg[seqIndex]
             if myRegionIndex == None and start > 0 and end > 0:
-                print self.__repr__()
+                #print self.__repr__()
                 logging.info("Error no region span these positions : {}-{}, possibly splitted regions".format(start,end))
                 return (None,None)
         else:
@@ -164,7 +151,7 @@ class Duplication(object):
                         myRegion = reg[index]
                         seqIndex = index
             if myRegionIndex == None and start > 0 and end > 0:
-                print self.__repr__()
+                #print self.__repr__()
                 logging.info("Error no region span these positions : {}-{}, possibly splitted regions".format(start,end))
                 return (None,None)
 
@@ -213,4 +200,5 @@ class Duplication(object):
     def __repr__(self):
         """representation"""
 
-        return('{}-{}-{}-{}-{}-{}-{}-{}'.format(self.seq1,self.start1,self.end1,self.seq2,self.start2,self.end2,self.lRegions,self.lSeqAlgmts))
+        #return('{}-{}-{}-{}-{}-{}-{}-{}'.format(self.seq1,self.start1,self.end1,self.seq2,self.start2,self.end2,self.lRegions,self.lSeqAlgmts))
+        return('{}-{}-{}-{}-{}-{}-{}'.format(self.seq1,self.start1,self.end1,self.seq2,self.start2,self.end2,self.lRegions))

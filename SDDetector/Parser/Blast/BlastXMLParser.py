@@ -56,10 +56,7 @@ class BlastXMLParser(object):
                 lindex.append((reg1.seq,reg1.end,reg1.start,reg2.seq,reg2.start,reg2.end))
             else:
                 lindex.append((reg1.seq,reg1.start,reg1.end,reg2.seq,reg2.start,reg2.end))
-#        print "INDEX {}".format(lindex)
 
-        for i in lindex:
-            print i
 
         #lRegionAlgmts = [ () for i in range(len(lRegions)) ]
         dRegionAlgmts = { i: () for i in lindex}
@@ -86,12 +83,12 @@ class BlastXMLParser(object):
             if val in dRegionAlgmts:
                 lRegionAlgmts[i] = dRegionAlgmts[val]
             else:
-               print('Error parsing, missing sequence alignment for {}'.format(lindex[i])) 
+               logging.error('Error parsing, missing sequence alignment for {}'.format(lindex[i])) 
         
 
         for i,a in enumerate(lRegionAlgmts):
             if len(lRegionAlgmts[i]) != 2:
-                print('Error missing sequence alignment for {}'.format(lindex[i])) 
+                logging.error('Error missing sequence alignment for {}'.format(lindex[i])) 
 
         return lRegionAlgmts
 

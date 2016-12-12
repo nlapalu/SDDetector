@@ -12,20 +12,12 @@ from SDDetector.Entities.GeneLink import GeneLink
 from SDDetector.Parser.Gff.GffDuplicationParser import GffDuplicationParser
 from SDDetector.Parser.Gff.GffGeneParser import GffGeneParser
 from SDDetector.Parser.Gff.GffTEParser import GffTEParser
-#from SDDetector.Parser.Blast.BlastXMLParser import BlastXMLParser
 from SDDetector.Parser.Blast.BlastXMLParserExpat import BlastXMLParserExpat
 
 from SDDetector.Db.GeneDB import GeneDB
 
 from SDDetector.Utils.CircosPlot import CircosPlot
 from SDDetector.Utils.FastaFileIndexer import FastaFileIndexer
-
-try:
-    from SDDetector.Parser.Blast.BlastXMLParser import BlastXMLParser
-except ImportError:
-    raise Exception('BioPython is not installed, xml parsing not available. \
-                    Please install BioPython if you want to use this tool')
-    exit(1)
 
 
 class Analyzer(object):
@@ -171,7 +163,7 @@ class Analyzer(object):
 
                         f.write(algmtGene)
                     else:
-                        f.write('Missing information on potential mutation for gene {} or gene {}'.format(link.gene1.id, link.gene2.id))
+                        f.write('No alignment build for gene {} or gene {}'.format(link.gene1.id, link.gene2.id))
                 else:
                     f.write('Missing transcripts for gene {} or gene {} in defined regions'.format(link.gene1.id, link.gene2.id))
         f.close()
@@ -190,13 +182,12 @@ class Analyzer(object):
         logging.info('Parsing Blast xml file')
         iBlastXMLParser = BlastXMLParserExpat(self.BlastXMLFile)
         lAlignmentTuples = iBlastXMLParser.getAlignmentsFromTupleOfRegions(lRegions)
-        logging.info('Parsing Blast xml file - finish')
 
-        print "len regions: {}".format(len(lRegions))
+ #       print "len regions: {}".format(len(lRegions))
 
-        print "len tuples: {}".format(len(lAlignmentTuples))
+  #      print "len tuples: {}".format(len(lAlignmentTuples))
 
-        print "len dup: {}".format(len(self.lDuplications))
+  #      print "len dup: {}".format(len(self.lDuplications))
 
         index = 0
         for dup in self.lDuplications:
@@ -204,7 +195,7 @@ class Analyzer(object):
             for region in dup.lRegions:
                 ##TODO: bug here if blast.xml has not sdd regions
 
-                print "index tuple len: {}".format(len(lAlignmentTuples[index]))
+  #              print "index tuple len: {}".format(len(lAlignmentTuples[index]))
                   
                 lAlgmts.append((lAlignmentTuples[index][0],lAlignmentTuples[index][1]))
                 index += 1
@@ -222,6 +213,10 @@ class Analyzer(object):
             (lGeneSeq1,lGeneSeq2) = self._extractGeneInDuplication(dup)
             if dup.DuplicationType not in ['mirror', 'bridge']:
                 self.lGeneLinks.extend(self._buildGeneLinks(lGeneSeq1,lGeneSeq2,dup))
+            else:
+                logging.info('Duplication type is {} for duplication: {}'
+                             ', no gene polymorphism analysis performed'
+                             .format(dup.DuplicationType, dup))
 
         self.getPolymorphismEffect()
 
@@ -288,18 +283,18 @@ class Analyzer(object):
     def _buildGeneLinks(self,lGeneSeq1,lGeneSeq2,dup):
         """build"""
 
-        print dup
+  #      print dup
 
         lLinks = []
-        for i in dup.dSeqToSeq:
-            print i
-            for a in dup.dSeqToSeq[i]:
-                print "{} - {}".format(a,dup.dSeqToSeq[i][a]) 
+  #      for i in dup.dSeqToSeq:
+  #          print i
+  #          for a in dup.dSeqToSeq[i]:
+  #              print "{} - {}".format(a,dup.dSeqToSeq[i][a]) 
 
-        print dup
+ #       print dup
  
-        print lGeneSeq1
-        print lGeneSeq2
+  #      print lGeneSeq1
+  #      print lGeneSeq2
 
         for gene1 in lGeneSeq1:
       

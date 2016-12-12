@@ -134,7 +134,7 @@ class GeneDB(SqliteDB):
 
 
     def getlGenesFromCoordinates(self, seqid, start, end):
-        """Get genes overlapping a defined region"""
+        """Get genes included in a defined region"""
 
         ###########################
         ####### TODO reactoring with selectAllGenes + polymorphirsm
@@ -156,8 +156,8 @@ class GeneDB(SqliteDB):
 #        cursor = self.conn.execute('''select id, seqid, start,end,strand,gene_id from transcript where seqid = \'{}\' and start < {} and end > {}'''.format(seqid,end,start))
         if dGenes:
 
-            for i in dGenes:
-                print i
+      #      for i in dGenes:
+     #           print i
 
             cursor = self.conn.execute('''select id, seqid, start,end,strand,gene_id from transcript where seqid = \'{}\' and start > {} and end < {} order by start'''.format(seqid,start,end)) 
             for row in cursor:
@@ -173,8 +173,8 @@ class GeneDB(SqliteDB):
 #        cursor = self.conn.execute('''select cds_id, seqid, start,end,strand,transcript_id from cds where seqid = \'{}\' and start < {} and end > {}'''.format(seqid,end,start)) 
         if dTranscripts:
 
-            for i in dTranscripts:
-                print i
+      #      for i in dTranscripts:
+     #           print i
 
             cursor = self.conn.execute('''select cds_id, seqid, start,end,strand,transcript_id from cds where seqid = \'{}\' and start > {} and end < {} order by start'''.format(seqid,start,end)) 
             for row in cursor:
