@@ -16,7 +16,7 @@ class Duplication(object):
         self.end2 = end2
         self.lRegions =  lRegions # list of tulpe of 2 Region objects
         self.lSeqAlgmts = lSeqAlgmts # list of tuple of 2 strings  = aligned sequence
-        self.dSeqToSeq = {} 
+        self.dSeqToSeq = {}
         if self.lRegions and self.lSeqAlgmts:
             self.dSeqToSeq = self.getdSeqToSeq()
         self.DuplicationType = self.setDuplicationType()
@@ -29,7 +29,7 @@ class Duplication(object):
         if self.seq1 == self.seq2:
             if self.isOverlapping:
                 return 'bridge'
-            if not self.isOverlapping: 
+            if not self.isOverlapping:
                 return 'intra'
         if self.seq1 != self.seq2:
             return 'inter'
@@ -51,7 +51,7 @@ class Duplication(object):
                 return False
             else:
                 return True
-            
+
 
     def getdSeqToSeq(self):
         """get """
@@ -61,14 +61,12 @@ class Duplication(object):
         dSeqToSeq[self.seq2] = {}
 
         for i,(reg1,reg2) in enumerate(self.lRegions):
-           
+
             lreg1 = []
             lreg2 = []
-            # reg2 = query in +1 strand
             index2 = reg2.start-1
             nbIndel2 = 0
             for base in self.lSeqAlgmts[i][1]:
-                #print base
                 if base != '-':
                     index2 +=1
                     lreg2.append(index2)
@@ -100,7 +98,7 @@ class Duplication(object):
                     #print reg1.end
                     #print reg1.seq
                     sys.exit('exit 2 problem with nb of base/algnmt')
-            
+
             elif reg1.strand == -1:
                 index1 = reg1.end+1
                 nbIndel1 = 0
@@ -115,7 +113,7 @@ class Duplication(object):
                 if index1 != reg1.start:
                     # todo log
                     sys.exit('exit 3 problem with nb of base/algnmt')
- 
+
             if len(lreg1) != len(lreg2):
                 sys.exit('error algmt list')
 
@@ -125,7 +123,7 @@ class Duplication(object):
             for i,pos in enumerate(lreg2):
                 if pos != None:
                     dSeqToSeq[reg2.seq][pos] = (reg1.seq,lreg1[i])
-         
+
         return dSeqToSeq
 
 
@@ -148,7 +146,7 @@ class Duplication(object):
             else:
                 #TODO: log
                 sys.exit("Error this sequence is not in this duplication")
-        
+
             for i, reg in enumerate (self.lRegions):
                 logging.debug('request:{}-{}-{}, region:{}-{}'.format(seqid,start,end,reg[seqIndex].start,reg[seqIndex].end))
                 if start >= reg[seqIndex].start and end <= reg[seqIndex].end:
@@ -169,7 +167,7 @@ class Duplication(object):
                 print self.__repr__()
                 logging.info("Error no region span these positions : {}-{}, possibly splitted regions".format(start,end))
                 return (None,None)
-                
+
 
         algmt = ''
         if myRegion.strand == 1:
@@ -180,7 +178,7 @@ class Duplication(object):
                     next
                 else:
                     algmt += self.lSeqAlgmts[myRegionIndex][seqIndex][i]
-                     
+
                 if self.lSeqAlgmts[myRegionIndex][seqIndex][i] != '-':
                     loopEnd += 1
                 i += 1
@@ -201,18 +199,18 @@ class Duplication(object):
         else:
             sys.exit("missing strand")
 
-        return(algmt, myRegion.strand) 
+        return(algmt, myRegion.strand)
 
 
     def __eq__(self, other):
         """Equality on all args"""
-        
-        if self.dSeqToSeq: 
+
+        if self.dSeqToSeq:
             return (self.seq1,self.start1,self.end1,self.seq2,self.start2,self.end2,self.lRegions,self.lSeqAlgmts,self.dSeqToSeq) == (other.seq1,other.start1,other.end1,other.seq2,other.start2,other.end2,other.lRegions,other.lSeqAlgmts,other.dSeqToSeq)
         else:
             return (self.seq1,self.start1,self.end1,self.seq2,self.start2,self.end2,self.lRegions,self.lSeqAlgmts) == (other.seq1,other.start1,other.end1,other.seq2,other.start2,other.end2,other.lRegions,other.lSeqAlgmts)
 
     def __repr__(self):
         """representation"""
-         
+
         return('{}-{}-{}-{}-{}-{}-{}-{}'.format(self.seq1,self.start1,self.end1,self.seq2,self.start2,self.end2,self.lRegions,self.lSeqAlgmts))

@@ -47,15 +47,16 @@ class TestAlignDB(unittest.TestCase):
         al3 = Alignment('q1','s1',1000,1100,18000,19000,100,100,1,-1, id=3)
         al4 = Alignment('q1','s1',10000,13000,150000,153000,3000,3000,1,-1,id=4)
         al5 = Alignment('q1','s1',11000,14000,154000,157000,3000,3000,1,-1,id=5)
+        al6 = Alignment('q1','s1',800,900,1000,1100,100,100,1,1, id=6)
 
-        lAlignments = [al1,al2,al3,al4,al5]
+        lAlignments = [al1, al2, al3, al4, al5, al6]
         self.db.deleteAllAlignments()
         self.db.insertlAlignments(lAlignments)
 
-        self.assertEquals([al2],self.db.selectProximalAlgmts(1))
+        self.assertEquals([al6],self.db.selectProximalAlgmts(1))
+        self.assertEquals([],self.db.selectProximalAlgmts(1,maxGap=200))
         self.assertEquals([],self.db.selectProximalAlgmts(2))
         self.assertEquals([],self.db.selectProximalAlgmts(3))
-        self.assertEquals([al2,al3],self.db.selectProximalAlgmts(1,maxGap=20000))
         self.assertEquals([al3],self.db.selectProximalAlgmts(2,maxGap=18000))
         self.assertEquals([al5],self.db.selectProximalAlgmts(4))
 

@@ -7,6 +7,15 @@ from unittest import TextTestRunner, TestLoader, TestSuite
 from tests.test_AlignDB import TestAlignDB
 from tests.test_AlignmentChainer import TestAlignmentChainer
 from tests.test_BlastTabParser import TestBlastTabParser
+from tests.test_BlastXMLParserExpat import TestBlastXMLParserExpat
+#from tests.test_CircosPlot import TestCircosPlot
+from tests.test_Duplication import TestDuplication
+from tests.test_EffectPredictor import TestEffectPredictor
+#from tests.test_FastaFileIndexer import TestFastaFileIndex
+from tests.test_GeneDB import TestGeneDB
+from tests.test_GeneLink import TestGeneLink
+from tests.test_GffDuplicationParser import TestGffDuplicationParser
+
 
 try:
     from tests.test_BlastXMLParser import TestBlastXMLParser
@@ -25,7 +34,11 @@ class TestSuite(Command):
 
     def run(self):
 
-        lTestCases = [TestAlignDB,TestAlignmentChainer, TestBlastTabParser]
+        lTestCases = [TestAlignDB, TestAlignmentChainer, TestBlastTabParser,
+                      TestBlastXMLParserExpat, TestDuplication,
+                      TestEffectPredictor, TestGeneDB, TestGeneLink,
+                      TestGffDuplicationParser ]
+
         if Biopython_available:
             lTestCases.append(TestBlastXMLParser)
         for case in lTestCases:
@@ -33,7 +46,7 @@ class TestSuite(Command):
             t = TextTestRunner(verbosity = 2)
             t.run(suite)
 
-execfile('SDDetector/version.py'). 
+execfile('SDDetector/version.py')
 
 setup(name='SDDetector',
       version = __version__,
