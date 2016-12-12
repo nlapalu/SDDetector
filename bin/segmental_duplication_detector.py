@@ -9,12 +9,6 @@ from SDDetector.Db.AlignDB import AlignDB
 from SDDetector.Utils.AlignmentChainer import AlignmentChainer
 from SDDetector.Parser.Blast.BlastTabParser import BlastTabParser
 
-#try:
-#    from SDDetector.Parser.Blast.BlastXMLParser import BlastXMLParser
-#    Biopython_available = True
-#except ImportError:
-#    Biopython_available = False 
-
 
 from SDDetector.Parser.Blast.BlastXMLParserExpat import BlastXMLParserExpat
 
@@ -68,8 +62,13 @@ class Detector(object):
                             [default=5000]")
         parser.add_argument("-t", "--matchLength", type=int, default=0,
                             help="minimum match length to consider [default=0]")
-        parser.add_argument("-r", "--removeOverDup", action="store_true",
-                            help="remove overlapping duplications, keep the longest")
+        parser.add_argument("-p","--matchOverlap", type=int, default=0,
+                            help="maximum overlap to consider between 2 alignments \
+                            before removing suboptimal alignment [default=0]")
+        parser.add_argument("-r", "--keepOverDup", action="store_true", default=False,
+                            help="keep overlapping duplications, [default=False] only the longest is kept")
+        parser.add_argument("-s", "--keepInternSimDup", action="store_true", default=False,
+                            help="keep duplication with internal similarity, [default=False]")
         parser.add_argument("-a", "--exportall", action="store_true",
                             help="export the content of the db at each step: all, removing \
                             self-matches, identity threshold, suboptimal matches")
@@ -81,7 +80,7 @@ class Detector(object):
 
     def _setAttributesFromArgsCLI(self, args):
         """Set attributes from argparse"""
- 
+
         if args.verbosity == 1:
             self.logLevel = 'ERROR'
         if args.verbosity == 2:
@@ -91,15 +90,13 @@ class Detector(object):
         logging.getLogger().setLevel(self.logLevel)
 
         self.inputFormat = args.inputFormat.lower()
-#        if self.inputFormat == 'xml' and Biopython_available == False :
-#            raise Exception('BioPython is not installed, xml parsing not available. \
-#                             Please choose tab format, or install BioPython')
+
         if self.inputFormat not in ['xml','tab']:
             raise Exception('untractable blast format')
             exit(1)
-        
+
         self.inputFile= args.inputFile
-        self.outputFile = args.outputFile 
+        self.outputFile = args.outputFile
 
         self.dbFile = args.db
         if self.dbFile == ':memory:':
@@ -114,7 +111,9 @@ class Detector(object):
         self.maxGap = args.maxGap
         self.chainLength = args.chainLength
         self.matchLength = args.matchLength
-        self.removeOverDup = args.removeOverDup
+        self.matchOverlap = args.matchOverlap
+        self.keepOverDup = args.keepOverDup
+        self.keepInternSimDup = args.keepInternSimDup
         self.exportDBAllSteps = args.exportall
         self.exportBed = args.bed
 
@@ -140,26 +139,26 @@ class Detector(object):
         if self.exportDBAllSteps:
             logging.info('Exporting matches after removing mimimal identity in gff3 format, file: {}.minidentity'.format(self.outputFile))
             self.exportMatches('{}.minidentity'.format(self.outputFile))
-        logging.info('Removing suboptimal matches')
+        logging.info('Removing suboptimal matches with maximum overlap {}'.format(self.matchOverlap))
         self.detectAndRemoveSuboptimalAlignments()
         if self.exportDBAllSteps:
             logging.info('Exporting matches after removing suboptimal alignments in gff3 format, file: {}.suboptimal'.format(self.outputFile))
             self.exportMatches('{}.suboptimal'.format(self.outputFile))
         logging.info('Chaining alignments with parameters: maximum Gap between fargments = {} bp, minimum chain length = {} bp'.format(self.maxGap, self.chainLength))
         self.chaineAlignmentsTogether(maxGap=self.maxGap, chainLength=self.chainLength)
-        if self.removeOverDup:
-            logging.info('Removing overlapping duplications: only the longest one is keep')
-            self.removeOverlappingDuplications()
-        if self.removeOverDup:
-            logging.info('Removing intra-sequence duplications with internal similarity')
-            self.removeDuplicationWithInternalSimilarity()
+#        if not self.keepOverDup:
+#            logging.info('Removing overlapping duplications: only the longest one is keep')
+#            self.removeOverlappingDuplications()
+#        if not self.keepInternSimDup:
+#            logging.info('Removing intra-sequence duplications with internal similarity')
+#            self.removeDuplicationWithInternalSimilarity()
         logging.info('Exporting chains in gff3 format, file: {}'.format(self.outputFile))
         self.exportChains(self.outputFile)
         if self.exportBed:
             logging.info('Exporting chains in bed format, file: {}.bed'.format(self.outputFile))
             self.exportChains('{}.bed'.format(self.outputFile), format='bed')
 
-        
+
     def parseAlignments(self):
         """Parse Alignments"""
 
@@ -187,7 +186,7 @@ class Detector(object):
         """Detect and remove identical alignment
 
            Detect self-matches, intra-chromosomal
-           hits with sbjct coordinates identical to 
+           hits with sbjct coordinates identical to
            query coordinates
 
         """
@@ -204,14 +203,16 @@ class Detector(object):
 
         """
 
-        lAlgmts = self.db.selectAlgmtsBelowIdentityThreshold() 
+        lAlgmts = self.db.selectAlgmtsBelowIdentityThreshold()
         self.db.deletelAlignments(lAlgmts)
         self.db.commit()
-        
+
     def detectAndRemoveSuboptimalAlignments(self):
         """Detect and remove suboptimal alignment"""
 
-        lAlgmts = self.db.selectSuboptimalAlgmts()
+        lAlgmts = self.db.selectSuboptimalAlgmts(self.matchOverlap)
+        print lAlgmts
+
         self.db.deletelAlignments(lAlgmts)
         self.db.commit()
 
@@ -233,7 +234,7 @@ class Detector(object):
                 logging.debug('Chaining Alignment with subject: {} and query: {}'.format(sbjct, query))
                 lAlgmts = self.db.selectAlignmentsWithDefinedSbjctAndQueryOrderBySbjctCoord(sbjct,query)
                 chainer = AlignmentChainer(self.db, maxGap=maxGap)
-                chainer.chainAlignments(lAlgmts)
+                chainer.chainAlignments2(lAlgmts)
 
                 for chain in chainer.lChains:
                     if chain.getLength() > chainLength:
@@ -259,7 +260,7 @@ class Detector(object):
 
         if format not in ['gff3','bed']:
             raise Exception('format {} is not supported for export'.format(format))
- 
+
         with open(outputFile, 'w') as f:
             for id, chain in enumerate(self.lSortedChains):
                 f.write(chain.convertChain(id+1, format))
@@ -271,7 +272,7 @@ class Detector(object):
 
         if format not in ['gff3','bed']:
             raise Exception('format {} is not supported for export'.format(format))
- 
+
         with open(outputFile, 'w') as f:
             for algmt in self.db.selectAllAlignments():
                 f.write(algmt.convertToGff3())
