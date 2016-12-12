@@ -32,12 +32,12 @@ class TestAlignmentChainer(unittest.TestCase):
         algmt12 = Alignment('q1','s1',10,50,50,60,10,10,1,1,id=12)
 
         iAlgmtChainer = AlignmentChainer(self.db)
-        self.assertEquals(70,iAlgmtChainer.distanceBetweenQueryAlgmts(algmt1,algmt2), "1 before 2")
-        self.assertEquals(70,iAlgmtChainer.distanceBetweenQueryAlgmts(algmt3,algmt4), "2 before 1")
-        self.assertEquals(-10,iAlgmtChainer.distanceBetweenQueryAlgmts(algmt5,algmt6), "1 start , 2 overlap")
-        self.assertEquals(-30,iAlgmtChainer.distanceBetweenQueryAlgmts(algmt7,algmt8), "1 start before, 2 nested")
-        self.assertEquals(-10,iAlgmtChainer.distanceBetweenQueryAlgmts(algmt9,algmt10), "2 starrt before, 1 overlap")
-        self.assertEquals(-30,iAlgmtChainer.distanceBetweenQueryAlgmts(algmt11,algmt12), "2 start before, 1 nested")
+        self.assertEquals(69,iAlgmtChainer.distanceBetweenQueryAlgmts(algmt1,algmt2), "1 before 2")
+        self.assertEquals(69,iAlgmtChainer.distanceBetweenQueryAlgmts(algmt3,algmt4), "2 before 1")
+        self.assertEquals(-11,iAlgmtChainer.distanceBetweenQueryAlgmts(algmt5,algmt6), "1 start , 2 overlap")
+        self.assertEquals(-31,iAlgmtChainer.distanceBetweenQueryAlgmts(algmt7,algmt8), "1 start before, 2 nested")
+        self.assertEquals(-11,iAlgmtChainer.distanceBetweenQueryAlgmts(algmt9,algmt10), "2 starrt before, 1 overlap")
+        self.assertEquals(-31,iAlgmtChainer.distanceBetweenQueryAlgmts(algmt11,algmt12), "2 start before, 1 nested")
 
 
     def test_chainAlignments_Case1(self):
@@ -120,8 +120,8 @@ class TestAlignmentChainer(unittest.TestCase):
         self.db.insertlAlignments(lAlignments)
         iAlgmtChainer = AlignmentChainer(self.db)
         iAlgmtChainer.chainAlignments(lAlignments)
-        for i in iAlgmtChainer.lChains:
-            print i.convertChain(1)
+#        for i in iAlgmtChainer.lChains:
+#            print i.convertChain(1)
 
 
 #Chr1	SDDetector	match_part	15253139	15253732	.	+	.	ID=match90878;Parent=chain37;Target=Chr1 15088003 15088582;length=594;identities=556;identity_percentage=0.959

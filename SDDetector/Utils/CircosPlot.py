@@ -9,7 +9,6 @@ from SDDetector.Entities.GeneLink import GeneLink
 from SDDetector.Parser.Gff.GffDuplicationParser import GffDuplicationParser
 from SDDetector.Parser.Gff.GffGeneParser import GffGeneParser
 from SDDetector.Parser.Gff.GffTEParser import GffTEParser
-from SDDetector.Parser.Blast.BlastXMLParser import BlastXMLParser
 from SDDetector.Utils.FastaFileIndexer import FastaFileIndexer
 from SDDetector.Db.GeneDB import GeneDB
 
@@ -17,7 +16,7 @@ class CircosPlot(object):
 
     def __init__(self, logLevel='ERROR'):
         """Constuctor"""
- 
+
         self.lRegionsToDraw = []
         self.lSeqNames = []
         self.lGeneLinks = []
@@ -52,14 +51,14 @@ class CircosPlot(object):
             f.write('<<include etc/housekeeping.conf>>\n')
 
             # ideogram
-            f.write('<ideogram>\n') 
+            f.write('<ideogram>\n')
             f.write('<spacing>\n')
             f.write('default = 0.005r\n')
             f.write('break   = 0.04r\n')
             f.write('axis_break_at_edge = yes\n')
             f.write('axis_break         = yes\n')
             f.write('axis_break_style   = 2\n')
-            lSeqToDraw = self.getSequencesToDraw().split(';') 
+            lSeqToDraw = self.getSequencesToDraw().split(';')
             f.write('<pairwise {} {}>\n'.format(lSeqToDraw[0],lSeqToDraw[-1]))
             f.write('spacing = 4r\n')
             f.write('</paiwise>\n')
@@ -203,7 +202,7 @@ class CircosPlot(object):
                 f.write('stroke_color = black\n')
                 f.write('stroke_thickness = 1\n')
                 f.write('</plot>\n')
-            
+
             # Similarity
             if self.similarity:
                 f.write('<plot>\n')
@@ -245,7 +244,7 @@ class CircosPlot(object):
                 f.write('</rule>\n')
                 f.write('</rules>\n')
                 f.write('</plot>\n')
-            f.write('</plots>\n') 
+            f.write('</plots>\n')
 
         f.close()
 
@@ -254,13 +253,13 @@ class CircosPlot(object):
 
         dSequences = { seq[0] : '-' for seq in self.lRegionsToDraw }
         return ';'.join([x for x in self.lSeqNames if x in dSequences])
-         
+
 
     def getRegionsToDraw(self, unit):
         """pass"""
 
         return ';'.join(sorted([ '{}:{:.3f}-{:.3f}'.format(i[0],(i[1]/unit)-((i[2]-i[1])/(4*unit)),(i[2]/unit)+((i[2]-i[1])/(4*unit))) for i in self.lRegionsToDraw ],key=lambda x : (x[0],x[1])))
-       
+
     def getRegionsNotToDraw(self, unit):
         """pass"""
 
@@ -273,7 +272,7 @@ class CircosPlot(object):
            for idx,j in enumerate(lRegionsToDraw) :
                if i[0] == j[0]:
                    if (i[1] < j[1] and i[2] < j[1]) or (i[1] > j[2] and i[2] > j[2]):
-                       next 
+                       next
                    elif (i[1] < j[1] and i[2] < j[2] and i[2] > j[1]):
                        #j[1] = i[1]
                        lRegionsToDraw[idx] = (j[0],i[1],j[2])
@@ -294,12 +293,12 @@ class CircosPlot(object):
                        modif = True
                        print 4
                        next
-           if modif == False: 
+           if modif == False:
                lRegionsToDraw.append(i)
            #print modif
            #print lRegionsToDraw
-       
-        #print "HAH" 
+
+        #print "HAH"
         #print lRegionsToDraw
         #print "tete"
         #print self.lRegionsToDraw
@@ -322,14 +321,14 @@ class CircosPlot(object):
                 lRegions.append(t)
 
         return ';'.join(lRegions)
-             
+
 
 
     def writeSeqDataFile(self, lSeqs, SeqDataFile):
         """Write Sequence data file=Karyotype"""
 
         self.lSeqNames = [ seq[0] for seq in lSeqs ]
- 
+
         with open(SeqDataFile,'w') as f:
             for i,seq in enumerate(lSeqs):
                 f.write('chr - {} {} {} {} {}\n'.format(seq[0],seq[0],0,seq[1],self.getColorByIndex(i)))
@@ -345,11 +344,11 @@ class CircosPlot(object):
                    '245,25,10','240,230,15','83,245,20','12,245,145','12,235,242',
                    '10,100,242','128,15,242','227,15,242','242,12,104','242,240,208']
         return lColors[index % 20]
-        
+
 
     def writeSegDupDataFile(self, lDuplications, SDDataFile):
         """Write Segmental Duplication data file"""
- 
+
         self.lRegionsToDraw = []
         self.lDuplications = lDuplications
         with open(SDDataFile,'w') as f:
@@ -358,8 +357,8 @@ class CircosPlot(object):
                 self.lRegionsToDraw.append((dup.seq1,float(dup.start1),float(dup.end1)))
                 self.lRegionsToDraw.append((dup.seq2,float(dup.start2),float(dup.end2)))
         f.close()
-        
-        return SDDataFile 
+
+        return SDDataFile
 
     def writeGeneDataFile(self, lGenes, GeneDataFile):
         """Write gene data file"""
@@ -380,7 +379,7 @@ class CircosPlot(object):
             for link in lGeneLinks:
                 f.write('{} {} {} {} {} {}\n'.format(link.gene1.seqid, link.gene1.start, link.gene1.end, link.gene2.seqid, link.gene2.start, link.gene2.end))
         f.close()
-       
+
         return GeneLinkDataFile
 
 
@@ -417,8 +416,8 @@ class CircosPlot(object):
         f.close()
         self.similarity = True
         return SimilarityDataFile
-        
-           
+
+
 
     def _slidingWindow(self,lStatus,length,overlap):
         """sliding window"""
@@ -427,9 +426,9 @@ class CircosPlot(object):
         for i in range(0,len(lStatus),length-overlap):
             if (i+length) < (len(lStatus)-1):
                 lvalues.append(sum(lStatus[i:i+length])/float(length)*100)
-        return lvalues 
+        return lvalues
 
- 
+
     def writeTEDataFile(self, lTEs, TEDataFile):
         """"Write TEs data file"""
 
