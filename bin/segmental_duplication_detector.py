@@ -8,8 +8,6 @@ from SDDetector.version import __version__
 from SDDetector.Db.AlignDB import AlignDB
 from SDDetector.Utils.AlignmentChainer import AlignmentChainer
 from SDDetector.Parser.Blast.BlastTabParser import BlastTabParser
-
-
 from SDDetector.Parser.Blast.BlastXMLParserExpat import BlastXMLParserExpat
 
 
@@ -146,12 +144,12 @@ class Detector(object):
             self.exportMatches('{}.suboptimal'.format(self.outputFile))
         logging.info('Chaining alignments with parameters: maximum Gap between fargments = {} bp, minimum chain length = {} bp'.format(self.maxGap, self.chainLength))
         self.chaineAlignmentsTogether(maxGap=self.maxGap, chainLength=self.chainLength)
-#        if not self.keepOverDup:
-#            logging.info('Removing overlapping duplications: only the longest one is keep')
-#            self.removeOverlappingDuplications()
-#        if not self.keepInternSimDup:
-#            logging.info('Removing intra-sequence duplications with internal similarity')
-#            self.removeDuplicationWithInternalSimilarity()
+        if not self.keepOverDup:
+            logging.info('Removing overlapping duplications: only the longest one is keep')
+            self.removeOverlappingDuplications()
+        if not self.keepInternSimDup:
+            logging.info('Removing intra-sequence duplications with internal similarity')
+            self.removeDuplicationWithInternalSimilarity()
         logging.info('Exporting chains in gff3 format, file: {}'.format(self.outputFile))
         self.exportChains(self.outputFile)
         if self.exportBed:

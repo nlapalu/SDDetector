@@ -1,4 +1,5 @@
 import unittest
+import logging
 
 from distutils.cmd import Command
 from distutils.core import setup
@@ -33,6 +34,8 @@ class TestSuite(Command):
         pass
 
     def run(self):
+
+        logging.disable(logging.CRITICAL) 
 
         lTestCases = [TestAlignDB, TestAlignmentChainer, TestBlastTabParser,
                       TestBlastXMLParserExpat, TestDuplication,

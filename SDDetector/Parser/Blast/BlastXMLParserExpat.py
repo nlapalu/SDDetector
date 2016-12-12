@@ -164,7 +164,7 @@ if __name__ == "__main__":
     parser = BlastXMLParserExpat()
 
     # test
-    parser.setFile("/media/backup/ubucluster/save/nlapalu/TAIR10_chr1.xml")
-    lalgmt = parser.getAllAlignments()
-    print lalgmt[0]
-    print len(lalgmt)
+#    parser.setFile("/media/backup/ubucluster/save/nlapalu/TAIR10_chr1.xml")
+#    lalgmt = parser.getAllAlignments()
+#    print lalgmt[0]
+#    print len(lalgmt)

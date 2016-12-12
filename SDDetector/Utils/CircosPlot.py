@@ -277,21 +277,21 @@ class CircosPlot(object):
                        #j[1] = i[1]
                        lRegionsToDraw[idx] = (j[0],i[1],j[2])
                        modif = True
-                       print 1
+                      # print 1
                    elif (i[1] > j[1] and i[1] < j[2] and i[2] > j[2]):
                        #j[2] = i[2]
                        lRegionsToDraw[idx] = (j[0],j[1],i[2])
                        modif = True
-                       print 2
+                     #  print 2
                    elif (i[1] < j[1] and i[2] > j[2]):
                        #j[1] = i[1]
                        #j[2] = i[2]
                        lRegionsToDraw[idx] = (j[0],i[1],i[2])
                        modif = True
-                       print 3
+                      # print 3
                    elif (i[1] > j[1] and i[2] < j[2]):
                        modif = True
-                       print 4
+                      # print 4
                        next
            if modif == False:
                lRegionsToDraw.append(i)
