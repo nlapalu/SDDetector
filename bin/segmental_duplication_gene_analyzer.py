@@ -163,9 +163,9 @@ class Analyzer(object):
 
                         f.write(algmtGene)
                     else:
-                        f.write('No alignment build for gene {} or gene {}'.format(link.gene1.id, link.gene2.id))
+                        f.write('No alignment build for gene {} or gene {}\n'.format(link.gene1.id, link.gene2.id))
                 else:
-                    f.write('Missing transcripts for gene {} or gene {} in defined regions'.format(link.gene1.id, link.gene2.id))
+                    f.write('Missing transcripts for gene {} or gene {} in defined regions\n'.format(link.gene1.id, link.gene2.id))
         f.close()
 
     def runAnalyze(self):
@@ -211,12 +211,17 @@ class Analyzer(object):
         self.lGeneLinks = [] 
         for dup in self.lDuplications:
             (lGeneSeq1,lGeneSeq2) = self._extractGeneInDuplication(dup)
-            if dup.DuplicationType not in ['mirror', 'bridge']:
-                self.lGeneLinks.extend(self._buildGeneLinks(lGeneSeq1,lGeneSeq2,dup))
+            if lGeneSeq1 and lGeneSeq2:
+                if dup.DuplicationType not in ['mirror', 'bridge']:
+                    self.lGeneLinks.extend(self._buildGeneLinks(lGeneSeq1,lGeneSeq2,dup))
+                else:
+                    logging.info('Duplication type is {} for duplication: {}'
+                                 ', no gene polymorphism analysis performed'
+                                 .format(dup.DuplicationType, dup))
             else:
-                logging.info('Duplication type is {} for duplication: {}'
-                             ', no gene polymorphism analysis performed'
-                             .format(dup.DuplicationType, dup))
+                logging.info('One of sequence in the duplication has no gene - no gene impact analysis for ({}-{}-{})--({}-{}-{})'
+                             .format(dup.seq1,dup.start1,dup.end1,dup.seq2,dup.start2,dup.end2))
+
 
         self.getPolymorphismEffect()
 
@@ -283,22 +288,12 @@ class Analyzer(object):
     def _buildGeneLinks(self,lGeneSeq1,lGeneSeq2,dup):
         """build"""
 
-  #      print dup
 
         lLinks = []
-  #      for i in dup.dSeqToSeq:
-  #          print i
-  #          for a in dup.dSeqToSeq[i]:
-  #              print "{} - {}".format(a,dup.dSeqToSeq[i][a]) 
-
- #       print dup
- 
-  #      print lGeneSeq1
-  #      print lGeneSeq2
 
         for gene1 in lGeneSeq1:
       
-            try:
+            if gene1.start in dup.dSeqToSeq[gene1.seqid] and gene1.end in dup.dSeqToSeq[gene1.seqid] : 
                 (seq2ID,val1) = dup.dSeqToSeq[gene1.seqid][gene1.start]
                 (seq2ID,val2) = dup.dSeqToSeq[gene1.seqid][gene1.end]
                 seq2Start = min(val1,val2)
@@ -308,8 +303,10 @@ class Analyzer(object):
                         next
                     else:
                        lLinks.append(GeneLink(dup=dup,gene1=gene1,gene2=gene2))
-            except Exception as e:
-                logging.info('Could not analyze gene impact in ({}-{}-{})--({}-{}-{})'.format(dup.seq1,dup.start1,dup.end1,dup.seq2,dup.start2,dup.end2))
+            else:
+                logging.info('Could not analyze polymorphism on gene : {}, no alignment span this region'.format(gene1.id))
+         #   except Exception as e:
+         #       logging.info('Could not analyze gene impact in ({}-{}-{})--({}-{}-{})'.format(dup.seq1,dup.start1,dup.end1,dup.seq2,dup.start2,dup.end2))
 
         return lLinks        
         # todo set : + logging.debug
