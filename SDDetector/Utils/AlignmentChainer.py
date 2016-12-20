@@ -18,7 +18,12 @@ class AlignmentChainer(object):
         logging.basicConfig(level=logLevel)
 
 
+<<<<<<< HEAD
     def chainAlignments2(self, lAlgmts):
+=======
+    def chainAlignments(self, lAlgmts):
+        """Build the list of chains and keep position of alignments in chains"""
+>>>>>>> eebe332c5cce0d1e6ee1a022995181b7e151de68
 
         maxOverlap = 0
 
@@ -55,9 +60,13 @@ class AlignmentChainer(object):
                                         if self.distanceBetweenQuerySbjctAlgmts(cAlgmt,proxAlgmt) < -maxOverlap:
                                             ToInclude = False
                                             break
+<<<<<<< HEAD
 
                                         if not self.assertRankForAlgmts(lAlgmtsCurrentChain[::1],proxAlgmt):
                                             print "NOTASSERRANK !!"
+=======
+                                        if not self.assertRankForAlgmts(lAlgmtsCurrentChain[::1],proxAlgmt):
+>>>>>>> eebe332c5cce0d1e6ee1a022995181b7e151de68
                                             ToInclude = False
 
 
@@ -69,8 +78,12 @@ class AlignmentChainer(object):
                                             else:
                                                 self.dIndex[proxAlgmt.id] = [chainId]
                                         else:
+<<<<<<< HEAD
                                             print "BUGBUGNUG"
 
+=======
+                                            logging.error("error in chaining - possible bug")
+>>>>>>> eebe332c5cce0d1e6ee1a022995181b7e151de68
                                     else:
                                         newChainTodo = True
 
@@ -83,16 +96,24 @@ class AlignmentChainer(object):
 
 
     def assertRankForAlgmts(self,lAlgmts,algmt):
+<<<<<<< HEAD
         lAlgmts.append(algmt)
         lSortedSbjct = lAlgmts.sort(key=lambda algmt: algmt.sstart)
         lSortedQuery = lAlgmts.sort(key=lambda algmt: algmt.qstart)
 
+=======
+
+        lAlgmts.append(algmt)
+        lSortedSbjct = sorted(lAlgmts,key=lambda algmtc: algmtc.sstart)
+        lSortedQuery = sorted(lAlgmts,key=lambda algmtc: algmtc.qstart)
+>>>>>>> eebe332c5cce0d1e6ee1a022995181b7e151de68
         if lSortedSbjct == lSortedQuery or lSortedSbjct == lSortedQuery[::-1]:
             return True
         else:
             return False
 
 
+<<<<<<< HEAD
     def chainAlignments(self, lAlgmts):
         """Build the list of chains and keep position of alignments in chains"""
 
@@ -120,6 +141,8 @@ class AlignmentChainer(object):
 
 
         return
+=======
+>>>>>>> eebe332c5cce0d1e6ee1a022995181b7e151de68
 
     def removeInternalAlignments(self):
         """

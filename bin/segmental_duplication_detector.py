@@ -145,7 +145,11 @@ class Detector(object):
             logging.info('Exporting matches after removing suboptimal alignments in gff3 format, file: {}.suboptimal'.format(self.outputFile))
             self.exportMatches('{}.suboptimal'.format(self.outputFile))
         logging.info('Chaining alignments with parameters: maximum Gap between fargments = {} bp, minimum chain length = {} bp'.format(self.maxGap, self.chainLength))
+<<<<<<< HEAD
         self.chaineAlignmentsTogether(maxGap=self.maxGap, chainLength=self.chainLength)
+=======
+        self.chainAlignments(maxGap=self.maxGap, chainLength=self.chainLength)
+>>>>>>> eebe332c5cce0d1e6ee1a022995181b7e151de68
         if not self.keepOverDup:
             logging.info('Removing overlapping duplications: only the longest one is keep')
             self.removeOverlappingDuplications()
@@ -211,6 +215,7 @@ class Detector(object):
         """Detect and remove suboptimal alignment"""
 
         lAlgmts = self.db.selectSuboptimalAlgmts(self.matchOverlap)
+<<<<<<< HEAD
         print lAlgmts
 
         self.db.deletelAlignments(lAlgmts)
@@ -218,6 +223,13 @@ class Detector(object):
 
     def chaineAlignmentsTogether(self, maxGap=3000, chainLength=5000):
         """Chaine Alignments together
+=======
+        self.db.deletelAlignments(lAlgmts)
+        self.db.commit()
+
+    def chainAlignments(self, maxGap=3000, chainLength=5000):
+        """Chain Alignments
+>>>>>>> eebe332c5cce0d1e6ee1a022995181b7e151de68
 
            - sort by sbjct, query ann coordiantes
            - chaine if distance < 3000 nt
@@ -234,7 +246,11 @@ class Detector(object):
                 logging.debug('Chaining Alignment with subject: {} and query: {}'.format(sbjct, query))
                 lAlgmts = self.db.selectAlignmentsWithDefinedSbjctAndQueryOrderBySbjctCoord(sbjct,query)
                 chainer = AlignmentChainer(self.db, maxGap=maxGap)
+<<<<<<< HEAD
                 chainer.chainAlignments2(lAlgmts)
+=======
+                chainer.chainAlignments(lAlgmts)
+>>>>>>> eebe332c5cce0d1e6ee1a022995181b7e151de68
 
                 for chain in chainer.lChains:
                     if chain.getLength() > chainLength:
