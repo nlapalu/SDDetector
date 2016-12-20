@@ -231,14 +231,14 @@ class GeneLink(object):
                    lCodon2.append(self.translate(''.join(codon2)))
                    codon2 = []
 
-
         indexCodon = 1
         lCodonPosAlgmt1 = []
         for i in lCodonsPosGene1:
             if i == '-':
                 indexCodon += 1
                 if indexCodon == 3:
-                   lCodonPosAlgmt1.append(lCodon1.pop(0))
+                   if lCodon1: 
+                       lCodonPosAlgmt1.append(lCodon1.pop(0))
                    indexCodon = 0
                 else:
                    lCodonPosAlgmt1.append(' ') 
@@ -251,13 +251,15 @@ class GeneLink(object):
             if i == '-':
                 indexCodon += 1
                 if indexCodon == 3:
-                   lCodonPosAlgmt2.append(lCodon2.pop(0))
+                   if lCodon2:
+                       lCodonPosAlgmt2.append(lCodon2.pop(0))
                    indexCodon = 0
                 else:
                    lCodonPosAlgmt2.append(' ') 
             else:
                 lCodonPosAlgmt2.append(' ')
 
+         
         lAlignEffect = []
         lAlignEffect.append(''.join(lCodonPosAlgmt1))
         lAlignEffect.append(''.join(lCodonsPosGene1))

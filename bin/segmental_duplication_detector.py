@@ -123,6 +123,8 @@ class Detector(object):
         logging.info('Parsing alignments')
         self.parseAlignments()
         logging.info('Loading alignments into database')
+        if self.matchLength > 0:
+            logging.info('Minimum size to consider for alignment: {}pb'.format(self.matchLength))
         self.loadAlignmentsInDb()
         if self.exportDBAllSteps:
             logging.info('Exporting matches after loading in database in gff3 format, file: {}.loading'.format(self.outputFile))
