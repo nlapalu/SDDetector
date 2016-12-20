@@ -60,11 +60,25 @@ class GffDuplicationParser(object):
                                     reg2 = Region(m2.group(1),int(m2.group(2)),int(m2.group(3)),1)
                                     lRegions.append((reg1,reg2))
                                 else:
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+                                    raise Exception('No Target tag for match_part feature in gff file: {}'.format(self.inputDuplicationGffFile))
+                            else:
+                                raise Exception('Error missing match feature \'{}\' for match_part features'.format(m.group(1)))
+                        else:
+                            raise Exception('Cannot find tag Parent for match_part feature in gff file: {}'.format(self.inputDuplicationGffFile))
+=======
+>>>>>>> 4e32a8fa5a027a1ab3853714e538aa98bd7adca3
                                     raise Exception('No Target tag for match_part feature in gff file: {} \nline: {}'.format(self.inputDuplicationGffFile,line))
                             else:
                                 raise Exception('Error missing match feature \'{}\' for match_part features'.format(m.group(1)))
                         else:
                             raise Exception('Cannot find tag Parent for match_part feature in gff file: {}\nline: {}'.format(self.inputDuplicationGffFile,line))
+<<<<<<< HEAD
+=======
+>>>>>>> eebe332c5cce0d1e6ee1a022995181b7e151de68
+>>>>>>> 4e32a8fa5a027a1ab3853714e538aa98bd7adca3
                 
         # add last duplication
         duplication = self._buildDuplication(seq1Dup,lRegions)
