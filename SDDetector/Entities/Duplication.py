@@ -135,7 +135,7 @@ class Duplication(object):
                 sys.exit("Error this sequence is not in this duplication")
 
             for i, reg in enumerate (self.lRegions):
-                logging.debug('getSeqAlignment - request:{}-{}-{}, region:{}-{}'.format(seqid,start,end,reg[seqIndex].start,reg[seqIndex].end))
+                logging.debug('request:{}-{}-{}, region:{}-{}'.format(seqid,start,end,reg[seqIndex].start,reg[seqIndex].end))
                 if start >= reg[seqIndex].start and end <= reg[seqIndex].end:
                     myRegionIndex = i
                     myRegion = reg[seqIndex]

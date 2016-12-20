@@ -17,7 +17,7 @@ class Chain(object):
         for i, algmt in enumerate(self.lAlgmts):
             if i == 0:
                sstartMin = algmt.sstart
-               sendMax = algmt.send
+               sendMax = algmt.send 
             if algmt.sstart < sstartMin:
                 sstartMin = algmt.sstart
             if algmt.send > sendMax:
@@ -54,7 +54,7 @@ class Chain(object):
         """return the size of the longest alignment"""
 
         return max([ algmt.length for algmt in self.lAlgmts ])
-
+        
 
     def getNbAlgmts(self):
         """return the number of alignments"""
@@ -76,7 +76,7 @@ class Chain(object):
         nbSNPs = 0
         for algmt in self.lAlgmts:
             nbSNPs += (algmt.length - algmt.identities)
-
+        
         return nbSNPs - self.getNbGaps()
 
     def getIdListOfAlgmts(self):
@@ -88,7 +88,7 @@ class Chain(object):
     def sortListOfAlgmts(self):
         """Sort the list of Alignments by Sbjct, coordinates"""
 
-        self.lAlgmts.sort(key=lambda algmt: algmt.sstart)
+        self.lAlgmts.sort(key=lambda algmt: algmt.sstart) 
         return self.lAlgmts
 
     def deleteListOfAlgmts(self,lIds):
@@ -107,7 +107,7 @@ class Chain(object):
         for i,algmt in enumerate(lAlgmts):
             if i == 0:
                sstartMin = algmt.sstart
-               sendMax = algmt.send
+               sendMax = algmt.send 
             if algmt.sstart < sstartMin:
                 sstartMin = algmt.sstart
             if algmt.send > sendMax:
@@ -120,7 +120,7 @@ class Chain(object):
             minSeq = min(algmt.qend-algmt.qstart,algmt.send-algmt.sstart) + 1
             minSeqs +=minSeq
             identities += algmt.identities
-
+ 
             if format == 'gff3':
                 lines.append('{}\tSDDetector\tmatch_part\t{}\t{}\t.\t{}\t.\tID=match{};Parent=chain{};Target={} {} {};length={};identities={};identity_percentage={:.3f}\n'.format(algmt.sbjct,algmt.sstart,algmt.send,strand,algmt.id,id,algmt.query,algmt.qstart,algmt.qend,algmt.length,algmt.identities,(algmt.identities/float(minSeq))))
             if format == 'bed':
@@ -132,7 +132,7 @@ class Chain(object):
 
     def __eq__(self, other):
         """Equality on all args"""
-
+      
         return (self.sortListOfAlgmts() == other.sortListOfAlgmts())
 
     def __repr__(self):
