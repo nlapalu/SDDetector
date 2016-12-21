@@ -3,7 +3,7 @@
 SDDetector has been developed to detect segmental duplications in complete genomes. The principle is based on the bioinformatic protocol proposed by *Kahja et al.* Segmental duplications are defined as regions having a sequence similarity greater than 90% and a length greater than 5000 nt. Regions could be fragmented due to inversion/insertion/deletion events, so a maximium gap of 3000 nt is allowed between fragments. Then, fragments are chained together and the chains with required criteria are reported as potential duplicated regions. To fit with your genome specificity, SDDetector allows parameters modification to increase/reduce the sequence similarity threshold, the minimal length of the regions and the maximal gap size.
 For an efficient detection, transposable and repetitive elements must be masked before sequence similarity search. If you do not provide a repetitive element annotation, results will contain a lot of false-positive regions. We recommend to perform a TE detection with the REPET package(*Flutre et al.*) or at least a minimal masking step with RepetMasker(*Smit et al.*).
 
-SSDetector is developed by Nicolas Lapalu at [INRA-BIOGER](http://www.versailles-grignon.inra.fr/bioger). Please do not hesitate to contact me (nlapalu at versailles dot inra dot fr) if you have any comments or questions.
+SSDetector is developed by Nicolas Lapalu at [INRA-BIOGER](http://www.versailles-grignon.inra.fr/bioger). Please do not hesitate to contact me (nlapalu at inra dot fr) if you have any comments or questions.
 
 ## Install
 
@@ -169,12 +169,14 @@ soon available
 
 ### Example 2: Arabidopsis thaliana
 
-Data:
+__Data:__
+
 ```
 tar -xvf data/arabido.tar.gz 
 ```
 
-Precompute data:
+__Precompute data:__
+
 ```
 maskFastaFromBed -fi TAIR10.fasta -fo TAIR10_masked.fasta -bed TAIR10_GFF3_transposons.gff -soft
 
@@ -185,14 +187,16 @@ makeblastdb -dbtype nucl -in TAIR10_masked.fasta -out TAIR10_masked -parse_seqid
 blastn -num_threads 15 -task megablast -db TAIR10_masked -query TAIR10_masked.fasta -out TAIR10.xml -outfmt 5 -db_soft_mask 100 
 ```
 
-Analyze:
+__Analyze:__
+
 ```
 ../../bin/segmental_duplication_detector.py TAIR10.xml xml sdd.gff3 ':memory' -v 2 -t 300
 
 ../../bin/segmental_duplication_gene_analyzer.py sdd.gff3 TAIR10.xml TAIR10.new.gff3 TAIR10.out -g TAIR10.fasta --circos -v 3
 ```
 
-Generate graph with Circos:
+__Generate graph with Circos:__
+
 `circos -conf circos.conf`
 
 ![image](images/arabido.png)
@@ -207,4 +211,5 @@ If you use SDDetector, please cite:
 
 * Flutre T, Duprat E, Feuillet C, Quesneville H. Considering transposable element diversification in de novo annotation approaches. PLoS One. 2011 Jan 31;6(1):e16526. doi: 10.1371/journal.pone.0016526. 
 * Khaja R, MacDonald JR, Zhang J, Scherer SW. Methods for identifying and mapping recent segmental and gene duplications in eukaryotic genomes. Methods Mol Biol. 2006;338:9-20.
-* Smit, AFA, Hubley, R & Green, P. RepeatMasker Open-4.0. 2013-2015 <http://www.repeatmasker.org>. 
+* Smit, AFA, Hubley, R & Green, P. RepeatMasker Open-4.0. 2013-2015 <http://www.repeatmasker.org>.
+* Krzywinski, M. et al. Circos: an Information Aesthetic for Comparative Genomics. Genome Res (2009) 19:1639-1645
