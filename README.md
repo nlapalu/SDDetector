@@ -30,7 +30,11 @@ System install (as root):
 
 or user install (you will have to (re)set your PYTHONPATH and PATH):
 
-`python setup.py install prefix==/my/user/directory`
+```
+python setup.py install --prefix=/my/user/directory
+export PYTHONPATH=/my/user/directory/lib/python2.7/site-packages/
+export PATH=$PATH:/my/user/directory/bin
+```
 
 ### Additional tools
 
