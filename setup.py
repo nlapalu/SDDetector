@@ -9,10 +9,10 @@ from tests.test_AlignDB import TestAlignDB
 from tests.test_AlignmentChainer import TestAlignmentChainer
 from tests.test_BlastTabParser import TestBlastTabParser
 from tests.test_BlastXMLParserExpat import TestBlastXMLParserExpat
-#from tests.test_CircosPlot import TestCircosPlot
+from tests.test_CircosPlot import TestCircosPlot
 from tests.test_Duplication import TestDuplication
 from tests.test_EffectPredictor import TestEffectPredictor
-#from tests.test_FastaFileIndexer import TestFastaFileIndex
+from tests.test_FastaFileIndexer import TestFastaFileIndexer
 from tests.test_GeneDB import TestGeneDB
 from tests.test_GeneLink import TestGeneLink
 from tests.test_GffDuplicationParser import TestGffDuplicationParser
@@ -40,7 +40,8 @@ class TestSuite(Command):
         lTestCases = [TestAlignDB, TestAlignmentChainer, TestBlastTabParser,
                       TestBlastXMLParserExpat, TestDuplication,
                       TestEffectPredictor, TestGeneDB, TestGeneLink,
-                      TestGffDuplicationParser ]
+                      TestGffDuplicationParser, TestCircosPlot,
+                      TestFastaFileIndexer ]
 
         if Biopython_available:
             lTestCases.append(TestBlastXMLParser)
@@ -58,7 +59,8 @@ setup(name='SDDetector',
       author='Nicolas Lapalu',
       author_email='nicolas.lapalu@versailles.inra.fr',
       license='GPL V3',
-      scripts=['bin/segmental_duplication_detector.py'],
+      scripts=['bin/segmental_duplication_detector.py',
+               'segmental_duplication_gene_analyzer.py'],
       packages=['SDDetector.Db','SDDetector.Utils','SDDetector.Parser',
                 'SDDetector.Parser.Blast', 'SDDetector.Entities','SDDetector', 'tests'],
       data_files=[('test-data', ['test-data/blast.xml','test-data/blast.tab']),
