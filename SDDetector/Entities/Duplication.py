@@ -117,6 +117,74 @@ class Duplication(object):
 
         return dSeqToSeq
 
+    def getSeqAlignmentWithIndels(self, seqid, start, end, deltaStart, deltaEnd):
+        """..."""
+
+        seqIndex = None
+        myRegionIndex = None
+        myRegionStrand = None
+
+        if self.seq1 != self.seq2:
+            if seqid == self.seq1:
+                seqIndex = 0
+            elif seqid == self.seq2:
+                seqIndex = 1
+            else:
+                #TODO: log
+                sys.exit("Error this sequence is not in this duplication")
+
+            for i, reg in enumerate (self.lRegions):
+                logging.debug('getSeqAlignment - request:{}-{}-{}, region:{}-{}'.format(seqid,start,end,reg[seqIndex].start,reg[seqIndex].end))
+                if start >= reg[seqIndex].start and end <= reg[seqIndex].end:
+                    myRegionIndex = i
+                    myRegion = reg[seqIndex]
+            if myRegionIndex == None and start > 0 and end > 0:
+                #print self.__repr__()
+                logging.info("Error no region span these positions : {}-{}, possibly splitted regions".format(start,end))
+                return (None,None)
+        else:
+            for index in range(0,2):
+                for i, reg in enumerate(self.lRegions):
+                    if start >= reg[index].start and end <= reg[index].end:
+                        myRegionIndex = i
+                        myRegion = reg[index]
+                        seqIndex = index
+            if myRegionIndex == None and start > 0 and end > 0:
+                #print self.__repr__()
+                logging.info("Error no region span these positions : {}-{}, possibly splitted regions".format(start,end))
+                return (None,None)
+
+        algmt = ''
+        if myRegion.strand == 1:
+            loopEnd = myRegion.start
+            i = 0
+            while loopEnd != end+1:
+                if loopEnd < start:
+                    next
+                else:
+                    algmt += self.lSeqAlgmts[myRegionIndex][seqIndex][i]
+
+                if self.lSeqAlgmts[myRegionIndex][seqIndex][i] != '-':
+                    loopEnd += 1
+                i += 1
+
+        elif myRegion.strand == -1:
+            loopEnd = myRegion.end
+            i = 0
+            while loopEnd != start-1:
+                if loopEnd > end:
+                    next
+                else:
+                    algmt += self.lSeqAlgmts[myRegionIndex][seqIndex][i]
+
+                if self.lSeqAlgmts[myRegionIndex][seqIndex][i] != '-':
+                    loopEnd -= 1
+                i += 1
+
+        else:
+            sys.exit("missing strand")
+
+        return(algmt, myRegion.strand)
 
     def getSeqAlignment(self,seqid,start,end):
         """return the alignment"""
@@ -155,7 +223,6 @@ class Duplication(object):
                 logging.info("Error no region span these positions : {}-{}, possibly splitted regions".format(start,end))
                 return (None,None)
 
-
         algmt = ''
         if myRegion.strand == 1:
             loopEnd = myRegion.start
@@ -186,7 +253,97 @@ class Duplication(object):
         else:
             sys.exit("missing strand")
 
+        print myRegion.strand
+
         return(algmt, myRegion.strand)
+
+    def getSeqAlignmentNew(self,seqid,start,end):
+        """return the alignment"""
+
+        seqIndex = None
+        seqIndex2 = None
+        myRegionIndex = None
+        myRegionStrand = None
+        myRegion = None
+        mySecondRegion = None
+
+        if self.seq1 != self.seq2:
+            if seqid == self.seq1:
+                seqIndex = 0
+                seqIndex2 = 1
+            elif seqid == self.seq2:
+                seqIndex = 1
+                seqIndex2 = 0
+            else:
+                #TODO: log
+                sys.exit("Error this sequence is not in this duplication")
+
+            for i, reg in enumerate (self.lRegions):
+                logging.debug('getSeqAlignment - request:{}-{}-{}, region:{}-{}'.format(seqid,start,end,reg[seqIndex].start,reg[seqIndex].end))
+                if start >= reg[seqIndex].start and end <= reg[seqIndex].end:
+                    myRegionIndex = i
+                    myRegion = reg[seqIndex]
+                    mySecondRegion = reg[seqIndex2]
+            if myRegionIndex == None and start > 0 and end > 0:
+                #print self.__repr__()
+                logging.info("Error no region span these positions : {}-{}, possibly splitted regions".format(start,end))
+                return (None,None)
+        else:
+            for index in range(0,2):
+                otherIndex = 2
+                if index == 0:
+                    otherIndex = 1
+                elif index == 1:
+                    otherIndex = 1
+                for i, reg in enumerate(self.lRegions):
+                    if start >= reg[index].start and end <= reg[index].end:
+                        myRegionIndex = i
+                        myRegion = reg[index]
+                        seqIndex = index
+                        mySecondRegion = reg[otherIndex]
+                        seqIndex2 = otherIndex
+            if myRegionIndex == None and start > 0 and end > 0:
+                #print self.__repr__()
+                logging.info("Error no region span these positions : {}-{}, possibly splitted regions".format(start,end))
+                return (None,None)
+
+        algmt = ''
+        algmt2 = ''
+        if myRegion.strand == 1:
+            loopEnd = myRegion.start
+            i = 0
+            while loopEnd != end+1:
+                if loopEnd < start:
+                    next
+                else:
+                    algmt += self.lSeqAlgmts[myRegionIndex][seqIndex][i]
+                    algmt2 += self.lSeqAlgmts[myRegionIndex][seqIndex2][i]
+
+                if self.lSeqAlgmts[myRegionIndex][seqIndex][i] != '-':
+                    loopEnd += 1
+                i += 1
+
+        elif myRegion.strand == -1:
+            loopEnd = myRegion.end
+            i = 0
+            while loopEnd != start-1:
+                if loopEnd > end:
+                    next
+                else:
+                    algmt += self.lSeqAlgmts[myRegionIndex][seqIndex][i]
+                    algmt2 += self.lSeqAlgmts[myRegionIndex][seqIndex2][i]
+
+                if self.lSeqAlgmts[myRegionIndex][seqIndex][i] != '-':
+                    loopEnd -= 1
+                i += 1
+
+        else:
+            sys.exit("missing strand")
+
+
+
+
+        return(algmt, algmt2, myRegion.strand, mySecondRegion.strand)
 
 
     def __eq__(self, other):

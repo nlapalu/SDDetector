@@ -95,8 +95,9 @@ class Analyzer(object):
                 raise Exception('File {} does not exist'.format(self.TEFile))
         self.circos = args.circos
         self.GenomeFile = args.GenomeFile
-        if not os.path.exists(self.GenomeFile):
-            raise Exception('File {} does not exist'.format(self.GenomeFile))
+        if self.GenomeFile:
+            if not os.path.exists(self.GenomeFile):
+                raise Exception('File {} does not exist'.format(self.GenomeFile))
         self.outputFile = args.outputFile
 
 
@@ -107,11 +108,13 @@ class Analyzer(object):
             logging.info('Writing polymorphism effect in {}'.format(self.outputFile))
             for link in self.lGeneLinks:
                 # analyse CDS Share Alignment
-                f.write('Gene: ({},{}); sequence: ({},{}); strand: ({},{})\n'.format(link.gene1.id, link.gene2.id,link.gene1.seqid,link.gene2.seqid,link.gene1.strand,link.gene2.strand))
+                f.write('Genes: ({},{}); sequences: ({},{}); strands: ({},{})\n'.format(link.gene1.id, link.gene2.id,link.gene1.seqid,link.gene2.seqid,link.gene1.strand,link.gene2.strand))
 
                 if len(link.gene1.lTranscripts) > 0 and len(link.gene2.lTranscripts) > 0:
 
                     lAlignEffect, lMutations, r1, r2 = link.getEffect()
+
+                    f.write('Alignment: ({},{},{},{}) vs ({},{},{},{})\n'.format(r1.seq,r1.start,r1.end,r1.strand,r2.seq,r2.start,r2.end,r2.strand))
                     
                     if lAlignEffect:
 
@@ -125,15 +128,24 @@ class Analyzer(object):
                         indexBase = 0
                         algmtGene = ''
 
-                        if link.gene1.strand == 1:
+             #           if link.gene1.strand == 1:
+             #               algmt1Start, algmt1End = (r1.start, r1.end)
+             #           else:
+             #               algmt1Start, algmt1End = (r1.end, r1.start)
+             #           if link.gene2.strand == 1:
+             #               algmt2Start, algmt2End = (r2.start, r2.end)
+             #           else:
+             #               algmt2Start, algmt2End = (r2.end, r2.start)
+            
+
+                        if r1.strand  == 1:
                             algmt1Start, algmt1End = (r1.start, r1.end)
                         else:
                             algmt1Start, algmt1End = (r1.end, r1.start)
-                        if link.gene2.strand == 1:
+                        if r2.strand == 1:
                             algmt2Start, algmt2End = (r2.start, r2.end)
                         else:
                             algmt2Start, algmt2End = (r2.end, r2.start)
-            
 
                         start1 = algmt1Start
                         start2 = algmt2Start
@@ -143,15 +155,35 @@ class Analyzer(object):
                             nbHyphen1 = lAlignEffect[2][indexBase:indexBase+size].count('-')
                             nbHyphen2 = lAlignEffect[4][indexBase:indexBase+size].count('-')
                 
-                            if link.gene1.strand == -1:
-                                end1 = start1-size-nbHyphen1
+                       #     if link.gene1.strand == -1:
+                       #         end1 = start1-size-nbHyphen1
+                       #     else:
+                       #         end1 = start1+size-nbHyphen1
+                       #     if link.gene2.strand == -1:
+                       #         end2 = start2-size-nbHyphen2
+                       #     else:
+                       #         end2 = start2+size-nbHyphen2
+               
+#                            if r1.strand == -1:
+#                                end1 = start1-size-nbHyphen1
+#                            else:
+#                                end1 = start1+size-nbHyphen1
+#                            if r2.strand == -1:
+#                                end2 = start2-size-nbHyphen2
+#                            else:
+#                                end2 = start2+size-nbHyphen2
+               
+                            if r1.strand == -1:
+                                end1 = start1-size-1-nbHyphen1
                             else:
-                                end1 = start1+size-nbHyphen1
-                            if link.gene2.strand == -1:
-                                end2 = start2-size-nbHyphen2
+                                end1 = start1+size-1-nbHyphen1
+                            if r2.strand == -1:
+                                end2 = start2-size-1-nbHyphen2
                             else:
-                                end2 = start2+size-nbHyphen2
-                
+                                end2 = start2+size-1-nbHyphen2
+
+
+ 
                             scale1 = str(start1) + ' '*(size-len(str(start1))-len(str(end1))) + str(end1)
                             scale2 = str(start2) + ' '*(size-len(str(start2))-len(str(end2))) + str(end2)
 
