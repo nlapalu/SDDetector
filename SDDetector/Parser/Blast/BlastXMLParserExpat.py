@@ -113,6 +113,7 @@ class BlastXMLParserExpat(object):
         else:
             logging.error('Blast Parsing: Unknown strand')
 
+
     def getAlignmentFromRegions(self):
         """...."""
 
@@ -122,13 +123,13 @@ class BlastXMLParserExpat(object):
             idx = self.lRegionIndex.index(index)
             del self.lRegionIndex[idx]
             
-            
 
     def getAllAlignments(self):
         """all alignments"""
 
         self.parseToSDDetector()
         return self.lAlgmts
+
 
     def getAlignmentsFromTupleOfRegions(self, lRegions):
 
@@ -149,22 +150,10 @@ class BlastXMLParserExpat(object):
             if val in self.dRegionAlgmts:
                 lRegionAlgmts[i] = self.dRegionAlgmts[val]
             else:
-               logging.error('Error parsing, missing sequence alignment for {}'.format(lRegionIndexParsed[i])) 
-        
+               raise Exception('Error parsing, missing sequence alignment for {}'.format(lRegionIndexParsed[i]))
 
         for i,a in enumerate(lRegionAlgmts):
             if len(lRegionAlgmts[i]) != 2:
-                logging.error('Error missing sequence alignment for {}'.format(lRegionIndexParsed[i])) 
+                raise Exception('Error missing sequence alignment for {}'.format(lRegionIndexParsed[i]))
 
         return lRegionAlgmts
-
-
-
-if __name__ == "__main__":
-    parser = BlastXMLParserExpat()
-
-    # test
-#    parser.setFile("/media/backup/ubucluster/save/nlapalu/TAIR10_chr1.xml")
-#    lalgmt = parser.getAllAlignments()
-#    print lalgmt[0]
-#    print len(lalgmt)
