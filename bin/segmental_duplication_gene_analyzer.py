@@ -1,5 +1,8 @@
 #!/usr/bin/env python
 
+""" segmental_duplication_gene_analyzer
+"""
+
 import argparse
 import logging
 import os
@@ -22,13 +25,17 @@ from SDDetector.Utils.FastaFileIndexer import FastaFileIndexer
 
 class Analyzer(object):
 
-    def __init__(self, SDFile='', BlastXMLFile='', GeneFile='', outputFile='', logLevel='ERROR'):
+    def __init__(self, SDFile='', BlastXMLFile='', GeneFile='', outputFile='', \
+                 GenomeFile='', TEFile='', circos=False, logLevel='ERROR'):
         """Constructor"""
 
         self.SDFile = SDFile
         self.BlastXMLFile = BlastXMLFile
         self.GeneFile = GeneFile
         self.outputFile = outputFile
+        self.GenomeFile = GenomeFile
+        self.TEFile = TEFile
+        self.circos = circos
         self.logLevel = logLevel
         logging.basicConfig(level=self.logLevel)
 
@@ -41,65 +48,6 @@ class Analyzer(object):
         if os.path.exists('gene.db'): 
             os.remove('gene.db')
 
-    def parseAttributesFromArgsCLI(self):
-        """Parse arguments from command line"""
-
-        program = 'SDAnalyzer'
-        version = __version__
-        description = "SDAnalyzer: analyzes segmental duplications in genome"
-
-        parser = argparse.ArgumentParser(prog=program)
-        parser = argparse.ArgumentParser(description=description)
-        parser.add_argument('--version', action='version', version='{} {}'.format(program,version))
-
-        parser.add_argument("SDFile", help="Segmental Duplication gff3 file = output of SDDetector (filtered or not)", type=str)
-        parser.add_argument("BlastXMLFile", help="Input Blast XML file", type=str)
-        parser.add_argument("GeneFile", help="gene annotation file in gff3 format", type=str)
-        parser.add_argument("outputFile", help="Output File", type=str)
-
-        parser.add_argument("-v", "--verbosity", type=int, choices=[1,2,3],
-                            help="increase output verbosity 1=error, 2=info, 3=debug")
-        parser.add_argument("-t", "--TEFile", type=str, default=None, help="Transposable \
-                            elements / Repeats file in gff3 format")
-        parser.add_argument("-g", "--GenomeFile", type=str, default=None, help="Genome \
-                            fasta file, required for circos plot")
-        parser.add_argument("--circos", action="store_true", help="Write circos \
-                            configuration file and associated data files")
-
-        args = parser.parse_args()
-        self._setAttributesFromArgsCLI(args)
-
-
-    def _setAttributesFromArgsCLI(self, args):
-        """Set attributes from argparse"""
- 
-        if args.verbosity == 1:
-            self.logLevel = 'ERROR'
-        if args.verbosity == 2:
-            self.logLevel = 'INFO'
-        if args.verbosity == 3:
-            self.logLevel = 'DEBUG'
-        logging.getLogger().setLevel(self.logLevel)
-        self.SDFile = args.SDFile
-        if not os.path.exists(self.SDFile):
-            raise Exception('File {} does not exist'.format(self.SDFile))
-        self.BlastXMLFile = args.BlastXMLFile
-        if not os.path.exists(self.BlastXMLFile):
-            raise Exception('File {} does not exist'.format(self.BlastXMLFile))
-        self.GeneFile = args.GeneFile
-        if not os.path.exists(self.GeneFile):
-            raise Exception('File {} does not exist'.format(self.GeneFile))
-        self.TEFile = args.TEFile
-        if self.TEFile:
-            if not os.path.exists(self.TEFile):
-                raise Exception('File {} does not exist'.format(self.TEFile))
-        self.circos = args.circos
-        self.GenomeFile = args.GenomeFile
-        if self.GenomeFile:
-            if not os.path.exists(self.GenomeFile):
-                raise Exception('File {} does not exist'.format(self.GenomeFile))
-        self.outputFile = args.outputFile
-
 
     def getPolymorphismEffect(self):
         """Analyze polymorphism between genes and return list of variants"""
@@ -107,16 +55,15 @@ class Analyzer(object):
         with open(self.outputFile,'w') as f:
             logging.info('Writing polymorphism effect in {}'.format(self.outputFile))
             for link in self.lGeneLinks:
-                # analyse CDS Share Alignment
                 f.write('Genes: ({},{}); sequences: ({},{}); strands: ({},{})\n'.format(link.gene1.id, link.gene2.id,link.gene1.seqid,link.gene2.seqid,link.gene1.strand,link.gene2.strand))
 
                 if len(link.gene1.lTranscripts) > 0 and len(link.gene2.lTranscripts) > 0:
 
                     lAlignEffect, lMutations, r1, r2 = link.getEffect()
 
-                    f.write('Alignment: ({},{},{},{}) vs ({},{},{},{})\n'.format(r1.seq,r1.start,r1.end,r1.strand,r2.seq,r2.start,r2.end,r2.strand))
-                    
                     if lAlignEffect:
+
+                        f.write('Alignment: ({},{},{},{}) vs ({},{},{},{})\n'.format(r1.seq,r1.start,r1.end,r1.strand,r2.seq,r2.start,r2.end,r2.strand))
 
                         for strMutation in lMutations:
                             f.write(strMutation)
@@ -127,16 +74,6 @@ class Analyzer(object):
                         indexSize = 0
                         indexBase = 0
                         algmtGene = ''
-
-             #           if link.gene1.strand == 1:
-             #               algmt1Start, algmt1End = (r1.start, r1.end)
-             #           else:
-             #               algmt1Start, algmt1End = (r1.end, r1.start)
-             #           if link.gene2.strand == 1:
-             #               algmt2Start, algmt2End = (r2.start, r2.end)
-             #           else:
-             #               algmt2Start, algmt2End = (r2.end, r2.start)
-            
 
                         if r1.strand  == 1:
                             algmt1Start, algmt1End = (r1.start, r1.end)
@@ -155,24 +92,6 @@ class Analyzer(object):
                             nbHyphen1 = lAlignEffect[2][indexBase:indexBase+size].count('-')
                             nbHyphen2 = lAlignEffect[4][indexBase:indexBase+size].count('-')
                 
-                       #     if link.gene1.strand == -1:
-                       #         end1 = start1-size-nbHyphen1
-                       #     else:
-                       #         end1 = start1+size-nbHyphen1
-                       #     if link.gene2.strand == -1:
-                       #         end2 = start2-size-nbHyphen2
-                       #     else:
-                       #         end2 = start2+size-nbHyphen2
-               
-#                            if r1.strand == -1:
-#                                end1 = start1-size-nbHyphen1
-#                            else:
-#                                end1 = start1+size-nbHyphen1
-#                            if r2.strand == -1:
-#                                end2 = start2-size-nbHyphen2
-#                            else:
-#                                end2 = start2+size-nbHyphen2
-               
                             if r1.strand == -1:
                                 end1 = start1-size-1-nbHyphen1
                             else:
@@ -181,12 +100,9 @@ class Analyzer(object):
                                 end2 = start2-size-1-nbHyphen2
                             else:
                                 end2 = start2+size-1-nbHyphen2
-
-
  
                             scale1 = str(start1) + ' '*(size-len(str(start1))-len(str(end1))) + str(end1)
                             scale2 = str(start2) + ' '*(size-len(str(start2))-len(str(end2))) + str(end2)
-
 
                             algmtGene += '{}\n{}\n{}\n{}\n{}\n{}\n{}\n{}\n{}\n\n'.format(scale1,lAlignEffect[0][indexBase:indexBase+size],lAlignEffect[1][indexBase:indexBase+size],lAlignEffect[2][indexBase:indexBase+size],lAlignEffect[3][indexBase:indexBase+size],lAlignEffect[4][indexBase:indexBase+size],lAlignEffect[5][indexBase:indexBase+size],lAlignEffect[6][indexBase:indexBase+size],scale2)
                             indexBase += size
@@ -200,8 +116,9 @@ class Analyzer(object):
                     f.write('Missing transcripts for gene {} or gene {} in defined regions\n'.format(link.gene1.id, link.gene2.id))
         f.close()
 
+
     def runAnalyze(self):
-        """run analyze"""
+        """run analysis"""
 
         logging.info('Parsing Duplication gff file')
         iGffDuplicationParser = GffDuplicationParser(self.SDFile)
@@ -212,23 +129,18 @@ class Analyzer(object):
                 lRegions.append(region)
 
         logging.info('Parsing Blast xml file')
-        iBlastXMLParser = BlastXMLParserExpat(self.BlastXMLFile)
-        lAlignmentTuples = iBlastXMLParser.getAlignmentsFromTupleOfRegions(lRegions)
-
- #       print "len regions: {}".format(len(lRegions))
-
-  #      print "len tuples: {}".format(len(lAlignmentTuples))
-
-  #      print "len dup: {}".format(len(self.lDuplications))
-
+        lAlignmentTuples = []
+        try:
+            iBlastXMLParser = BlastXMLParserExpat(self.BlastXMLFile)
+            lAlignmentTuples = iBlastXMLParser.getAlignmentsFromTupleOfRegions(lRegions)
+        except Exception as e:
+            logging.error(e.message)
+            sys.exit(1)
+            
         index = 0
         for dup in self.lDuplications:
             lAlgmts = []
             for region in dup.lRegions:
-                ##TODO: bug here if blast.xml has not sdd regions
-
-  #              print "index tuple len: {}".format(len(lAlignmentTuples[index]))
-                  
                 lAlgmts.append((lAlignmentTuples[index][0],lAlignmentTuples[index][1]))
                 index += 1
             dup.lSeqAlgmts = lAlgmts
@@ -264,7 +176,6 @@ class Analyzer(object):
                 logging.info('Indexing Genome fasta file')
                 iFastaGenomeParser = FastaFileIndexer(self.GenomeFile)
                 iFastaGenomeParser.read()
-                ##TODO: modify parser : implement an iterator on sequence/ obj seq with size ?
                 lSeqNames = iFastaGenomeParser.lSeq
                 self.lSeqs = [ (seq, len(iFastaGenomeParser.dSeq[seq])) for seq in lSeqNames ]
             else:
@@ -278,6 +189,7 @@ class Analyzer(object):
 
             logging.info('Generating circos files')
             self.writeCircosPlotFiles()
+
 
     def writeCircosPlotFiles(self):
         """write circos files"""
@@ -316,14 +228,13 @@ class Analyzer(object):
         logging.info('Writing circos configuration file in {}'.format(CircosConfFile))
         cPlot.writeCircosConf()
 
+
     def _buildGeneLinks(self,lGeneSeq1,lGeneSeq2,dup):
-        """build"""
+        """ build links between genes """
 
         lLinks = []
-
         for gene1 in lGeneSeq1:
-      
-            if gene1.start in dup.dSeqToSeq[gene1.seqid] and gene1.end in dup.dSeqToSeq[gene1.seqid] : 
+            if gene1.start in dup.dSeqToSeq[gene1.seqid] and gene1.end in dup.dSeqToSeq[gene1.seqid]:
                 (seq2ID,val1) = dup.dSeqToSeq[gene1.seqid][gene1.start]
                 (seq2ID,val2) = dup.dSeqToSeq[gene1.seqid][gene1.end]
                 seq2Start = min(val1,val2)
@@ -334,21 +245,66 @@ class Analyzer(object):
                     else:
                        lLinks.append(GeneLink(dup=dup,gene1=gene1,gene2=gene2))
             else:
-                logging.info('Could not analyze polymorphism on gene : {}, no alignment span this region'.format(gene1.id))
+
+                logging.info('Could not analyze polymorphism on gene : {}, no full alignment span this region'.format(gene1.id))
 
         return lLinks        
-        # todo set : + logging.debug
+
       
-    def _extractGeneInDuplication(self,dup):
-        """extract """
+    def _extractGeneInDuplication(self, dup):
+        """extract all genes in a duplication"""
 
         lGeneSeq1 = self.db.getlGenesFromCoordinates(dup.seq1,dup.start1,dup.end1)
         lGeneSeq2 = self.db.getlGenesFromCoordinates(dup.seq2,dup.start2,dup.end2)
 
         return (lGeneSeq1,lGeneSeq2)
 
+
 if __name__ == "__main__":
 
-    analyzer = Analyzer()
-    analyzer.parseAttributesFromArgsCLI()
+    program = 'segmental_duplication_gene_analyzer'
+    version = __version__
+    description = "segmental_duplication_gene_analyzer: analyzes segmental\
+                   duplications in your assembly"
+    parser = argparse.ArgumentParser(prog=program)
+    parser = argparse.ArgumentParser(description=description)
+    parser.add_argument('--version', action='version', version='{} {}'.format(program,version))
+    parser.add_argument("SDFile", help="Segmental Duplication gff3 file = output of SDDetector (filtered or not)", type=str)
+    parser.add_argument("BlastXMLFile", help="Input Blast XML file", type=str)
+    parser.add_argument("GeneFile", help="gene annotation file in gff3 format", type=str)
+    parser.add_argument("outputFile", help="Output File", type=str)
+    parser.add_argument("-v", "--verbosity", type=int, choices=[1,2,3],
+                        help="increase output verbosity 1=error, 2=info, 3=debug")
+    parser.add_argument("-t", "--TEFile", type=str, default=None, help="Transposable \
+                        elements / Repeats file in gff3 format")
+    parser.add_argument("-g", "--GenomeFile", type=str, default=None, help="Genome \
+                        fasta file, required for circos plot")
+    parser.add_argument("--circos", action="store_true", help="Write circos \
+                        configuration file and associated data files")
+    args = parser.parse_args()
+
+    logLevel = 'ERROR'
+ 
+    if args.verbosity == 1:
+        logLevel = 'ERROR'
+    if args.verbosity == 2:
+        logLevel = 'INFO'
+    if args.verbosity == 3:
+        logLevel = 'DEBUG'
+    logging.getLogger().setLevel(logLevel)
+
+    if not os.path.exists(args.SDFile):
+        raise Exception('File {} does not exist'.format(args.SDFile))
+    if not os.path.exists(args.BlastXMLFile):
+        raise Exception('File {} does not exist'.format(args.BlastXMLFile))
+    if not os.path.exists(args.GeneFile):
+        raise Exception('File {} does not exist'.format(args.GeneFile))
+    if args.TEFile:
+        if not os.path.exists(args.TEFile):
+            raise Exception('File {} does not exist'.format(args.TEFile))
+    if args.GenomeFile:
+        if not os.path.exists(args.GenomeFile):
+            raise Exception('File {} does not exist'.format(args.GenomeFile))
+
+    analyzer = Analyzer(args.SDFile, args.BlastXMLFile, args.GeneFile, args.outputFile, GenomeFile=args.GenomeFile, TEFile=args.TEFile, circos=args.circos, logLevel=logLevel)
     analyzer.runAnalyze()
