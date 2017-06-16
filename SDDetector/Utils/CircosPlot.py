@@ -174,7 +174,7 @@ class CircosPlot(object):
                 f.write('link_dims = 4p,4p,8p,4p,4p\n')
                 f.write('link_thickness = 2p\n')
                 f.write('link_color = red\n')
-                f.write('label_size = 20p\n')
+                f.write('label_size = 16p\n')
                 f.write('label_font  = condensed\n')
                 f.write('padding = 0p\n')
                 f.write('rpadding = 0p\n')
@@ -268,42 +268,24 @@ class CircosPlot(object):
         lRegionsToDraw = [self.lRegionsToDraw[0]]
         for i in self.lRegionsToDraw[1:]:
            modif = False
-           #print i
            for idx,j in enumerate(lRegionsToDraw) :
                if i[0] == j[0]:
                    if (i[1] < j[1] and i[2] < j[1]) or (i[1] > j[2] and i[2] > j[2]):
                        next
                    elif (i[1] < j[1] and i[2] < j[2] and i[2] > j[1]):
-                       #j[1] = i[1]
                        lRegionsToDraw[idx] = (j[0],i[1],j[2])
                        modif = True
-                      # print 1
                    elif (i[1] > j[1] and i[1] < j[2] and i[2] > j[2]):
-                       #j[2] = i[2]
                        lRegionsToDraw[idx] = (j[0],j[1],i[2])
                        modif = True
-                     #  print 2
                    elif (i[1] < j[1] and i[2] > j[2]):
-                       #j[1] = i[1]
-                       #j[2] = i[2]
                        lRegionsToDraw[idx] = (j[0],i[1],i[2])
                        modif = True
-                      # print 3
                    elif (i[1] > j[1] and i[2] < j[2]):
                        modif = True
-                      # print 4
                        next
            if modif == False:
                lRegionsToDraw.append(i)
-           #print modif
-           #print lRegionsToDraw
-
-        #print "HAH"
-        #print lRegionsToDraw
-        #print "tete"
-        #print self.lRegionsToDraw
-
-
 
         for i in lRegionsToDraw:
             dSeq[i[0]].extend([(i[1]/unit)-((i[2]-i[1])/(4*unit)),(i[2]/unit)+((i[2]-i[1])/(4*unit))])
@@ -418,7 +400,6 @@ class CircosPlot(object):
         return SimilarityDataFile
 
 
-
     def _slidingWindow(self,lStatus,length,overlap):
         """sliding window"""
 
@@ -439,4 +420,3 @@ class CircosPlot(object):
         f.close()
 
         return TEDataFile
-

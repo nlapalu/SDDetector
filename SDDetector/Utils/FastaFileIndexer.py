@@ -3,7 +3,6 @@
 import os
 import logging
 import re
-#import numpy as np
 
 class FastaFileIndexer(object):
 
@@ -43,21 +42,6 @@ class FastaFileIndexer(object):
                     mySeq.append(line.replace('\n',''))
             self.dSeq[currentSeq] += ''.join(mySeq)
 
-#    def write(self):
-#        """write"""
-
-#        size = self.getMaxSize()
-#        lSeq = []
-#        for i, seq in enumerate(self.dSeq):
-#            self.dIndexSeq[seq] = i
-#            l = ['a']*size
-#            l[0:len(self.dSeq[seq])]
-#            lSeq.append(l)
-             
-#        genome = np.array(lSeq, dtype='a1')
-#        fp = np.memmap('{}.idx'.format(self.filename),dtype='a1',mode='w+', shape=(len(lSeq),size))
-#        fp[:] = genome[:]
-#        del fp,genome
         
     def getMaxSize(self):
         """Return the size of the longest sequence"""
@@ -73,7 +57,6 @@ class FastaFileIndexer(object):
 
         seq = self.fp[self.dSeq][start:stop]
         if strand == -1:
-            #seq = fu.reverseComplement(seq)
             pass
 
         return seq

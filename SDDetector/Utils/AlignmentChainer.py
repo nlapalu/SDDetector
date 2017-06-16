@@ -133,14 +133,10 @@ class AlignmentChainer(object):
         """
 
         ltmp = []
-        #print "nb chains: {}".format(len(self.lChains))
         for i,chain in enumerate(self.lChains):
             lAlgmtIds = set(self.db.selectQueryOnlySuboptimalAlgmts(chain.getIdListOfAlgmts()))
             lAlgmtIds.union(self.db.selectSubjectOnlySuboptimalAlgmts(chain.getIdListOfAlgmts()))
-        #    print lAlgmtIds
-        #    print "nb algmts chain id: {}, nb {}".format(i, chain.getNbAlgmts())
             chain.deleteListOfAlgmts(lAlgmtIds)
-        #    print "nb algmts chain id: {}, nb {} - after".format(i, chain.getNbAlgmts())
             for algmtId in lAlgmtIds:
                 index = self.dIndex[algmtId].index(i)
                 del(self.dIndex[algmtId][index])
@@ -243,7 +239,6 @@ class AlignmentChainer(object):
             for j, chain2 in enumerate(lChains[i+1:]):
                 sTrue = False
                 qTrue = False
-        #        print 'chain {} (q:{},s:{}) vs chain {} (q:{},s{})'.format(i,chain1.lAlgmts[0].query,chain1.lAlgmts[0].sbjct,i+1,chain2.lAlgmts[0].query,chain2.lAlgmts[0].sbjct)
 
                 if (chain1.lAlgmts[0].query == chain2.lAlgmts[0].query and chain1.lAlgmts[0].sbjct == chain2.lAlgmts[0].sbjct):
 
@@ -259,9 +254,6 @@ class AlignmentChainer(object):
                         qTrue = True
                     elif (chain1.getQEnd() > chain2.getQStart() and chain1.getQEnd() <= chain2.getQEnd()):
                         qTrue = True
-
-        #            print sTrue
-        #            print qTrue
 
                     if sTrue and qTrue:
                         if chain1.getLength() > chain2.getLength():

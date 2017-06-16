@@ -4,15 +4,10 @@
 class EffectPredictor(object):
 
     effects = []
-    # structure
-    # AA changes
-    # snp 
-    # indel 
 
     def __init__(self):
         """Constructor"""
-
-       # = geneLink
+        pass
 
 
     def run(self):
