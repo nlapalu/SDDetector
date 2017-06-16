@@ -22,6 +22,3 @@ class Gene(object):
         """Gene representation"""
 
         return 'Gene: {}-{}-{}-{}-{}-{}'.format(self.id,self.seqid,self.start,self.end,self.strand, self.lTranscripts)
-
-
-

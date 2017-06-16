@@ -21,4 +21,3 @@ class Region(object):
         """repr"""
 
         return '{}-{}-{}-{}'.format(self.seq,self.start,self.end,self.strand)      
- 

@@ -21,6 +21,3 @@ class Feature(object):
         """Feature representation"""
 
         return 'Feature: {}-{}-{}-{}-{}-{}'.format(self.type,self.id,self.seqid,self.start,self.end,self.strand)
-
-
-

@@ -40,4 +40,3 @@ class Alignment(object):
 
         gff3line = '{}\tSQLiteDB\tmatch\t{}\t{}\t.\t{}\t.\tID=match{};Target={} {} {}\n'.format(self.sbjct,self.sstart,self.send,strand,self.id,self.query,self.qstart,self.qend)
         return gff3line
-

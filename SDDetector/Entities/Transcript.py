@@ -23,6 +23,3 @@ class Transcript(object):
         """Transcript representation"""
 
         return 'Transcript: {}-{}-{}-{}-{}-{}-{}'.format(self.id,self.seqid,self.start,self.end,self.strand,self.lCDS, self.gene_id)
-
-
-

@@ -22,5 +22,3 @@ class CDS(object):
         """CDS representation"""
 
         return 'CDS: {}'.format(self.cds_id)
-
-
