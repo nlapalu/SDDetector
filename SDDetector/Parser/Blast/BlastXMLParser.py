@@ -58,7 +58,6 @@ class BlastXMLParser(object):
                 lindex.append((reg1.seq,reg1.start,reg1.end,reg2.seq,reg2.start,reg2.end))
 
 
-        #lRegionAlgmts = [ () for i in range(len(lRegions)) ]
         dRegionAlgmts = { i: () for i in lindex}
 
         with open(self.inputBlastXMLFile,  'r') as input :
@@ -71,10 +70,8 @@ class BlastXMLParser(object):
                     for hsp in alignment.hsps:
                         logging.debug('{}-{}-{}-{}-{}-{}'.format(alignment.hit_id,hsp.sbjct_start,hsp.sbjct_end,blast_record.query,hsp.query_start,hsp.query_end))
                         if (alignment.hit_id,hsp.sbjct_start,hsp.sbjct_end,blast_record.query,hsp.query_start,hsp.query_end) in lindex:
-                            #index = lindex.index((alignment.hit_id,hsp.sbjct_start,hsp.sbjct_end,blast_record.query,hsp.query_start,hsp.query_end))
                             index = (alignment.hit_id,hsp.sbjct_start,hsp.sbjct_end,blast_record.query,hsp.query_start,hsp.query_end)
                             dRegionAlgmts[index] = (hsp.sbjct,hsp.query)
-                            #lRegionAlgmts[index] = (hsp.sbjct,hsp.query)
 
         input.close()
 
