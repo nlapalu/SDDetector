@@ -12,8 +12,6 @@ SSDetector is developed by Nicolas Lapalu at [INRA-BIOGER](http://www.versailles
 prerequesite: 
 
 * Python 2.7.X
-* BioPython, only if you want to parse Blast results from xml format
-
 ```
 wget https://github.com/nlapalu/SDDetector/archive/master.zip
 unzip master.zip
