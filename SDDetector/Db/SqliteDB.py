@@ -25,5 +25,3 @@ class SqliteDB(object):
 
     def getListOfTables(self):
         pass
-
-

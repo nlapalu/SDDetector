@@ -136,11 +136,6 @@ class GeneDB(SqliteDB):
     def getlGenesFromCoordinates(self, seqid, start, end):
         """Get genes included in a defined region"""
 
-        ###########################
-        ####### TODO reactoring with selectAllGenes + polymorphirsm
-        ### Extract gene included in dup / not overlapping
-
-
         lGenes = []
         dGenes = {}
         lTranscripts = []
@@ -148,17 +143,11 @@ class GeneDB(SqliteDB):
         lCDS = []
         dCDS = {}
 
-#        cursor = self.conn.execute('''select id, seqid, start, end, strand from gene where seqid = \'{}\' and start < {} and end > {}'''.format(seqid,end,start)) 
         cursor = self.conn.execute('''select id, seqid, start, end, strand from gene where seqid = \'{}\' and start > {} and end < {} order by start'''.format(seqid,start,end)) 
         for row in cursor:        
             dGenes[row[0]] = Gene(row[0],row[1],row[2],row[3],row[4])
 
-#        cursor = self.conn.execute('''select id, seqid, start,end,strand,gene_id from transcript where seqid = \'{}\' and start < {} and end > {}'''.format(seqid,end,start))
         if dGenes:
-
-      #      for i in dGenes:
-     #           print i
-
             cursor = self.conn.execute('''select id, seqid, start,end,strand,gene_id from transcript where seqid = \'{}\' and start > {} and end < {} order by start'''.format(seqid,start,end)) 
             for row in cursor:
                 transcript = Transcript(row[0],row[1],row[2],row[3],row[4],row[5])
@@ -170,12 +159,7 @@ class GeneDB(SqliteDB):
                     else:
                         dGenes[transcript.gene_id].lTranscripts = [transcript]
 
-#        cursor = self.conn.execute('''select cds_id, seqid, start,end,strand,transcript_id from cds where seqid = \'{}\' and start < {} and end > {}'''.format(seqid,end,start)) 
         if dTranscripts:
-
-      #      for i in dTranscripts:
-     #           print i
-
             cursor = self.conn.execute('''select cds_id, seqid, start,end,strand,transcript_id from cds where seqid = \'{}\' and start > {} and end < {} order by start'''.format(seqid,start,end)) 
             for row in cursor:
                 cds = CDS(row[0],row[1],row[2],row[3],row[4],row[5])
@@ -200,4 +184,3 @@ class GeneDB(SqliteDB):
 
         self.conn.close()
         os.remove(self.dbfile)
-

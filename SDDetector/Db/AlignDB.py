@@ -181,15 +181,6 @@ class AlignDB(SqliteDB):
         return [ row[0] for row in cursor ]
 
 
-#    def selectAlgmtsBelowIdentityThreshold(self, threshold=0.9):
-#        """Select alignments with identity below the defined threshold"""
-
-#        cursor = self.conn.execute('''select id, identities, length from alignment \
-#                                      where identities/ cast(length as real) < {} ''' \
-#                                   .format(threshold))
-
-#        return [ row[0] for row in cursor ]
-
     def selectAlgmtsBelowIdentityThreshold(self, threshold=0.9):
         """Select alignments with identity below the defined threshold"""
 
@@ -232,15 +223,8 @@ class AlignDB(SqliteDB):
                                    and  al1.sbjct = al2.sbjct and al1.query = al2.query \
                                    and al1.length > al2.length'''.format(maxOverlap, maxOverlap,maxOverlap, maxOverlap))
 
-
-                                   #or (al1.sstart <= al2.sstart and al1.send > al2.sstart) \
-                                   #or (al1.qstart <= al2.qstart and al1.qend > al2.qstart) \
-
-#        for row in cursor:
-          #  print "devant: {}".format(self.selectAlignmentById(row[1]))
-#            print "vire : {}".format(self.selectAlignmentById(row[0]))
-
         return [ row[0] for row in cursor ]
+
 
     def selectQueryOnlySuboptimalAlgmts(self, lIds):
 
