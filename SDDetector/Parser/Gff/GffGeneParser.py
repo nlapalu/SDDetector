@@ -36,15 +36,15 @@ class GffGeneParser(object):
                     line = line.rstrip('\n')
                     values = line.split('\t')
 
-#                    if values[2] == 'gene':
-#                        id = self._getFeatureTagValue('ID',values[8])
-#                        currentGene = Gene(id, values[0], int(values[3]), int(values[4]), self._getStrand(values[6]))
-#                        dGenes[id] = currentGene
-#                        self.lGenes.append(currentGene)
+                    if values[2] == 'gene':
+                        id = self._getFeatureTagValue('ID',values[8])
+                        currentGene = Gene(id, values[0], int(values[3]), int(values[4]), self._getStrand(values[6]))
+                        dGenes[id] = currentGene
+                        self.lGenes.append(currentGene)
                         
                     if values[2] == 'mRNA':
                         id = self._getFeatureTagValue('ID',values[8])
-                        #gene_id = self._getFeatureTagValue('Parent', values[8])
+                        gene_id = self._getFeatureTagValue('Parent', values[8])
                         gene_id = '{}_G'.format(id)
                         currentGene = Gene(gene_id, values[0], int(values[3]), int(values[4]), self._getStrand(values[6]))
                         dGenes[gene_id] = currentGene
@@ -58,7 +58,7 @@ class GffGeneParser(object):
                             dGenes[gene_id].lTranscripts = [currentTranscript]
 
                     if values[2] == 'CDS':
-                        #id = self._getFeatureTagValue('ID',values[8])
+                        id = self._getFeatureTagValue('ID',values[8])
                         
                         transcript_id = self._getFeatureTagValue('Parent', values[8])
                         id = '{}_CDS'.format(transcript_id)
@@ -73,7 +73,6 @@ class GffGeneParser(object):
         """Return the fist value of the tag property"""
         m = re.search(r".*{mytag}=([^;]*);{{0,1}}.*".format(mytag = tag),line)
         if m:
-#            print "ID {}".format(m.group(1))
             return m.group(1).split(',')[0]
         else:
             raise Exception('Cannot find tag {} in string \'{}\''.format(tag, line))
@@ -88,9 +87,4 @@ class GffGeneParser(object):
             return -1
         else:
             raise Exception('Cannot defined strand for feature')
-
-
-#    def _getFeatureTagValues(self, tag, line):
-#        """Return the list of values of the tag property"""
-
 
