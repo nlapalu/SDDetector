@@ -240,12 +240,14 @@ class Analyzer(object):
                 seq2Start = min(val1,val2)
                 seq2End = max(val1,val2)
                 for gene2 in lGeneSeq2:
-                    if (gene2.start < seq2Start and gene2.end < seq2Start) or (gene2.start > seq2End and gene2.end > seq2End):
-                        next
+                    if gene2.start in dup.dSeqToSeq[gene2.seqid] and gene2.end in dup.dSeqToSeq[gene2.seqid]:
+                        if (gene2.start < seq2Start and gene2.end < seq2Start) or (gene2.start > seq2End and gene2.end > seq2End):
+                            next
+                        else:
+                           lLinks.append(GeneLink(dup=dup,gene1=gene1,gene2=gene2))
                     else:
-                       lLinks.append(GeneLink(dup=dup,gene1=gene1,gene2=gene2))
+                        logging.info('Could not analyze polymorphism on gene : {}, no full alignment span this region'.format(gene2.id))
             else:
-
                 logging.info('Could not analyze polymorphism on gene : {}, no full alignment span this region'.format(gene1.id))
 
         return lLinks        
