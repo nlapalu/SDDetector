@@ -55,7 +55,7 @@ class GffDuplicationParser(object):
                                     reg1Strand = -1
                                 reg1 = Region(values[0],int(values[3]),int(values[4]),reg1Strand)
                                 
-                                m2 = re.match(r".*Target=\s*(\w+)\s+(\d+)\s+(\d+)\s*;.*",values[8])
+                                m2 = re.match(r".*Target=\s*(.+)\s+(\d+)\s+(\d+)\s*;.*",values[8])
                                 if m2:
                                     reg2 = Region(m2.group(1),int(m2.group(2)),int(m2.group(3)),1)
                                     lRegions.append((reg1,reg2))
