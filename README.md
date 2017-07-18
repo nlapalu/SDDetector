@@ -166,8 +166,41 @@ Examples are provided in data directory. If you want to test your install and ha
 
 ### Example 1: Subset of a fungal genome 
 
-soon available
+__Data:__
 
+````
+tar -xvf data/colleto.tar.gz
+```
+
+__Precompute data:__
+
+```
+maskFastaFromBed -fi Colletotrichum_higginsianum_IMI349063_all_unitigs.fasta -fo Colletotrichum_higginsianum_IMI349063_all_unitigs_masked.fasta -bed Colletotrichum_higginsianum_IMI349063_TE.gff3 -soft
+
+convert2blastmask -in Colletotrichum_higginsianum_IMI349063_all_unitigs_masked.fasta -parse_seqids -masking_algorithm TE -masking_options "TE" -outfmt maskinfo_asn1_bin -out Colletotrichum_higginsianum_IMI349063_all_unitigs_masked.asnb
+
+makeblastdb -dbtype nucl -in Colletotrichum_higginsianum_IMI349063_all_unitigs_masked.fasta -out Colletotrichum_higginsianum_IMI349063_all_unitigs_masked  -parse_seqids -mask_data Colletotrichum_higginsianum_IMI349063_all_unitigs_masked.asnb
+
+blastn -num_threads 8 -task megablast -db Colletotrichum_higginsianum_IMI349063_all_unitigs_masked -query Colletotrichum_higginsianum_IMI349063_all_unitigs_masked.fasta -out Colhig_pacbio_unitig_masked.xml -outfmt 5 -db_soft_mask 100 
+```
+
+__Analyze:__
+
+```
+segmental_duplication_detector.py Colhig_pacbio_unitig_masked.xml xml sdd_0.9_3000_3000.gff3 :memory: -g 3000 -l 3000 -a 
+
+segmental_duplication_gene_analyzer.py sdd_0.9_3000_3000.gff3 Colhig_pacbio_unitig_masked.xml Colletotrichum_higginsianum_IMI349063_gene.gff3 gene_analyze.out -t Colletotrichum_higginsianum_IMI349063_TE.gff3 -g Colletotrichum_higginsianum_IMI349063_all_unitigs.fasta --circos
+```
+
+__Generate graph with Circos:__
+
+`circos -conf circos.conf`
+
+![image](images/colleto.png)
+
+You can see below a refined version of this image and published in *J.Dallery et al*.
+
+![image](images/colleto_refined.png)
 
 ### Example 2: Arabidopsis thaliana
 
@@ -192,9 +225,9 @@ blastn -num_threads 15 -task megablast -db TAIR10_masked -query TAIR10_masked.fa
 __Analyze:__
 
 ```
-../../bin/segmental_duplication_detector.py TAIR10.xml xml sdd.gff3 ':memory' -v 2 -t 300
+segmental_duplication_detector.py TAIR10.xml xml sdd.gff3 ':memory' -v 2 -t 300
 
-../../bin/segmental_duplication_gene_analyzer.py sdd.gff3 TAIR10.xml TAIR10.new.gff3 TAIR10.out -g TAIR10.fasta --circos -v 3
+bin/segmental_duplication_gene_analyzer.py sdd.gff3 TAIR10.xml TAIR10.new.gff3 TAIR10.out -g TAIR10.fasta --circos -v 3
 ```
 
 __Generate graph with Circos:__
