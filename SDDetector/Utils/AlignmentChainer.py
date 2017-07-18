@@ -18,68 +18,6 @@ class AlignmentChainer(object):
         logging.basicConfig(level=logLevel)
 
 
-    def chainAlignments(self, lAlgmts):
-        """Build the list of chains and keep position of alignments in chains"""
-
-        maxOverlap = 0
-
-        for algmt in lAlgmts:
-            if algmt.id not in self.dIndex:
-                chain = Chain([algmt])
-                index = len(self.lChains)
-                self.lChains.append(chain)
-                self.dIndex[algmt.id] = [index]
-
-	    lProximalAlgmts = self.db.selectProximalAlgmts(algmt.id, self.maxGap)
-
-            for proxAlgmt in lProximalAlgmts:
-                if abs(self.distanceBetweenQueryAlgmts(algmt,proxAlgmt)) < self.maxGap and self.distanceBetweenQueryAlgmts(algmt,proxAlgmt) > -maxOverlap:
-                    if abs(self.distanceBetweenSbjctAlgmts(algmt,proxAlgmt)) < self.maxGap and self.distanceBetweenSbjctAlgmts(algmt,proxAlgmt) > -maxOverlap:
-                        if self.distanceBetweenQuerySbjctAlgmts(algmt,proxAlgmt) > -maxOverlap:
-                            if self.distanceBetweenQuerySbjctAlgmts(proxAlgmt,algmt) > -maxOverlap:
-
-                                lChainIdsCurrentAlgmt = self.dIndex[algmt.id]
-                                newChainTodo = False
-                                for chainId in lChainIdsCurrentAlgmt:
-                                    lAlgmtsCurrentChain = self.lChains[chainId].sortListOfAlgmts()
-                                    ToInclude = True
-                                    for cAlgmt in lAlgmtsCurrentChain:
-                                        if self.distanceBetweenQueryAlgmts(proxAlgmt,cAlgmt) < -maxOverlap:
-                                            ToInclude = False
-                                            break
-                                        if self.distanceBetweenSbjctAlgmts(proxAlgmt,cAlgmt) < -maxOverlap:
-                                            ToInclude = False
-                                            break
-                                        if self.distanceBetweenQuerySbjctAlgmts(proxAlgmt,cAlgmt) < -maxOverlap:
-                                            ToInclude = False
-                                            break
-                                        if self.distanceBetweenQuerySbjctAlgmts(cAlgmt,proxAlgmt) < -maxOverlap:
-                                            ToInclude = False
-                                            break
-                                        if not self.assertRankForAlgmts(lAlgmtsCurrentChain[::1],proxAlgmt):
-                                            ToInclude = False
-
-
-                                    if ToInclude:
-                                        if proxAlgmt.id not in self.lChains[chainId].getIdListOfAlgmts():
-                                            self.lChains[chainId].lAlgmts.append(proxAlgmt)
-                                            if proxAlgmt.id in self.dIndex:
-                                                self.dIndex[proxAlgmt.id].append(chainId)
-                                            else:
-                                                self.dIndex[proxAlgmt.id] = [chainId]
-                                        else:
-                                            logging.error("error in chaining - possible bug")
-                                    else:
-                                        newChainTodo = True
-
-                                if newChainTodo:
-                                    chain = Chain([algmt,proxAlgmt])
-                                    index = len(self.lChains)
-                                    self.lChains.append(chain)
-                                    self.dIndex[algmt.id] = [index]
-
-
-
     def assertRankForAlgmts(self,lAlgmts,algmt):
 
         lAlgmts.append(algmt)
