@@ -168,7 +168,7 @@ Examples are provided in data directory. If you want to test your install and ha
 
 __Data:__
 
-````
+```
 tar -xvf data/colleto.tar.gz
 ```
 
