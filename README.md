@@ -137,7 +137,7 @@ Gene: (G0001,G0002); sequence: (seq11,seq11); strand: (-1,1)
 691 : G - A --- (seq11-39503,seq11-555524)
 754 : T - C --- (seq11-39440,seq11-555587)
 779 : C - A --- (seq11-39415,seq11-555612)
-40193                                                  40133
+40193                                                  40132
  M  T  P  H  S  L  T  D  K  Q  A  R  Q  R  L  E  A  L  Q  L 
 ------------------------------------------------------------
 ATGACGCCGCACAGCTTGACGGACAAGCAGCGGCGCCAGCGCCTTGAAGCCCTGCAACTT
@@ -145,9 +145,9 @@ ATGACGCCGCACAGCTTGACGGACAAGCAGCGGCGCCAGCGCCTTGAAGCCCTGCAACTT
 ATGACGCCGCACAGCTTGACGGACAAGCAGCG---CCAGCGCCTTAAAGCCCTGCAACTT
 --------------------------------   -------------------------
  M  T  P  H  S  L  T  D  K  Q  R     Q  R  L  K  A  L  Q  L 
-554837                                                554894
+554837                                                554893
 
-40134                                                  40074
+40133                                                  40072
  Y  L  N  E  P  E  P  V  L  I  C  A  P  C  G  Y  A  L  K  P 
 ------------------------------------------------------------
 TACTTGAACGAGCCTGAACCGGTCCTCATCTGCCGGCCTTGCGGTTACGCATTGAAGCCG
@@ -155,7 +155,7 @@ TACTTGAACGAGCCTGAACCGGTCCTCATCTGCCGGCCTTGCGGTTACGCATTGAAGCCG
 TACTTAAACGAGCCTGAACTGGTCCTCATCTGCCAGCCTTGCGGTTACGCATTGAAGCCG
 ------------------------------------------------------------
  Y  L  N  E  P  E  L  V  L  I  C  Q  P  C  G  Y  A  L  K  P 
-554895                                                554955
+554894                                                554953
 
 .....
 ```
