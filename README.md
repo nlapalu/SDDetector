@@ -164,7 +164,7 @@ TACTTAAACGAGCCTGAACTGGTCCTCATCTGCCAGCCTTGCGGTTACGCATTGAAGCCG
 
 Examples are provided in data directory. If you want to test your install and have a look to the expected file formats, you can run a complete analysis.
 
-### Example 1: Subset of a fungal genome 
+### Example 1: a fungal genome, *Colletotrichum higginsianum*
 
 __Data:__
 
@@ -202,7 +202,7 @@ You can see below a refined version of this image and published in *J.Dallery et
 
 ![image](images/colleto_refined.png)
 
-### Example 2: Arabidopsis thaliana
+### Example 2: a plant genome, *Arabidopsis thaliana*
 
 __Data:__
 
