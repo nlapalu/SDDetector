@@ -198,7 +198,7 @@ __Generate graph with Circos:__
 
 ![image](images/colleto.png)
 
-You can see below a refined version of this image and published in *J.Dallery et al*.
+You can see below a refined version of this image and published in *J.Dallery et al* (submitted).
 
 ![image](images/colleto_refined.png)
 
