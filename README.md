@@ -240,11 +240,15 @@ __Generate graph with Circos:__
 
 If you use SDDetector, please cite:
 
+*J.-F. Dallery, N. Lapalu, A. Zampounis, S. Pigne, I. Luyten, J. Amselem, A. H. J. Wittenberg, S. Zhou, M. V. de Queiroz, G. P. Robin, A. Auger, M. Hainaut, B. Henrissat, K.-T. Kim, Y.-H. Lee, O. Lespinet, D. C. Schwartz, M. R. Thon, and R. J. O'Connell, Gapless genome assembly of Colletotrichum higginsianum reveals chromosome structure and association of transposable elements with secondary metabolite gene clusters, BMC Genomics, vol. 18, no. 1, p. 667, Dec. 2017.*
+
+or
+
 *__SDDetector, Lapalu.N, https://github.com/nlapalu/SDDetector__*
 
 ## References
 
-* J.-F. Dallery, N. Lapalu, A. Zampounis, S. Pigne, I. Luyten, J. Amselem, A. H. J. Wittenberg, S. Zhou, M. V. de Queiroz, G. P. Robin, A. Auger, M. Hainaut, B. Henrissat, K.-T. Kim, Y.-H. Lee, O. Lespinet, D. C. Schwartz, M. R. Thon, and R. J. Ox'Connell, Gapless genome assembly of Colletotrichum higginsianum reveals chromosome structure and association of transposable elements with secondary metabolite gene clusters, BMC Genomics, vol. 18, no. 1, p. 667, Dec. 2017.
+* J.-F. Dallery, N. Lapalu, A. Zampounis, S. Pigne, I. Luyten, J. Amselem, A. H. J. Wittenberg, S. Zhou, M. V. de Queiroz, G. P. Robin, A. Auger, M. Hainaut, B. Henrissat, K.-T. Kim, Y.-H. Lee, O. Lespinet, D. C. Schwartz, M. R. Thon, and R. J. O'Connell, Gapless genome assembly of Colletotrichum higginsianum reveals chromosome structure and association of transposable elements with secondary metabolite gene clusters, BMC Genomics, vol. 18, no. 1, p. 667, Dec. 2017.
 * Flutre T, Duprat E, Feuillet C, Quesneville H. Considering transposable element diversification in de novo annotation approaches. PLoS One. 2011 Jan 31;6(1):e16526. doi: 10.1371/journal.pone.0016526. 
 * Khaja R, MacDonald JR, Zhang J, Scherer SW. Methods for identifying and mapping recent segmental and gene duplications in eukaryotic genomes. Methods Mol Biol. 2006;338:9-20.
 * Smit, AFA, Hubley, R & Green, P. RepeatMasker Open-4.0. 2013-2015 <http://www.repeatmasker.org>.
