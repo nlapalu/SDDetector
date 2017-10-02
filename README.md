@@ -240,7 +240,7 @@ __Generate graph with Circos:__
 
 If you use SDDetector, please cite:
 
-*J.-F. Dallery, N. Lapalu, A. Zampounis, S. Pigne, I. Luyten, J. Amselem, A. H. J. Wittenberg, S. Zhou, M. V. de Queiroz, G. P. Robin, A. Auger, M. Hainaut, B. Henrissat, K.-T. Kim, Y.-H. Lee, O. Lespinet, D. C. Schwartz, M. R. Thon, and R. J. O'Connell, Gapless genome assembly of Colletotrichum higginsianum reveals chromosome structure and association of transposable elements with secondary metabolite gene clusters, BMC Genomics, vol. 18, no. 1, p. 667, Dec. 2017.*
+*__J.-F. Dallery, N. Lapalu, A. Zampounis, S. Pigne, I. Luyten, J. Amselem, A. H. J. Wittenberg, S. Zhou, M. V. de Queiroz, G. P. Robin, A. Auger, M. Hainaut, B. Henrissat, K.-T. Kim, Y.-H. Lee, O. Lespinet, D. C. Schwartz, M. R. Thon, and R. J. O'Connell, Gapless genome assembly of Colletotrichum higginsianum reveals chromosome structure and association of transposable elements with secondary metabolite gene clusters, BMC Genomics, vol. 18, no. 1, p. 667, Dec. 2017.__*
 
 or
 
