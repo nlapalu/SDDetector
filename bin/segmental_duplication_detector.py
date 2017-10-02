@@ -247,7 +247,7 @@ if __name__ == "__main__":
                         help="export also results in bed format")
     args = parser.parse_args()
 
-
+    logLevel = 'ERROR'
     if args.verbosity == 1:
         logLevel = 'ERROR'
     if args.verbosity == 2:
