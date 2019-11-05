@@ -8,11 +8,12 @@ from SDDetector.Entities.Alignment import Alignment
 
 class AlignDB(SqliteDB):
 
-    def __init__(self, dbfile='', logLevel='ERROR'):
+    def __init__(self, dbfile='', logLevel='ERROR', copy=False):
         """AlignDB Constructor"""
 
-        SqliteDB.__init__(self, dbfile=dbfile, logLevel=logLevel)
-        self._createDBSchema()
+        SqliteDB.__init__(self, dbfile=dbfile, logLevel=logLevel, copy=copy)
+        if copy == False:
+            self._createDBSchema()
 
     def _createDBSchema(self):
         """Create Database Schema"""
