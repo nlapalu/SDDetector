@@ -34,6 +34,12 @@ class Chain(object):
 
         return self.length
 
+    def getQueryName(self):
+        return self.lAlgmts[0].query
+
+    def getSubjectName(self):
+        return self.lAlgmts[0].subject
+
     def getSStart(self):
 
         return min([ algmt.sstart for algmt in self.lAlgmts ])
@@ -115,11 +121,12 @@ class Chain(object):
             else:
                 strand = '-'
 
-            minSeq = min(algmt.qend-algmt.qstart,algmt.send-algmt.sstart) + 1
+            #minSeq = min(algmt.qend-algmt.qstart,algmt.send-algmt.sstart) + 1
+            minSeq = algmt.length
             minSeqs +=minSeq
             identities += algmt.identities
             if format == 'gff3':
-                lines.append('{}\tSDDetector\tmatch_part\t{}\t{}\t.\t{}\t.\tID=match{};Parent=chain{};Target={} {} {};length={};identities={};identity_percentage={:.3f}\n'.format(algmt.sbjct,algmt.sstart,algmt.send,strand,algmt.id,id,algmt.query,algmt.qstart,algmt.qend,algmt.length,algmt.identities,(algmt.identities/float(minSeq))))
+                lines.append('{}\tSDDetector\tmatch_part\t{}\t{}\t.\t{}\t.\tID=match{};Parent=chain{};Target={} {} {};length={};identities={};identity_percentage={:.3f}\n'.format(algmt.sbjct,algmt.sstart,algmt.send,strand,algmt.id,id,algmt.query,algmt.qstart,algmt.qend,algmt.length,algmt.identities,(algmt.identities/float(algmt.length))))
             if format == 'bed':
                 lines.append('{}\t'.format(algmt.sbjct))
         if format == 'gff3':
