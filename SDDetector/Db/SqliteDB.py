@@ -5,7 +5,7 @@ import sqlite3
 
 class SqliteDB(object):
 
-    def __init__(self, dbfile='', logLevel='DEBUG'):
+    def __init__(self, dbfile='', logLevel='DEBUG', copy=False):
         
         self.dbfile = dbfile
 
@@ -13,7 +13,8 @@ class SqliteDB(object):
             self.setLoggingLevel(logLevel)
 
         if dbfile:
-            self.conn = sqlite3.connect(dbfile)
+            if copy == False:
+                self.conn = sqlite3.connect(dbfile)
         else:
             dbfile='/tmp/tmpSqlite.db' 
             self.conn = sqlite3.connect(dbfile)
