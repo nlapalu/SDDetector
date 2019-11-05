@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 import logging
-
+import sqlite3
 from SDDetector.Entities.Chain import Chain
 from SDDetector.Entities.Alignment import Alignment
 
@@ -30,7 +30,7 @@ class AlignmentChainer(object):
             return False
 
 
-    def chainAlignments(self, lAlgmts):
+    def chainAlignments(self, lAlgmts, multiproc=False):
         """Build the list of chains and keep position of alignments in chains"""
 
         for algmt in lAlgmts:
@@ -41,6 +41,8 @@ class AlignmentChainer(object):
                 self.dIndex[algmt.id] = [index]
 
             lChainIdsCurrentAlgmt = self.dIndex[algmt.id]
+            if multiproc:
+                self.db.conn = sqlite3.connect(self.db.dbfile)
 	    lProximalAlgmts = self.db.selectProximalAlgmts(algmt.id, self.maxGap)
             for proxAlgmt in lProximalAlgmts:
                 for chainId in lChainIdsCurrentAlgmt:
