@@ -1,8 +1,9 @@
 #!/usr/bin/env python
 
 import logging
-
+import sqlite3
 from SDDetector.Entities.Chain import Chain
+from SDDetector.Entities.Alignment import Alignment
 
 class AlignmentChainer(object):
 
@@ -29,7 +30,7 @@ class AlignmentChainer(object):
             return False
 
 
-    def chainAlignments(self, lAlgmts):
+    def chainAlignments(self, lAlgmts, multiproc=False):
         """Build the list of chains and keep position of alignments in chains"""
 
         for algmt in lAlgmts:
@@ -40,6 +41,8 @@ class AlignmentChainer(object):
                 self.dIndex[algmt.id] = [index]
 
             lChainIdsCurrentAlgmt = self.dIndex[algmt.id]
+            if multiproc:
+                self.db.conn = sqlite3.connect(self.db.dbfile)
 	    lProximalAlgmts = self.db.selectProximalAlgmts(algmt.id, self.maxGap)
             for proxAlgmt in lProximalAlgmts:
                 for chainId in lChainIdsCurrentAlgmt:
@@ -214,3 +217,21 @@ class AlignmentChainer(object):
         lChains = [ chain for i, chain in enumerate(lChains) if i not in ltmp ]
 
         return self.sortListOfChains(lChains)
+
+    def pairingChains(self, lChains):
+
+        lpairizedChains = []
+
+        for i,ch in enumerate(lChains):
+            ch.id = '{}.1'.format(i)
+            lpairizedChains.append(ch)
+            ch2 = Chain(self._reverse_algmts(ch.lAlgmts),'{}.2'.format(i))
+            lpairizedChains.append(ch2)
+        return lpairizedChains
+
+    def _reverse_algmts(self, lAlgmts):
+
+        lReversedAlgmts = []
+        for algmt in lAlgmts:
+            lReversedAlgmts.append(Alignment(algmt.sbjct,algmt.query,algmt.sstart,algmt.send,algmt.qstart,algmt.qend,algmt.length,algmt.identities,algmt.sstrand,algmt.qstrand,"{}.reverse".format(algmt.id)))
+        return lReversedAlgmts

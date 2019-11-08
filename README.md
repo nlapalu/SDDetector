@@ -94,6 +94,14 @@ __Detection from tab-delimited format:__
 
 `segmental_duplication_detector.py blast.tab tab sdd_0.9_3000_5000.gff3 :memory: -g 3000 -l 5000 -a`
 
+Note: For large genomes with many alignments, you can try the multiprocess mode (--procs). The SQLite database containing alignments will be copied as many times as required procs to allow performance in database queries.
+
+### Filter Segmental Duplications
+
+With soft masking, it is possible to obtain alignments with TE fragments. You can filter duplications with alignments covered (at least 10%) by an annotation. 
+
+`segmental_duplication_filter.py sdd_0.9_3000_5000.gff3 genome_TE.gff -v2 -f match_part -o sdd.filter.gff3`
+
 ### Analyze duplicated genes
 
 If you ask for a Blast XML output and you have a gene annotation file in gff3 format, you can use the SDAnalyzer tool.
