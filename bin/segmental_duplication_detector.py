@@ -217,7 +217,8 @@ class Detector(object):
         lQueries = sorted(self.db.selectAllQueries())
 
         if lSbjcts != lQueries:
-            raise 'error in list of subjects / queries of algmts'
+            #raise 'error in list of subjects / queries of algmts'
+            logging.info("Some sequences without any alignments")
 
         lSelectedChains = []
 
