@@ -43,7 +43,7 @@ class AlignmentChainer(object):
             lChainIdsCurrentAlgmt = self.dIndex[algmt.id]
             if multiproc:
                 self.db.conn = sqlite3.connect(self.db.dbfile)
-	    lProximalAlgmts = self.db.selectProximalAlgmts(algmt.id, self.maxGap)
+            lProximalAlgmts = self.db.selectProximalAlgmts(algmt.id, self.maxGap)
             for proxAlgmt in lProximalAlgmts:
                 for chainId in lChainIdsCurrentAlgmt:
                     if self.distanceBetweenQueryAlgmts(algmt,proxAlgmt) < self.maxGap and self.distanceBetweenQueryAlgmts(algmt,proxAlgmt) > 0:
